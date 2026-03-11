@@ -1,0 +1,4 @@
+.playwright-mcp/
+backups/
+__pycache__/
+*.pyc
