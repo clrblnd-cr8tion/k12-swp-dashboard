@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOVA Update Process — Reference Guide</title>
+<style>
+  /* ── Reset & Base ───────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* Source colors */
+    --src-dashboard: #0d9488;
+    --src-dashboard-bg: #f0fdfa;
+    --src-grant-page: #2563eb;
+    --src-grant-page-bg: #eff6ff;
+    --src-quarterly: #d97706;
+    --src-quarterly-bg: #fffbeb;
+    --src-derived: #64748b;
+    --src-derived-bg: #f8fafc;
+    --src-preserved: #7c3aed;
+    --src-preserved-bg: #f5f3ff;
+
+    /* UI colors */
+    --ink: #1e293b;
+    --ink-secondary: #475569;
+    --ink-tertiary: #94a3b8;
+    --surface: #ffffff;
+    --surface-alt: #f8fafc;
+    --border: #e2e8f0;
+    --border-strong: #cbd5e1;
+    --accent: #2563eb;
+    --accent-bg: #eff6ff;
+
+    /* Spacing */
+    --sp-xs: 0.25rem;
+    --sp-sm: 0.5rem;
+    --sp-md: 1rem;
+    --sp-lg: 1.5rem;
+    --sp-xl: 2rem;
+    --sp-2xl: 3rem;
+    --sp-3xl: 4rem;
+
+    /* Typography */
+    --font-display: 'Georgia', 'Times New Roman', 'Palatino Linotype', serif;
+    --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-mono: 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', monospace;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--ink);
+    background: var(--surface-alt);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Layout Shell ───────────────────────────────────── */
+  .page-wrapper {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: var(--sp-xl) var(--sp-lg);
+  }
+
+  /* ── Header ─────────────────────────────────────────── */
+  header {
+    border-bottom: 3px solid var(--ink);
+    padding-bottom: var(--sp-lg);
+    margin-bottom: var(--sp-2xl);
+  }
+
+  header .overline {
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-tertiary);
+    margin-bottom: var(--sp-xs);
+  }
+
+  header h1 {
+    font-family: var(--font-display);
+    font-size: 2.1rem;
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: var(--sp-sm);
+  }
+
+  header .subtitle {
+    font-size: 1.05rem;
+    color: var(--ink-secondary);
+    max-width: 640px;
+  }
+
+  header .meta {
+    margin-top: var(--sp-md);
+    font-size: 0.78rem;
+    color: var(--ink-tertiary);
+  }
+
+  /* ── Table of Contents ──────────────────────────────── */
+  nav.toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: var(--sp-lg);
+    margin-bottom: var(--sp-2xl);
+  }
+
+  nav.toc h2 {
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-tertiary);
+    margin-bottom: var(--sp-md);
+  }
+
+  nav.toc ol {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-xs) var(--sp-xl);
+  }
+
+  nav.toc a {
+    font-size: 0.88rem;
+    color: var(--ink-secondary);
+    text-decoration: none;
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-sm);
+    padding: var(--sp-xs) 0;
+    transition: color 0.15s;
+  }
+
+  nav.toc a:hover { color: var(--accent); }
+
+  nav.toc .toc-num {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-tertiary);
+    min-width: 1.4rem;
+  }
+
+  /* ── Sections ───────────────────────────────────────── */
+  section {
+    margin-bottom: var(--sp-3xl);
+  }
+
+  section > h2 {
+    font-family: var(--font-display);
+    font-size: 1.55rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--ink);
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: var(--sp-sm);
+    margin-bottom: var(--sp-lg);
+  }
+
+  section > h3, .subsection-title {
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-top: var(--sp-xl);
+    margin-bottom: var(--sp-md);
+  }
+
+  section p {
+    font-size: 0.92rem;
+    color: var(--ink-secondary);
+    margin-bottom: var(--sp-md);
+    max-width: 720px;
+  }
+
+  /* ── SVG Icons ──────────────────────────────────────── */
+  .icon {
+    width: 22px;
+    height: 22px;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    flex-shrink: 0;
+  }
+
+  .icon-sm {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* ── Data Flow Diagram ──────────────────────────────── */
+  .flow-diagram {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+    padding: var(--sp-lg) 0;
+    margin-bottom: var(--sp-lg);
+  }
+
+  .flow-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-sm);
+    padding: var(--sp-md) var(--sp-lg);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    min-width: 120px;
+    text-align: center;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .flow-node .icon { color: var(--ink-secondary); }
+
+  .flow-node-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+
+  .flow-node-sub {
+    font-size: 0.68rem;
+    color: var(--ink-tertiary);
+  }
+
+  .flow-node[data-source="dashboard"] { border-left: 3px solid var(--src-dashboard); }
+  .flow-node[data-source="grant-page"] { border-left: 3px solid var(--src-grant-page); }
+  .flow-node[data-source="json"] { border-left: 3px solid var(--src-derived); }
+  .flow-node[data-source="python"] { border-left: 3px solid var(--src-preserved); }
+  .flow-node[data-source="excel"] { border-left: 3px solid var(--src-quarterly); }
+
+  .flow-arrow {
+    display: flex;
+    align-items: center;
+    color: var(--ink-tertiary);
+    font-size: 1.2rem;
+    padding: 0 var(--sp-sm);
+    flex-shrink: 0;
+    user-select: none;
+  }
+
+  .flow-arrow svg {
+    width: 28px;
+    height: 28px;
+    stroke: var(--border-strong);
+    stroke-width: 2;
+    fill: none;
+  }
+
+  /* ── Phase Cards ────────────────────────────────────── */
+  .phase-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: var(--sp-lg);
+    margin-bottom: var(--sp-md);
+    position: relative;
+  }
+
+  .phase-card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-md);
+    margin-bottom: var(--sp-sm);
+  }
+
+  .phase-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--surface);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .phase-card-header h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.4;
+    padding-top: 4px;
+  }
+
+  .phase-card > p {
+    font-size: 0.88rem;
+    color: var(--ink-secondary);
+    margin-bottom: var(--sp-md);
+    margin-left: 44px;
+  }
+
+  .phase-card details {
+    margin-left: 44px;
+    border-top: 1px solid var(--border);
+    padding-top: var(--sp-sm);
+  }
+
+  .phase-card summary {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--accent);
+    cursor: pointer;
+    padding: var(--sp-xs) 0;
+    user-select: none;
+    list-style: none;
+  }
+
+  .phase-card summary::-webkit-details-marker { display: none; }
+
+  .phase-card summary::before {
+    content: '+ ';
+    font-family: var(--font-mono);
+    margin-right: var(--sp-xs);
+  }
+
+  .phase-card details[open] summary::before {
+    content: '- ';
+  }
+
+  .phase-card details .detail-content {
+    padding: var(--sp-md) 0;
+    font-size: 0.82rem;
+    color: var(--ink-secondary);
+    line-height: 1.7;
+  }
+
+  .phase-card details .detail-content ul,
+  .phase-card details .detail-content ol {
+    margin: var(--sp-sm) 0 var(--sp-sm) var(--sp-lg);
+  }
+
+  .phase-card details .detail-content li {
+    margin-bottom: var(--sp-xs);
+  }
+
+  .phase-card details .detail-content code {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    background: var(--surface-alt);
+    padding: 1px 5px;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+  }
+
+  /* ── Round Reference Table ──────────────────────────── */
+  .table-wrap {
+    overflow-x: auto;
+    margin: var(--sp-md) 0 var(--sp-lg);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+  }
+
+  thead th {
+    font-weight: 600;
+    text-align: left;
+    padding: var(--sp-sm) var(--sp-md);
+    border-bottom: 2px solid var(--ink);
+    white-space: nowrap;
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--ink-secondary);
+  }
+
+  tbody td {
+    padding: var(--sp-sm) var(--sp-md);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  tbody tr:hover { background: var(--surface-alt); }
+
+  .status-active {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 8px;
+    border-radius: 3px;
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .status-closed {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 8px;
+    border-radius: 3px;
+    background: var(--surface-alt);
+    color: var(--ink-tertiary);
+  }
+
+  .status-early {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 8px;
+    border-radius: 3px;
+    background: #fef9c3;
+    color: #854d0e;
+  }
+
+  /* ── Source Legend ───────────────────────────────────── */
+  .source-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-sm) var(--sp-lg);
+    padding: var(--sp-md) var(--sp-lg);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: var(--sp-lg);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-sm);
+    font-size: 0.78rem;
+    color: var(--ink-secondary);
+  }
+
+  .legend-chip {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .legend-chip.dashboard { background: var(--src-dashboard); }
+  .legend-chip.grant-page { background: var(--src-grant-page); }
+  .legend-chip.quarterly { background: var(--src-quarterly); }
+  .legend-chip.derived { background: var(--src-derived); }
+  .legend-chip.preserved { background: var(--src-preserved); }
+
+  /* ── Source Badges ───────────────────────────────────── */
+  .src-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 3px;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+
+  .src-badge.dashboard {
+    background: var(--src-dashboard-bg);
+    color: var(--src-dashboard);
+    border: 1px solid #99f6e4;
+  }
+
+  .src-badge.grant-page {
+    background: var(--src-grant-page-bg);
+    color: var(--src-grant-page);
+    border: 1px solid #bfdbfe;
+  }
+
+  .src-badge.quarterly {
+    background: var(--src-quarterly-bg);
+    color: var(--src-quarterly);
+    border: 1px solid #fde68a;
+  }
+
+  .src-badge.derived {
+    background: var(--src-derived-bg);
+    color: var(--src-derived);
+    border: 1px solid #e2e8f0;
+  }
+
+  .src-badge.preserved {
+    background: var(--src-preserved-bg);
+    color: var(--src-preserved);
+    border: 1px solid #ddd6fe;
+  }
+
+  /* ── Column Mapping Table ───────────────────────────── */
+  .col-mapping-table tbody td:first-child {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.82rem;
+    width: 3rem;
+    text-align: center;
+  }
+
+  .col-mapping-table tbody td:nth-child(2) {
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .col-mapping-table tbody td:nth-child(4) {
+    font-size: 0.8rem;
+    color: var(--ink-secondary);
+    line-height: 1.5;
+  }
+
+  .col-mapping-table tbody tr[data-source="dashboard"] td:first-child {
+    border-left: 3px solid var(--src-dashboard);
+  }
+  .col-mapping-table tbody tr[data-source="grant-page"] td:first-child {
+    border-left: 3px solid var(--src-grant-page);
+  }
+  .col-mapping-table tbody tr[data-source="quarterly"] td:first-child {
+    border-left: 3px solid var(--src-quarterly);
+  }
+  .col-mapping-table tbody tr[data-source="derived"] td:first-child {
+    border-left: 3px solid var(--src-derived);
+  }
+  .col-mapping-table tbody tr[data-source="preserved"] td:first-child {
+    border-left: 3px solid var(--src-preserved);
+  }
+
+  /* ── Quarterly Pattern Diagram ──────────────────────── */
+  .quarterly-grid {
+    display: grid;
+    grid-template-columns: 140px repeat(6, 1fr);
+    gap: 2px;
+    margin: var(--sp-lg) 0;
+    font-size: 0.78rem;
+  }
+
+  .qg-header {
+    font-weight: 600;
+    text-align: center;
+    padding: var(--sp-sm);
+    background: var(--ink);
+    color: var(--surface);
+    font-size: 0.72rem;
+  }
+
+  .qg-round-label {
+    display: flex;
+    align-items: center;
+    padding: var(--sp-sm);
+    font-weight: 600;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-size: 0.78rem;
+  }
+
+  .qg-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--sp-sm) var(--sp-xs);
+    text-align: center;
+    border: 1px solid var(--border);
+    line-height: 1.3;
+  }
+
+  .qg-cell.active {
+    background: var(--src-quarterly-bg);
+    border-color: #fde68a;
+  }
+
+  .qg-cell.final {
+    background: #fef3c7;
+    border-color: #fcd34d;
+  }
+
+  .qg-cell .col-letter {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.72rem;
+    color: var(--src-quarterly);
+  }
+
+  .qg-cell .col-letter.final-letter {
+    color: #92400e;
+  }
+
+  .qg-cell .fy-label {
+    font-size: 0.65rem;
+    color: var(--ink-tertiary);
+  }
+
+  .qg-cell.inactive {
+    background: var(--surface-alt);
+    color: var(--ink-tertiary);
+  }
+
+  .qg-page-indicator {
+    font-size: 0.6rem;
+    font-weight: 600;
+    margin-top: 2px;
+    padding: 1px 4px;
+    border-radius: 2px;
+    background: rgba(217, 119, 6, 0.15);
+    color: var(--src-quarterly);
+  }
+
+  /* ── Edge Cases List ────────────────────────────────── */
+  .edge-case-list {
+    list-style: none;
+    margin: var(--sp-md) 0;
+  }
+
+  .edge-case-list li {
+    padding: var(--sp-sm) var(--sp-md);
+    border-left: 3px solid var(--border);
+    margin-bottom: var(--sp-sm);
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  .edge-case-list li strong {
+    color: var(--ink);
+  }
+
+  /* ── Validation Checks ──────────────────────────────── */
+  .validation-grid {
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    gap: var(--sp-xs) var(--sp-md);
+    font-size: 0.82rem;
+    margin: var(--sp-md) 0;
+  }
+
+  .val-num {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--ink-tertiary);
+    text-align: right;
+    padding-top: 2px;
+  }
+
+  .val-desc {
+    color: var(--ink-secondary);
+    padding-bottom: var(--sp-sm);
+    border-bottom: 1px solid var(--border);
+    line-height: 1.5;
+  }
+
+  /* ── Footer ─────────────────────────────────────────── */
+  footer {
+    border-top: 2px solid var(--ink);
+    padding-top: var(--sp-lg);
+    margin-top: var(--sp-3xl);
+  }
+
+  footer h3 {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-tertiary);
+    margin-bottom: var(--sp-md);
+  }
+
+  footer .file-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-xs) var(--sp-xl);
+  }
+
+  footer .file-ref {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-sm);
+    font-size: 0.8rem;
+    padding: var(--sp-xs) 0;
+  }
+
+  footer .file-ref code {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  footer .file-ref span {
+    color: var(--ink-tertiary);
+  }
+
+  /* ── Print Styles ───────────────────────────────────── */
+  @media print {
+    body { background: white; font-size: 11pt; }
+    .page-wrapper { max-width: 100%; padding: 0; }
+
+    .source-legend { position: static; }
+
+    details { open: true; }
+    details[open] summary { display: none; }
+    details .detail-content { display: block !important; }
+
+    section { break-inside: avoid; page-break-inside: avoid; }
+    section > h2 { page-break-after: avoid; }
+    .phase-card { break-inside: avoid; }
+    table { break-inside: avoid; }
+
+    .flow-diagram { justify-content: center; }
+
+    nav.toc { display: none; }
+
+    * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  }
+
+  /* ── Responsive ─────────────────────────────────────── */
+  @media (max-width: 640px) {
+    nav.toc ol { grid-template-columns: 1fr; }
+    .flow-diagram { flex-direction: column; align-items: stretch; }
+    .flow-arrow svg { transform: rotate(90deg); }
+    .flow-arrow { justify-content: center; }
+    .quarterly-grid { font-size: 0.68rem; grid-template-columns: 100px repeat(6, 1fr); }
+    footer .file-grid { grid-template-columns: 1fr; }
+    .source-legend { position: static; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- SVG Sprite (hidden)                                 -->
+<!-- ════════════════════════════════════════════════════ -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <symbol id="icon-globe" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10"/>
+    <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+  </symbol>
+  <symbol id="icon-browser" viewBox="0 0 24 24">
+    <rect x="3" y="3" width="18" height="18" rx="2"/>
+    <path d="M3 9h18"/>
+    <circle cx="7" cy="6" r="0.5" fill="currentColor" stroke="none"/>
+    <circle cx="10" cy="6" r="0.5" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="icon-file" viewBox="0 0 24 24">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+    <polyline points="14 2 14 8 20 8"/>
+    <line x1="9" y1="13" x2="15" y2="13"/>
+    <line x1="9" y1="17" x2="15" y2="17"/>
+  </symbol>
+  <symbol id="icon-code" viewBox="0 0 24 24">
+    <polyline points="16 18 22 12 16 6"/>
+    <polyline points="8 6 2 12 8 18"/>
+    <line x1="14" y1="4" x2="10" y2="20"/>
+  </symbol>
+  <symbol id="icon-grid" viewBox="0 0 24 24">
+    <rect x="3" y="3" width="18" height="18" rx="1"/>
+    <line x1="3" y1="9" x2="21" y2="9"/>
+    <line x1="3" y1="15" x2="21" y2="15"/>
+    <line x1="9" y1="3" x2="9" y2="21"/>
+    <line x1="15" y1="3" x2="15" y2="21"/>
+  </symbol>
+  <symbol id="icon-check" viewBox="0 0 24 24">
+    <path d="M9 11l3 3L22 4"/>
+    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+  </symbol>
+  <symbol id="icon-arrow-right" viewBox="0 0 24 24">
+    <line x1="5" y1="12" x2="19" y2="12"/>
+    <polyline points="14 7 19 12 14 17"/>
+  </symbol>
+</svg>
+
+<div class="page-wrapper">
+
+  <!-- ═══ Header ═══════════════════════════════════════ -->
+  <header>
+    <div class="overline">K-12 Strong Workforce Program &middot; Central Mother Lode Region</div>
+    <h1>NOVA Update Process<br>Reference Guide</h1>
+    <p class="subtitle">How the automated update process pulls data from NOVA and builds the grant tracking spreadsheet &mdash; what happens at each step, and where every column's data comes from.</p>
+    <p class="meta">Last updated: March 2026 &middot; Source: CLAUDE.md operational runbook</p>
+  </header>
+
+  <!-- ═══ Table of Contents ════════════════════════════ -->
+  <nav class="toc">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#flow"><span class="toc-num">1.1</span> Data Flow Overview</a></li>
+      <li><a href="#phase-1"><span class="toc-num">1.2</span> Phase 1: Prerequisites</a></li>
+      <li><a href="#phase-2"><span class="toc-num">1.3</span> Phase 2: Dashboard Scan</a></li>
+      <li><a href="#phase-3"><span class="toc-num">1.4</span> Phase 3: Grant Scraping</a></li>
+      <li><a href="#phase-4"><span class="toc-num">1.5</span> Phase 4: Spreadsheet Update</a></li>
+      <li><a href="#phase-5"><span class="toc-num">1.6</span> Phase 5: Validation</a></li>
+      <li><a href="#rounds"><span class="toc-num">1.7</span> Round Reference Table</a></li>
+      <li><a href="#legend"><span class="toc-num">2.1</span> Data Source Legend</a></li>
+      <li><a href="#column-map"><span class="toc-num">2.2</span> Column-by-Column Mapping</a></li>
+      <li><a href="#quarterly-pattern"><span class="toc-num">2.3</span> Quarterly Column Pattern</a></li>
+      <li><a href="#edge-cases"><span class="toc-num">2.4</span> Approximations &amp; Edge Cases</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SECTION 1: HOW THE UPDATE PROCESS WORKS        -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <section id="process">
+      <h2>1 &mdash; How the Update Process Works</h2>
+
+      <!-- 1.1 Data Flow Diagram -->
+      <div id="flow">
+        <h3>1.1 Data Flow Overview</h3>
+        <p>Data moves through five stages from NOVA to the final spreadsheet. Each stage produces an artifact that feeds the next.</p>
+
+        <div class="flow-diagram">
+          <div class="flow-node" data-source="dashboard">
+            <svg class="icon"><use href="#icon-globe"/></svg>
+            <span class="flow-node-label">NOVA Website</span>
+            <span class="flow-node-sub">nova.cccco.edu</span>
+          </div>
+
+          <div class="flow-arrow"><svg class="icon"><use href="#icon-arrow-right"/></svg></div>
+
+          <div class="flow-node" data-source="grant-page">
+            <svg class="icon"><use href="#icon-browser"/></svg>
+            <span class="flow-node-label">Browser Scraping</span>
+            <span class="flow-node-sub">~3 pages per grant</span>
+          </div>
+
+          <div class="flow-arrow"><svg class="icon"><use href="#icon-arrow-right"/></svg></div>
+
+          <div class="flow-node" data-source="json">
+            <svg class="icon"><use href="#icon-file"/></svg>
+            <span class="flow-node-label">scraped_data.json</span>
+            <span class="flow-node-sub">Raw extracted data</span>
+          </div>
+
+          <div class="flow-arrow"><svg class="icon"><use href="#icon-arrow-right"/></svg></div>
+
+          <div class="flow-node" data-source="python">
+            <svg class="icon"><use href="#icon-code"/></svg>
+            <span class="flow-node-label">regenerate_<br>spreadsheet.py</span>
+            <span class="flow-node-sub">Rebuild &amp; format</span>
+          </div>
+
+          <div class="flow-arrow"><svg class="icon"><use href="#icon-arrow-right"/></svg></div>
+
+          <div class="flow-node" data-source="excel">
+            <svg class="icon"><use href="#icon-grid"/></svg>
+            <span class="flow-node-label">Excel Spreadsheet</span>
+            <span class="flow-node-sub">.xlsx output</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1.2 Phase 1 -->
+      <div id="phase-1" class="phase-card">
+        <div class="phase-card-header">
+          <div class="phase-badge">1</div>
+          <h3>Prerequisites &amp; Authentication</h3>
+        </div>
+        <p>Verify NOVA access is working, detect the browser automation tool, test SSO authentication, and confirm which funding rounds need updating.</p>
+        <details>
+          <summary>Technical details</summary>
+          <div class="detail-content">
+            <ol>
+              <li>Detect whether Claude-in-Chrome or Playwright MCP is available for browser automation</li>
+              <li>Confirm SSO authentication by navigating to a known grant page and extracting the Plan ID via JavaScript &mdash; if empty after 5 seconds, SSO isn't active</li>
+              <li>Ensure <code>scraped_data.json</code> exists (preserves previous round data during partial updates)</li>
+              <li>Identify active rounds with final report deadlines not yet passed</li>
+              <li>Confirm with the operator which rounds to update before proceeding</li>
+            </ol>
+          </div>
+        </details>
+      </div>
+
+      <!-- 1.3 Phase 2 -->
+      <div id="phase-2" class="phase-card">
+        <div class="phase-card-header">
+          <div class="phase-badge">2</div>
+          <h3>Dashboard Scan &mdash; Get Grant Listing</h3>
+        </div>
+        <p>The NOVA Fiscal Reporting Dashboard is the authoritative source for the list of grants per round. The process reads the full dashboard, filters to Central Mother Lode institutions, and records the grant count, plan IDs, and approval statuses.</p>
+        <details>
+          <summary>Technical details</summary>
+          <div class="detail-content">
+            <ol>
+              <li>Navigate to <code>nova.cccco.edu/swpk/fiscal-reports/plans</code></li>
+              <li>Extract the full page text (all regions, all rounds)</li>
+              <li>Filter to Central/Mother Lode grants by matching Lead Agency against the 68-institution list</li>
+              <li>Filter by fiscal year to isolate the target round</li>
+              <li>Record for each grant: Plan ID, Grant Name, Lead Institution, Submitted count (X/Y), Approval Status</li>
+              <li>The <strong>total grant count</strong> per round becomes the expected row count used during validation</li>
+              <li>Compare against the known plan IDs in <code>scrape_round.py</code> &mdash; flag any new or removed grants</li>
+            </ol>
+          </div>
+        </details>
+      </div>
+
+      <!-- 1.4 Phase 3 -->
+      <div id="phase-3" class="phase-card">
+        <div class="phase-card-header">
+          <div class="phase-badge">3</div>
+          <h3>Individual Grant Scraping</h3>
+        </div>
+        <p>Each grant's fiscal report page is visited to extract financial data (budget, expenditures), then up to 2 additional FY pages are visited to determine which quarterly reports have been submitted. At ~6 seconds per page, a full round of 38 grants takes roughly 30&ndash;60 minutes.</p>
+        <details>
+          <summary>Technical details</summary>
+          <div class="detail-content">
+            <p><strong>Per-grant scraping sequence:</strong></p>
+            <ol>
+              <li>Navigate to <code>nova.cccco.edu/swpk/fiscal-reports/plans/{planId}?duration={yearCode}</code></li>
+              <li>Wait 5 seconds (SSO may redirect before auto-authenticating)</li>
+              <li>Extract via JavaScript: Plan ID, Grant Name, Approval Status, financial totals (PTD Expenditure, Project Budget, Budget Remaining)</li>
+              <li>Multi-institution grants produce multiple "Totals" rows &mdash; all are summed together</li>
+              <li>Extract Q4 status from the primary page (this is the first FY page)</li>
+              <li>Navigate to the 2nd FY page to get Q2 and Q4 status for that year</li>
+              <li>Navigate to the 3rd FY page for Q2, Q4, and Final Report status</li>
+              <li>Future FY pages (where no quarterly deadline has passed) are skipped &mdash; set to FALSE without navigating</li>
+            </ol>
+            <p><strong>Quarterly status values:</strong> Each FY page shows "Q2" or "Q4" on one line, followed by "Complete" or "Incomplete" on the next line. "Complete" = submitted (TRUE), "Incomplete" = not submitted (blank in spreadsheet).</p>
+            <p><strong>Error handling:</strong> If Plan ID extracts as empty, the page hasn't loaded &mdash; retry once after 3 seconds. Grants that fail twice are logged to <code>failed_grants.txt</code> for manual review.</p>
+          </div>
+        </details>
+      </div>
+
+      <!-- 1.5 Phase 4 -->
+      <div id="phase-4" class="phase-card">
+        <div class="phase-card-header">
+          <div class="phase-badge">4</div>
+          <h3>Spreadsheet Update</h3>
+        </div>
+        <p>A Python script (<code>regenerate_spreadsheet.py</code>) rebuilds the Round 5&ndash;8 tabs from the scraped JSON data. Before modifying anything, it creates a timestamped backup. It preserves the Notes and Unexpended columns by matching on Proposal ID. R5 uses a 17-column layout (A&ndash;Q); R6&ndash;R8 use a 19-column layout (A&ndash;S) with Plan Status (L) and Lead LEA (M).</p>
+        <details>
+          <summary>Technical details</summary>
+          <div class="detail-content">
+            <p><strong>Rebuild strategy per tab:</strong></p>
+            <ol>
+              <li>Read existing data keyed by Proposal ID (column B)</li>
+              <li>Find Notes and Unexpended columns by header text (not fixed index, since column positions differ per layout)</li>
+              <li>Delete the old sheet</li>
+              <li>Recreate with fresh scraped data: header row (blue fill, white text, Arial), data rows sorted alphabetically by Lead Institution, total row with SUM and COUNTIF formulas</li>
+              <li>Restore preserved Notes and Unexpended values by matching Proposal ID</li>
+            </ol>
+            <p>Run with: <code>python3 regenerate_spreadsheet.py</code></p>
+          </div>
+        </details>
+      </div>
+
+      <!-- 1.6 Phase 5 -->
+      <div id="phase-5" class="phase-card">
+        <div class="phase-card-header">
+          <div class="phase-badge">5</div>
+          <h3>Validation</h3>
+        </div>
+        <p>An automated validation script (<code>validate.py</code>) automates 10 of the 18 checklist items on the scraped data and regenerated spreadsheet. The remaining 8 are manual checks. Automated checks include budget sanity, row counts, header matching, quarterly monotonicity, stale data detection, and cross-round deduplication.</p>
+        <details>
+          <summary>Technical details</summary>
+          <div class="detail-content">
+            <p><strong>Automated checks (run via <code>python3 validate.py</code>):</strong></p>
+            <div class="validation-grid">
+              <span class="val-num">3</span><span class="val-desc">Budget sanity &mdash; all project budgets &gt; $0</span>
+              <span class="val-num">4</span><span class="val-desc">Expenditure bounds &mdash; expenditures between $0 and budget (flags but doesn't reject over-budget)</span>
+              <span class="val-num">5</span><span class="val-desc">Budget remaining &mdash; budgetRemaining &#8776; projectBudget - ptdExpenditure (within $1)</span>
+              <span class="val-num">6</span><span class="val-desc">Row count &mdash; data rows per tab match expected grant count</span>
+              <span class="val-num">7</span><span class="val-desc">Column headers &mdash; headers match expected layout for each round</span>
+              <span class="val-num">8</span><span class="val-desc">Sum validation &mdash; prints total budget and expenditure per round for review</span>
+              <span class="val-num">13</span><span class="val-desc">Quarterly monotonicity &mdash; if a later FY has TRUE, earlier FYs should also be TRUE</span>
+              <span class="val-num">15</span><span class="val-desc">Final report consistency &mdash; if all quarters TRUE and deadline passed, Final Report should be TRUE</span>
+              <span class="val-num">16</span><span class="val-desc">Cross-round dedup &mdash; no Plan ID appears in multiple rounds</span>
+              <span class="val-num">18</span><span class="val-desc">Stale data &mdash; flags past-due quarters still marked FALSE</span>
+            </div>
+            <p><strong>Manual checks:</strong> Spot-check 3 random grant pages against scraped values, verify % Spent formulas, confirm Notes/Unexpended columns survived the rebuild.</p>
+          </div>
+        </details>
+      </div>
+
+      <!-- 1.7 Round Reference Table -->
+      <div id="rounds">
+        <h3>1.7 Round Reference Table</h3>
+        <p>Summary of all 8 funding rounds. Rounds 5&ndash;8 are maintained by the automated process; Rounds 1&ndash;4 are historical.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Round</th>
+                <th>Grant FY</th>
+                <th>NOVA Year Code</th>
+                <th>Final Report Due</th>
+                <th>Grants</th>
+                <th>Total Budget</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>R1</td>
+                <td>2019-20</td>
+                <td><code>2020004</code></td>
+                <td>03/31/2022</td>
+                <td>30</td>
+                <td>$44,742,940</td>
+                <td><span class="status-closed">Closed</span></td>
+              </tr>
+              <tr>
+                <td>R2</td>
+                <td>2020-21</td>
+                <td><code>2021004</code></td>
+                <td>03/31/2023</td>
+                <td>26</td>
+                <td>$41,273,830</td>
+                <td><span class="status-closed">Closed</span></td>
+              </tr>
+              <tr>
+                <td>R3</td>
+                <td>2020-21</td>
+                <td><code>2021004</code></td>
+                <td>09/30/2023</td>
+                <td>31</td>
+                <td>$41,693,920</td>
+                <td><span class="status-closed">Closed</span></td>
+              </tr>
+              <tr>
+                <td>R4</td>
+                <td>2021-22</td>
+                <td><code>2022004</code></td>
+                <td>09/30/2024</td>
+                <td>22</td>
+                <td>$36,011,642</td>
+                <td><span class="status-closed">Closed</span></td>
+              </tr>
+              <tr>
+                <td>R5</td>
+                <td>2022-23</td>
+                <td><code>2023004</code></td>
+                <td>09/30/2025</td>
+                <td>28</td>
+                <td>$23,283,728</td>
+                <td><span class="status-active">Active</span></td>
+              </tr>
+              <tr>
+                <td>R6</td>
+                <td>2023-24</td>
+                <td><code>2024004</code></td>
+                <td>09/30/2026</td>
+                <td>30</td>
+                <td>$20,632,608</td>
+                <td><span class="status-active">Active</span></td>
+              </tr>
+              <tr>
+                <td>R7</td>
+                <td>2024-25</td>
+                <td><code>2025004</code></td>
+                <td>09/30/2027</td>
+                <td>38</td>
+                <td>$21,549,421</td>
+                <td><span class="status-active">Active</span></td>
+              </tr>
+              <tr>
+                <td>R8</td>
+                <td>2025-26</td>
+                <td><code>2026004</code></td>
+                <td>09/30/2028</td>
+                <td>4</td>
+                <td>$3,265,760</td>
+                <td><span class="status-early">Early</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SECTION 2: WHERE THE DATA COMES FROM           -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <section id="data-sources">
+      <h2>2 &mdash; Where the Data Comes From</h2>
+
+      <!-- 2.1 Source Legend -->
+      <div id="legend" class="source-legend">
+        <div class="legend-item"><div class="legend-chip dashboard"></div>NOVA Dashboard</div>
+        <div class="legend-item"><div class="legend-chip grant-page"></div>Grant Fiscal Report Page</div>
+        <div class="legend-item"><div class="legend-chip quarterly"></div>Quarterly FY Pages</div>
+        <div class="legend-item"><div class="legend-chip derived"></div>Derived / Calculated</div>
+        <div class="legend-item"><div class="legend-chip preserved"></div>Preserved from Previous</div>
+      </div>
+
+      <!-- 2.2 Column-by-Column Mapping -->
+      <div id="column-map">
+        <h3>2.2 Column-by-Column Mapping</h3>
+        <p>Every column in the Round 5&ndash;8 tabs and where its data comes from. R5 has 17 columns (A&ndash;Q); R6&ndash;R8 have 19 columns (A&ndash;S) with Plan Status and Lead LEA inserted at L&ndash;M. The color on the left edge matches the source legend above.</p>
+
+        <div class="table-wrap">
+          <table class="col-mapping-table">
+            <thead>
+              <tr>
+                <th>Col</th>
+                <th>Header</th>
+                <th>Source</th>
+                <th>Where on NOVA / How It Gets There</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-source="dashboard">
+                <td>A</td>
+                <td>Lead Institution</td>
+                <td><span class="src-badge dashboard">Dashboard</span></td>
+                <td>The lead agency name from the NOVA dashboard listing, used to filter grants to the Central Mother Lode region.</td>
+              </tr>
+              <tr data-source="dashboard">
+                <td>B</td>
+                <td>Proposal ID</td>
+                <td><span class="src-badge dashboard">Dashboard</span></td>
+                <td>The numeric Plan ID from the NOVA dashboard listing and the grant page URL (<code>/plans/{planId}</code>).</td>
+              </tr>
+              <tr data-source="dashboard">
+                <td>C</td>
+                <td># Reporting Insitutions</td>
+                <td><span class="src-badge dashboard">Dashboard</span></td>
+                <td>The "Y" value from the dashboard's "X/Y Submitted" count. Represents how many institutions file reports for this grant.</td>
+              </tr>
+              <tr data-source="grant-page">
+                <td>D</td>
+                <td>Grant Name</td>
+                <td><span class="src-badge grant-page">Grant Page</span></td>
+                <td>The project title link on the grant fiscal report page (the <code>&lt;a&gt;</code> element linking to the plan preview).</td>
+              </tr>
+              <tr data-source="quarterly">
+                <td>E</td>
+                <td>Grant FY Q4</td>
+                <td><span class="src-badge quarterly">FY Page</span></td>
+                <td>From the primary grant page (first FY). Look for "Q4" followed by "Complete" or "Incomplete". Complete = TRUE.</td>
+              </tr>
+              <tr data-source="quarterly">
+                <td>F</td>
+                <td>Grant FY+1 Q2</td>
+                <td><span class="src-badge quarterly">FY Page</span></td>
+                <td>Navigate to <code>?duration={nextYearCode}</code>. Look for "Q2" followed by "Complete"/"Incomplete".</td>
+              </tr>
+              <tr data-source="quarterly">
+                <td>G</td>
+                <td>Grant FY+1 Q4</td>
+                <td><span class="src-badge quarterly">FY Page</span></td>
+                <td>Same page as Col F. Look for "Q4" followed by "Complete"/"Incomplete".</td>
+              </tr>
+              <tr data-source="quarterly">
+                <td>H</td>
+                <td>Grant FY+2 Q2</td>
+                <td><span class="src-badge quarterly">FY Page</span></td>
+                <td>Navigate to <code>?duration={nextNextYearCode}</code>. Look for "Q2" followed by "Complete"/"Incomplete".</td>
+              </tr>
+              <tr data-source="quarterly">
+                <td>I</td>
+                <td>Grant FY+2 Q4</td>
+                <td><span class="src-badge quarterly">FY Page</span></td>
+                <td>Same page as Col H. Look for "Q4" followed by "Complete"/"Incomplete".</td>
+              </tr>
+              <tr data-source="quarterly">
+                <td>J</td>
+                <td>Final Report</td>
+                <td><span class="src-badge quarterly">FY Page</span></td>
+                <td>Same page as Cols H/I (last FY). Look for "Final Report" followed by "Complete"/"Incomplete". Complete = TRUE.</td>
+              </tr>
+              <tr data-source="dashboard">
+                <td>K</td>
+                <td>Report Waiting Approval</td>
+                <td><span class="src-badge dashboard">Dashboard</span></td>
+                <td>If the dashboard approval status is "Pending Approval" or "Submitted", that value is placed here. Otherwise blank.</td>
+              </tr>
+              <tr data-source="dashboard">
+                <td>L <small>(R6&ndash;R8)</small></td>
+                <td>Plan Status</td>
+                <td><span class="src-badge dashboard">Plans Listing</span></td>
+                <td>Plan-level certification status from <code>/swpk/plans</code> listing page (Certified, Submitted, or blank). R6&ndash;R8 only; not present in R5.</td>
+              </tr>
+              <tr data-source="dashboard">
+                <td>M <small>(R6&ndash;R8)</small></td>
+                <td>Lead LEA</td>
+                <td><span class="src-badge dashboard">Plans Listing</span></td>
+                <td>Lead Local Education Agency from <code>/swpk/plans</code> listing page. R6&ndash;R8 only; not present in R5.</td>
+              </tr>
+              <tr data-source="grant-page">
+                <td>L / N</td>
+                <td>Grant Amount</td>
+                <td><span class="src-badge grant-page">Grant Page</span></td>
+                <td>From the Expenditure Report "Totals" row, column 5 (Project Budget). Multi-institution grants: all Totals rows are summed. Col L in R5, Col N in R6&ndash;R8.</td>
+              </tr>
+              <tr data-source="grant-page">
+                <td>M / O</td>
+                <td>Total Reported Expenditures</td>
+                <td><span class="src-badge grant-page">Grant Page</span></td>
+                <td>From the Expenditure Report "Totals" row, column 2 (PTD Expenditure). Multi-institution grants: all Totals rows are summed. Col M in R5, Col O in R6&ndash;R8.</td>
+              </tr>
+              <tr data-source="derived">
+                <td>N / P</td>
+                <td>Total Reported Expenditures Approved</td>
+                <td><span class="src-badge derived">Derived</span></td>
+                <td>Approximation: if overall grant status is "Approved" or "Certified", equals Total Expenditures. If "Pending Approval", set to 0. Col N in R5, Col P in R6&ndash;R8.</td>
+              </tr>
+              <tr data-source="derived">
+                <td>O / Q</td>
+                <td>% Spent</td>
+                <td><span class="src-badge derived">Derived</span></td>
+                <td>Excel formula: R5 <code>=IF(L{row}=0,"",M{row}/L{row})</code>, R6&ndash;R8 <code>=IF(N{row}=0,"",O{row}/N{row})</code>. Guards against division by zero.</td>
+              </tr>
+              <tr data-source="preserved">
+                <td>P / R</td>
+                <td>Notes</td>
+                <td><span class="src-badge preserved">Preserved</span></td>
+                <td>Manually entered notes. Never overwritten by scraping. Preserved across tab rebuilds by matching on Proposal ID (Col B). Col P in R5, Col R in R6&ndash;R8.</td>
+              </tr>
+              <tr data-source="preserved">
+                <td>Q / S</td>
+                <td>Unexpended according to last fiscal report</td>
+                <td><span class="src-badge preserved">Preserved</span></td>
+                <td>Manually entered. Never overwritten by scraping. Preserved across tab rebuilds by matching on Proposal ID (Col B). Col Q in R5, Col S in R6&ndash;R8.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 2.3 Quarterly Column Pattern -->
+      <div id="quarterly-pattern">
+        <h3>2.3 Quarterly Column Pattern</h3>
+        <p>Each round spans 3 fiscal years on NOVA. The scraper visits up to 3 FY pages per grant and maps the Q2/Q4/Final Report status to spreadsheet columns E through J. This diagram shows which NOVA page feeds which column.</p>
+
+        <div class="quarterly-grid">
+          <!-- Header row -->
+          <div class="qg-header"></div>
+          <div class="qg-header">Col E</div>
+          <div class="qg-header">Col F</div>
+          <div class="qg-header">Col G</div>
+          <div class="qg-header">Col H</div>
+          <div class="qg-header">Col I</div>
+          <div class="qg-header">Col J</div>
+
+          <!-- R5 -->
+          <div class="qg-round-label">R5 (FY22-23)</div>
+          <div class="qg-cell active">
+            <span class="col-letter">E</span>
+            <span class="fy-label">FY22-23 Q4</span>
+            <span class="qg-page-indicator">Page 1</span>
+          </div>
+          <div class="qg-cell active">
+            <span class="col-letter">F</span>
+            <span class="fy-label">FY23-24 Q2</span>
+            <span class="qg-page-indicator">Page 2</span>
+          </div>
+          <div class="qg-cell active">
+            <span class="col-letter">G</span>
+            <span class="fy-label">FY23-24 Q4</span>
+            <span class="qg-page-indicator">Page 2</span>
+          </div>
+          <div class="qg-cell active">
+            <span class="col-letter">H</span>
+            <span class="fy-label">FY24-25 Q2</span>
+            <span class="qg-page-indicator">Page 3</span>
+          </div>
+          <div class="qg-cell active">
+            <span class="col-letter">I</span>
+            <span class="fy-label">FY24-25 Q4</span>
+            <span class="qg-page-indicator">Page 3</span>
+          </div>
+          <div class="qg-cell final">
+            <span class="col-letter final-letter">J</span>
+            <span class="fy-label">Final (09/30/25)</span>
+            <span class="qg-page-indicator">Page 3</span>
+          </div>
+
+          <!-- R6 -->
+          <div class="qg-round-label">R6 (FY23-24)</div>
+          <div class="qg-cell active">
+            <span class="col-letter">E</span>
+            <span class="fy-label">FY23-24 Q4</span>
+            <span class="qg-page-indicator">Page 1</span>
+          </div>
+          <div class="qg-cell active">
+            <span class="col-letter">F</span>
+            <span class="fy-label">FY24-25 Q2</span>
+            <span class="qg-page-indicator">Page 2</span>
+          </div>
+          <div class="qg-cell active">
+            <span class="col-letter">G</span>
+            <span class="fy-label">FY24-25 Q4</span>
+            <span class="qg-page-indicator">Page 2</span>
+          </div>
+          <div class="qg-cell active">
+            <span class="col-letter">H</span>
+            <span class="fy-label">FY25-26 Q2</span>
+            <span class="qg-page-indicator">Page 3</span>
+          </div>
+          <div class="qg-cell active">
+            <span class="col-letter">I</span>
+            <span class="fy-label">FY25-26 Q4</span>
+            <span class="qg-page-indicator">Page 3</span>
+          </div>
+          <div class="qg-cell final">
+            <span class="col-letter final-letter">J</span>
+            <span class="fy-label">Final (09/30/26)</span>
+            <span class="qg-page-indicator">Page 3</span>
+          </div>
+
+          <!-- R7 -->
+          <div class="qg-round-label">R7 (FY24-25)</div>
+          <div class="qg-cell active">
+            <span class="col-letter">E</span>
+            <span class="fy-label">FY24-25 Q4</span>
+            <span class="qg-page-indicator">Page 1</span>
+          </div>
+          <div class="qg-cell active">
+            <span class="col-letter">F</span>
+            <span class="fy-label">FY25-26 Q2</span>
+            <span class="qg-page-indicator">Page 2</span>
+          </div>
+          <div class="qg-cell active">
+            <span class="col-letter">G</span>
+            <span class="fy-label">FY25-26 Q4</span>
+            <span class="qg-page-indicator">Page 2</span>
+          </div>
+          <div class="qg-cell active">
+            <span class="col-letter">H</span>
+            <span class="fy-label">FY26-27 Q2</span>
+            <span class="qg-page-indicator">Page 3</span>
+          </div>
+          <div class="qg-cell active">
+            <span class="col-letter">I</span>
+            <span class="fy-label">FY26-27 Q4</span>
+            <span class="qg-page-indicator">Page 3</span>
+          </div>
+          <div class="qg-cell final">
+            <span class="col-letter final-letter">J</span>
+            <span class="fy-label">Final (09/30/27)</span>
+            <span class="qg-page-indicator">Page 3</span>
+          </div>
+
+          <!-- R8 -->
+          <div class="qg-round-label">R8 (FY25-26)</div>
+          <div class="qg-cell active">
+            <span class="col-letter">E</span>
+            <span class="fy-label">FY25-26 Q4</span>
+            <span class="qg-page-indicator">Page 1</span>
+          </div>
+          <div class="qg-cell active">
+            <span class="col-letter">F</span>
+            <span class="fy-label">FY26-27 Q2</span>
+            <span class="qg-page-indicator">Page 2</span>
+          </div>
+          <div class="qg-cell active">
+            <span class="col-letter">G</span>
+            <span class="fy-label">FY26-27 Q4</span>
+            <span class="qg-page-indicator">Page 2</span>
+          </div>
+          <div class="qg-cell active">
+            <span class="col-letter">H</span>
+            <span class="fy-label">FY27-28 Q2</span>
+            <span class="qg-page-indicator">Page 3</span>
+          </div>
+          <div class="qg-cell active">
+            <span class="col-letter">I</span>
+            <span class="fy-label">FY27-28 Q4</span>
+            <span class="qg-page-indicator">Page 3</span>
+          </div>
+          <div class="qg-cell final">
+            <span class="col-letter final-letter">J</span>
+            <span class="fy-label">Final (09/30/28)</span>
+            <span class="qg-page-indicator">Page 3</span>
+          </div>
+        </div>
+
+        <p><strong>Reading the diagram:</strong> "Page 1" is the primary grant page (also where financial data comes from). "Page 2" and "Page 3" are the subsequent FY pages. Two columns sharing the same page indicator (e.g., F and G both from "Page 2") are extracted from a single page load &mdash; Q2 and Q4 appear on the same FY page.</p>
+      </div>
+
+      <!-- 2.4 Edge Cases -->
+      <div id="edge-cases">
+        <h3>2.4 Known Approximations &amp; Edge Cases</h3>
+
+        <ul class="edge-case-list">
+          <li>
+            <strong>Expenditures Approved is approximate.</strong> The scraper cannot distinguish approved vs. unapproved expenditure line items. If the overall grant status is "Approved" or "Certified," Approved equals Total Expenditures. If "Pending Approval," Approved is 0. This may slightly differ from granular per-line approval data. (Col N in R5, Col P in R6&ndash;R8.)
+          </li>
+          <li>
+            <strong>Q2 and Q4 are independent within a FY.</strong> A grant can have Q2 = Complete but Q4 = Incomplete on the same FY page. The primary page's approval status (Certified, Submitted, etc.) is not a reliable proxy for individual quarter status.
+          </li>
+          <li>
+            <strong>Multi-institution grants sum financial data.</strong> Grants with multiple reporting institutions produce multiple "Totals" rows in the Expenditure Report table. All rows are summed for the Grant Amount, Total Expenditures, and budget remaining columns. The institution count (Col C) comes from the dashboard, not from counting scraped rows.
+          </li>
+          <li>
+            <strong>Notes and Unexpended are never overwritten.</strong> These columns (P/Q in R5, R/S in R6&ndash;R8) are preserved across tab rebuilds by matching on Proposal ID. The script finds them by header text, not fixed column index. If a grant is removed from NOVA (no longer appears in the dashboard), its preserved values are logged as a warning but not carried forward.
+          </li>
+          <li>
+            <strong>$0 expenditure is normal for new grants.</strong> Early-lifecycle grants (especially R8) may have zero expenditures. The validation script flags these as warnings, not errors.
+          </li>
+          <li>
+            <strong>SSO redirects are expected.</strong> Every NOVA navigation may briefly redirect to a login page before auto-authenticating. The process waits 5 seconds after each navigation to allow this to complete.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══ Footer ═══════════════════════════════════════ -->
+  <footer>
+    <h3>Source Files</h3>
+    <div class="file-grid">
+      <div class="file-ref"><code>CLAUDE.md</code> <span>Operational runbook (process phases, column layout, edge cases)</span></div>
+      <div class="file-ref"><code>regenerate_spreadsheet.py</code> <span>Python script that rebuilds tabs from JSON</span></div>
+      <div class="file-ref"><code>validate.py</code> <span>Automated validation checks</span></div>
+      <div class="file-ref"><code>scrape_round.py</code> <span>Round configs, year codes, plan ID lists</span></div>
+      <div class="file-ref"><code>scraped_data.json</code> <span>Raw data from the last NOVA scrape</span></div>
+      <div class="file-ref"><code>SPREADSHEET_CONTEXT.md</code> <span>Workbook structure documentation</span></div>
+    </div>
+  </footer>
+
+</div>
+
+<!-- Force details open for print -->
+<script>
+  window.addEventListener('beforeprint', function () {
+    document.querySelectorAll('details').forEach(function (d) { d.setAttribute('open', ''); });
+  });
+</script>
+
+</body>
+</html>

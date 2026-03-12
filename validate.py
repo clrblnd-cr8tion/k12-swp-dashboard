@@ -168,7 +168,7 @@ def check_6_spreadsheet_row_count(data, wb):
 
 def check_7_column_headers(wb):
     """Check 7: Column headers match expected layout from ROUND_CONFIGS"""
-    from regenerate_spreadsheet import ROUND_CONFIGS, BASE_HEADERS
+    from regenerate_spreadsheet import ROUND_CONFIGS, HEADERS_BY_LAYOUT
     issues = []
     for rk, config in ROUND_CONFIGS.items():
         sheet_name = config['sheet_name']
@@ -176,8 +176,9 @@ def check_7_column_headers(wb):
             issues.append(f"{rk}: sheet '{sheet_name}' not found")
             continue
         ws = wb[sheet_name]
-        # Build expected headers
-        expected = list(BASE_HEADERS)
+        L = config['layout']
+        # Build expected headers using the correct layout
+        expected = list(HEADERS_BY_LAYOUT[L['total_cols']])
         for i, label in enumerate(config['quarterly_labels']):
             expected[4 + i] = label
         expected[9] = config['final_report_header']
@@ -331,7 +332,7 @@ def main():
     print("\n  --- Manual Checks (perform these yourself) ---")
     print("  [ ] #9:  Spot check — re-visit 3 random grant pages and compare fields")
     print("  [ ] #10: Formula check — verify % Spent formula for 5 random rows in Excel")
-    print("  [ ] #11: Data preservation — verify Notes (P) and Unexpended (Q) restored after tab rebuild")
+    print("  [ ] #11: Data preservation — verify Notes and Unexpended columns restored after tab rebuild")
     print("  [ ] #12: Quarterly status consistency — compare approvalStatus vs Col E for flagged grants")
 
     # Summary

@@ -23,23 +23,27 @@ Each "Round" tab is a tracker for one funding round's grants **filtered to Centr
 | Round 7 | 38 | $21,549,421 | FY24-25 Q4 → FY26-27 Q4 | 09/30/2027 |
 | Round 8 | 4 | $3,265,760 | FY25-26 Q4 → FY27-28 Q4 | 09/30/2028 |
 
-**Column layout (consistent across all Round tabs):**
+**Column layout:**
 
-| Column | Description |
-|--------|-------------|
-| Lead Institution | K-12 school district or ROP leading the grant |
-| Proposal ID | Unique NOVA proposal identifier |
-| # Reporting Institutions | Count of institutions filing reports |
-| Grant Name | Full project title |
-| FY Quarterly columns (varies) | Report submission status — `TRUE` = submitted, blank = not submitted |
-| Final Report | Final report submission status |
-| Report Waiting Approval | Flags reports pending approval |
-| Grant Amount | Total grant award in dollars |
-| Total Reported Expenditures | Sum of all expenditures reported to date |
-| Total Reported Expenditures Approved | Sum of approved expenditures only |
-| % Spent | Ratio of expenditures to grant amount |
-| Notes | Free-text notes |
-| Unexpended according to last fiscal report | Remaining unspent funds |
+R5 uses 17 columns (A-Q). R6-R8 use 19 columns (A-S) with two additional columns: Plan Status (L) and Lead LEA (M). Columns A-K are identical across all rounds.
+
+| Column | R5 | R6-R8 | Description |
+|--------|-----|-------|-------------|
+| Lead Institution | A | A | K-12 school district or ROP leading the grant |
+| Proposal ID | B | B | Unique NOVA proposal identifier |
+| # Reporting Institutions | C | C | Count of institutions filing reports |
+| Grant Name | D | D | Full project title |
+| FY Quarterly columns (varies) | E-I | E-I | Report submission status — `TRUE` = submitted, blank = not submitted |
+| Final Report | J | J | Final report submission status |
+| Report Waiting Approval | K | K | Flags reports pending approval |
+| Plan Status | — | L | Plan-level certification status from `/swpk/plans` (R6-R8 only) |
+| Lead LEA | — | M | Lead Local Education Agency from `/swpk/plans` (R6-R8 only) |
+| Grant Amount | L | N | Total grant award in dollars |
+| Total Reported Expenditures | M | O | Sum of all expenditures reported to date |
+| Total Reported Expenditures Approved | N | P | Sum of approved expenditures only |
+| % Spent | O | Q | Ratio of expenditures to grant amount |
+| Notes | P | R | Free-text notes |
+| Unexpended according to last fiscal report | Q | S | Remaining unspent funds |
 
 **Last row** in each Round tab contains a **region total** row (labeled "Central / Mother Lode Region" or "Central Mother Lode Region").
 
@@ -114,7 +118,7 @@ Amador County ROP, Amador County Unified, Aspire Vanguard College Preparatory Ac
 
 Rounds 5-8 were updated on 2026-03-11 via direct NOVA scraping:
 - Data scraped from individual NOVA grant fiscal report pages (`nova.cccco.edu/swpk/fiscal-reports/plans/{planId}?duration={yearCode}`)
-- Values are hardcoded (not formula-driven), except % Spent which uses `=M{row}/L{row}`
+- Values are hardcoded (not formula-driven), except % Spent which uses a formula (R5: `=M{row}/L{row}`, R6-R8: `=O{row}/N{row}`)
 - Quarterly submission status determined by visiting each FY page and extracting Q2/Q4/Final Report → Complete/Incomplete status
 - Q2 and Q4 are independent per FY page — cannot use primary page approval status as a proxy
 - "# Reporting Institutions" uses the dashboard X/Y submitted count (Y value)

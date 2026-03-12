@@ -140,6 +140,19 @@ The dashboard is the **authoritative source** for grant listings. Never rely sol
 
 **Note:** The dashboard may paginate. If fewer grants appear than expected, check for pagination controls or scroll triggers. The `get_page_text` output may need multiple calls if the page lazy-loads.
 
+**Plan Status & Lead LEA extraction (R6-R8 only):**
+
+After the dashboard scan, extract Plan Status and Lead LEA from the NOVA plans listing:
+
+1. Navigate to `nova.cccco.edu/swpk/plans`
+2. Extract full page text via `get_page_text` (or `browser_evaluate(() => document.body.innerText)` for Playwright)
+3. The plans listing contains blocks per plan with Plan Status (Certified/Submitted/blank) and Lead LEA
+4. For each Plan ID from the dashboard scan, match and extract:
+   - `planStatus`: the plan-level certification status
+   - `leadLEA`: the lead Local Education Agency name
+5. Store as `planStatus` and `leadLEA` fields in each grant's scraped data
+6. These fields are optional — R5 grants will not have them (`.get()` with empty string default handles this)
+
 ### Phase 3: Individual Grant Scraping
 
 For each grant from the dashboard listing:
@@ -247,6 +260,8 @@ const institutionCount = expenditureRows.length;
   "grantName": "Agriculture Pathway Expansion",
   "leadInstitution": "Newman-Crows Landing Unified",
   "approvalStatus": "Certified",
+  "planStatus": "Certified",
+  "leadLEA": "Newman-Crows Landing Unified",
   "ptdExpenditure": 79554,
   "projectBudget": 418567,
   "budgetRemaining": 339013,
@@ -284,13 +299,15 @@ This script handles the full rebuild. See the file for implementation details. I
 - For **new round tabs** not yet in the spreadsheet: Create new sheet
 - For **existing round tabs** already in the spreadsheet: **Merge and recreate**:
   1. Read existing data keyed by Proposal ID (column B)
-  2. Preserve values from columns P (Notes) and Q (Unexpended) into a lookup dict
+  2. Preserve Notes and Unexpended values into a lookup dict (found by header text, not fixed column index)
   3. Delete old sheet
   4. Recreate with fresh scraped data
-  5. Restore preserved P and Q values by matching Proposal ID
+  5. Restore preserved Notes and Unexpended values by matching Proposal ID
   6. For grants that existed before but are no longer in the scrape: log a warning (grant may have been removed from NOVA)
 
-**Column layout (17 columns — matches all existing Round tabs):**
+**Column layout — R5 has 17 columns (A-Q); R6-R8 have 19 columns (A-S) with Plan Status and Lead LEA.**
+
+Columns A-K are identical across all rounds:
 
 | Col | Header | Format | Data Source |
 |-----|--------|--------|-------------|
@@ -301,23 +318,36 @@ This script handles the full rebuild. See the file for implementation details. I
 | E-I | 5 quarterly columns (see Quarterly Column Mapping) | Boolean | `quarterlyStatus` from scrape: `TRUE` if submitted, blank if not |
 | J | Final Report (Due MM/DD/YYYY) | Boolean | `finalReport` from scrape: `TRUE` if final report submitted (Complete), blank if not |
 | K | Report Waiting Approval | Text | Derived: if `dashboardApproval` is "Pending Approval" or "Submitted" → set to that status; otherwise blank |
-| L | Grant Amount | Number, `#,##0` | `projectBudget` from scrape |
-| M | Total Reported Expenditures | Number, `#,##0` | `ptdExpenditure` from scrape |
-| N | Total Reported Expenditures Approved | Number, `#,##0` | **Approximation:** if `dashboardApproval` is "Approved" or "Certified" → same as M; if "Pending Approval" → 0 |
-| O | % Spent | Formula `=M{row}/L{row}`, format `0.0%` | Calculated |
-| P | Notes | Text | **Preserved from previous tab** via Proposal ID merge; blank for new grants |
-| Q | Unexpended according to last fiscal report | Text | **Preserved from previous tab** via Proposal ID merge; blank for new grants |
+
+R6-R8 only (not present in R5):
+
+| Col | Header | Format | Data Source |
+|-----|--------|--------|-------------|
+| L | Plan Status | Text | `planStatus` from `/swpk/plans` listing (Certified/Submitted/blank) |
+| M | Lead LEA | Text | `leadLEA` from `/swpk/plans` listing |
+
+Remaining columns (letter shifts for R6-R8 vs R5):
+
+| R5 Col | R6-R8 Col | Header | Format | Data Source |
+|--------|-----------|--------|--------|-------------|
+| L | N | Grant Amount | Number, `#,##0` | `projectBudget` from scrape |
+| M | O | Total Reported Expenditures | Number, `#,##0` | `ptdExpenditure` from scrape |
+| N | P | Total Reported Expenditures Approved | Number, `#,##0` | **Approximation:** if `dashboardApproval` is "Approved" or "Certified" → same as Total Exp; if "Pending Approval" → 0 |
+| O | Q | % Spent | Formula, format `0.0%` | R5: `=IF(L{row}=0,"",M{row}/L{row})`; R6-R8: `=IF(N{row}=0,"",O{row}/N{row})` |
+| P | R | Notes | Text | **Preserved from previous tab** via Proposal ID merge; blank for new grants |
+| Q | S | Unexpended according to last fiscal report | Text | **Preserved from previous tab** via Proposal ID merge; blank for new grants |
 
 **Formatting:**
 - Font: Arial throughout
 - Header row: Bold, white text on blue fill (`#4472C4`), wrap text enabled
 - Data rows sorted alphabetically by Lead Institution (column A)
 - Last row: "Central Mother Lode Region" total row with:
-  - `SUM` formulas for Grant Amount (L), Total Reported Expenditures (M), Expenditures Approved (N)
+  - `SUM` formulas for Grant Amount, Total Reported Expenditures, Expenditures Approved
   - `COUNTIF` for quarterly submission columns (E-I) AND Final Report (J)
   - `% Spent` formula referencing the totals
 
-**Column widths:** A=28.38, B=10.88, C=10.88, D=59.0, E-J=7.75, K=8.75, L-N=11.75, O=8.63, P=32.38, Q=15.0
+**Column widths (R5):** A=28.38, B=10.88, C=10.88, D=59.0, E-J=7.75, K=8.75, L-N=11.75, O=8.63, P=32.38, Q=15.0
+**Column widths (R6-R8):** A=28.38, B=10.88, C=10.88, D=59.0, E-J=7.75, K=8.75, L=8.75, M=28.38, N-P=11.75, Q=8.63, R=32.38, S=15.0
 
 ### Phase 5: Update SPREADSHEET_CONTEXT.md
 
@@ -342,7 +372,7 @@ All checks must pass before saving. Run these in order:
 8. **Sum validation:** Print total budget and total expenditure per round; compare against previous run if available
 9. **Spot check:** Re-visit 3 random grant pages in browser and compare all fields against scraped values
 10. **Formula check:** Verify `% Spent` formula evaluates correctly for 5 random rows
-11. **Data preservation check:** After recreating a tab, verify all previously-existing Proposal IDs still have their Notes (P) and Unexpended (Q) values restored. Print any grants that existed before but are missing from the new scrape.
+11. **Data preservation check:** After recreating a tab, verify all previously-existing Proposal IDs still have their Notes and Unexpended values restored (column letters differ per layout: P/Q for R5, R/S for R6-R8). Print any grants that existed before but are missing from the new scrape.
 12. **Quarterly status consistency:** For each grant, if `approvalStatus` is Certified/Approved/Submitted on the primary FY page, then Col E (grant FY Q4) should generally be TRUE. Flag any mismatches for manual review (note: this is a heuristic — Q2/Q4 status from the FY page is authoritative).
 13. **Quarterly monotonicity (cross-FY only):** If any quarter in a later FY is TRUE, all quarters in earlier FYs should also be TRUE. Flag if e.g., FY25-26 has a TRUE but FY24-25 has a FALSE. **Within a single FY, Q2 and Q4 are independent** — do NOT flag Q2=TRUE/Q4=FALSE on the same FY as an error (see "Q2/Q4 are independent" edge case).
 14. **Dashboard grant count vs scrape_round.py:** If dashboard returns more grants than `scrape_round.py` lists, flag as "new grants found — add to scrape_round.py". If fewer, flag as "grants removed from NOVA".
@@ -363,7 +393,7 @@ All checks must pass before saving. Run these in order:
 - **Page not loaded:** If extraction returns an empty `planId` or `grantName`, the page hasn't finished loading. Wait 3 more seconds and retry once.
 - **Rounds 5-6 transitioning from Look-tab formulas:** These rounds previously used QUERY formulas referencing Look tabs (R5 Look, R6 Look). The scrape-based approach replaces all formulas with hardcoded values. The Look tabs are preserved as historical archives but are no longer referenced by the Round tabs after the first scrape-based update.
 - **#REF! errors in R5/R6:** The existing "# Reporting Institutions" column had #REF! errors from broken formula references. The scrape-based approach fixes this by using `dashboardInstitutions` as a hardcoded value.
-- **Column N approximation:** "Total Reported Expenditures Approved" is approximated — the scrape cannot distinguish approved vs. unapproved expenditure line items. If the overall grant status is "Approved" or "Certified", column N equals column M. If "Pending Approval", column N is 0. This may slightly differ from the granular per-line approval data in the Look tabs.
+- **Expenditures Approved approximation:** "Total Reported Expenditures Approved" is approximated — the scrape cannot distinguish approved vs. unapproved expenditure line items. If the overall grant status is "Approved" or "Certified", Approved equals Total Expenditures. If "Pending Approval", Approved is 0. This may slightly differ from the granular per-line approval data in the Look tabs. (Col N in R5, Col P in R6-R8.)
 - **Quarterly text patterns:** The NOVA page does NOT show "Q2 Approved" or "Q4 Submitted" as standalone text. Instead, each FY page shows "Q2" on one line followed by "Complete" or "Incomplete" on the next line, and similarly for "Q4" and "Final Report". Use the JavaScript extraction pattern in Phase 3 step 5.
 - **Q2/Q4 are independent:** A grant can have Q2=Complete but Q4=Incomplete on the same FY page (e.g., grant 25760 on FY24-25). The primary page `approvalStatus` (Certified/Submitted) cannot be used as a proxy for individual quarter status.
 - **"Unsubmitted" vs "Awaiting Submittal":** FY pages that haven't had reports submitted show "Status\nUnsubmitted" — this is distinct from "Awaiting Submittal" which appears on the primary page for grants that haven't filed their first report.
