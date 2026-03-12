@@ -1,48 +1,1950 @@
 {
-  "round7": [
-    {"planId":"29751","grantName":"Agriculture Pathway Expansion","leadInstitution":"Newman-Crows Landing Unified","approvalStatus":"Certified","ptdExpenditure":79554,"projectBudget":418567,"budgetRemaining":339013,"dashboardInstitutions":1,"dashboardApproval":"Approved"},
-    {"planId":"29752","grantName":"CTE Wheel 7-12 Alignment","leadInstitution":"Burton Elementary","approvalStatus":"Certified","ptdExpenditure":22067,"projectBudget":299807,"budgetRemaining":277740,"dashboardInstitutions":1,"dashboardApproval":"Approved"},
-    {"planId":"29753","grantName":"LodiHS Agriculture Complex Expansion and Modernization","leadInstitution":"Lodi Unified","approvalStatus":"Certified","ptdExpenditure":0,"projectBudget":280897,"budgetRemaining":280897,"dashboardInstitutions":1,"dashboardApproval":"Approved"},
-    {"planId":"29754","grantName":"Ceres CTE Collaboration and Health Pathway","leadInstitution":"Ceres Unified","approvalStatus":"Certified","ptdExpenditure":0,"projectBudget":129000,"budgetRemaining":129000,"dashboardInstitutions":1,"dashboardApproval":"Approved"},
-    {"planId":"29755","grantName":"Dual Enrollment Pathways to Combat California's Teacher Shortage","leadInstitution":"Fresno Unified","approvalStatus":"Certified","ptdExpenditure":0,"projectBudget":563112,"budgetRemaining":563112,"dashboardInstitutions":1,"dashboardApproval":"Approved"},
-    {"planId":"29756","grantName":"Pre-Apprenticeship Training for High School Students (PATHSS)","leadInstitution":"Hanford Joint Union High","approvalStatus":"Certified","ptdExpenditure":0,"projectBudget":427000,"budgetRemaining":427000,"dashboardInstitutions":1,"dashboardApproval":"Approved"},
-    {"planId":"29757","grantName":"Overcoming Barriers to Internships and Early College Credit","leadInstitution":"Fresno Unified","approvalStatus":"Certified","ptdExpenditure":105326,"projectBudget":1093274,"budgetRemaining":987948,"dashboardInstitutions":1,"dashboardApproval":"Approved"},
-    {"planId":"29760","grantName":"Expanding Equity, Articulation, and Equal Access - Agriculture and Natural Resources","leadInstitution":"Escalon Unified","approvalStatus":"Certified","ptdExpenditure":0,"projectBudget":475800,"budgetRemaining":475800,"dashboardInstitutions":1,"dashboardApproval":"Approved"},
-    {"planId":"29761","grantName":"Refining Systems of Alignment & Access to CTE Pathways for All Students","leadInstitution":"Visalia Unified","approvalStatus":"Submitted","ptdExpenditure":0,"projectBudget":1093274,"budgetRemaining":1093274,"dashboardInstitutions":1,"dashboardApproval":"Pending Approval"},
-    {"planId":"29762","grantName":"Stanislaus County Career Inspiration Center Partnership Program","leadInstitution":"Ceres Unified","approvalStatus":"Certified","ptdExpenditure":4348,"projectBudget":570297,"budgetRemaining":565949,"dashboardInstitutions":7,"dashboardApproval":"Approved"},
-    {"planId":"29763","grantName":"Equity Diversity and Inclusion in CTE Across the Region","leadInstitution":"Corcoran Joint Unified","approvalStatus":"Certified","ptdExpenditure":0,"projectBudget":59077,"budgetRemaining":59077,"dashboardInstitutions":11,"dashboardApproval":"Approved"},
-    {"planId":"29764","grantName":"LUSD: Cultivating Graduates for a Competitive World","leadInstitution":"Lincoln Unified","approvalStatus":"","ptdExpenditure":0,"projectBudget":208605,"budgetRemaining":208605,"dashboardInstitutions":1,"dashboardApproval":"Awaiting Submittal"},
-    {"planId":"29765","grantName":"Capacity, Inclusion, and Equity in Ag/Welding","leadInstitution":"Fowler Unified","approvalStatus":"Certified","ptdExpenditure":3194,"projectBudget":569998,"budgetRemaining":566804,"dashboardInstitutions":1,"dashboardApproval":"Approved"},
-    {"planId":"29767","grantName":"Simulation Training for Welding and Diesel Mechanics","leadInstitution":"Kern High","approvalStatus":"","ptdExpenditure":0,"projectBudget":1064060,"budgetRemaining":1064060,"dashboardInstitutions":1,"dashboardApproval":"Awaiting Submittal"},
-    {"planId":"29769","grantName":"Expanding Future Readiness: Building Bridges to 21st Century Careers for Kern's Middle Schoolers","leadInstitution":"Kern Co. Office of Education","approvalStatus":"Submitted","ptdExpenditure":0,"projectBudget":1093274,"budgetRemaining":1093274,"dashboardInstitutions":2,"dashboardApproval":"Pending Approval"},
-    {"planId":"29770","grantName":"Kern Innovation Center for Future Readiness and Student Success in College and Career","leadInstitution":"Kern Co. Office of Education","approvalStatus":"Certified","ptdExpenditure":0,"projectBudget":1093274,"budgetRemaining":1093274,"dashboardInstitutions":1,"dashboardApproval":"Approved"},
-    {"planId":"29773","grantName":"Supporting Career Connections with Equity in Sanger Schools (SUCCESS) Project","leadInstitution":"Sanger Unified","approvalStatus":"Certified","ptdExpenditure":1030,"projectBudget":569998,"budgetRemaining":568968,"dashboardInstitutions":1,"dashboardApproval":"Approved"},
-    {"planId":"29775","grantName":"Harnessing AI in Student-Led Enterprises","leadInstitution":"Cutler-Orosi Joint Unified","approvalStatus":"Certified","ptdExpenditure":0,"projectBudget":63884,"budgetRemaining":63884,"dashboardInstitutions":8,"dashboardApproval":"Approved"},
-    {"planId":"29776","grantName":"Advancing Agricultural Sustainability and Environmental Quality in the Central Valley","leadInstitution":"Cutler-Orosi Joint Unified","approvalStatus":"Certified","ptdExpenditure":0,"projectBudget":62886,"budgetRemaining":62886,"dashboardInstitutions":8,"dashboardApproval":"Approved"},
-    {"planId":"29780","grantName":"Edison High School Construction Pathway","leadInstitution":"Stockton Unified","approvalStatus":"Certified","ptdExpenditure":20402,"projectBudget":500007,"budgetRemaining":479605,"dashboardInstitutions":1,"dashboardApproval":"Approved"},
-    {"planId":"29781","grantName":"Expanding CTE Exploration Opportunities for Middle School","leadInstitution":"Stockton Unified","approvalStatus":"Certified","ptdExpenditure":43234,"projectBudget":593839,"budgetRemaining":550605,"dashboardInstitutions":1,"dashboardApproval":"Approved"},
-    {"planId":"29787","grantName":"Cultivating Careers in Sustainable Agriculture at Aspire Vanguard","leadInstitution":"Aspire Vanguard College Preparatory Academy","approvalStatus":"Certified","ptdExpenditure":0,"projectBudget":127770,"budgetRemaining":127770,"dashboardInstitutions":1,"dashboardApproval":"Approved"},
-    {"planId":"29788","grantName":"Advancing Equity & Strengthening Regional Workforces Through CTE","leadInstitution":"Delhi Unified","approvalStatus":"Certified","ptdExpenditure":34543,"projectBudget":569998,"budgetRemaining":535455,"dashboardInstitutions":1,"dashboardApproval":"Approved"},
-    {"planId":"29789","grantName":"CTE: The Pathway to College and Career Readiness","leadInstitution":"Career Technical Education Charter","approvalStatus":"Certified","ptdExpenditure":0,"projectBudget":559998,"budgetRemaining":559998,"dashboardInstitutions":2,"dashboardApproval":"Approved"},
-    {"planId":"29790","grantName":"Enhancing AgriScience & Forestry Education Through Work-Based Learning & Industry Exploration","leadInstitution":"Kern Co. Office of Education","approvalStatus":"Certified","ptdExpenditure":11203,"projectBudget":301834,"budgetRemaining":290631,"dashboardInstitutions":1,"dashboardApproval":"Approved"},
-    {"planId":"29792","grantName":"Modernizing Yosemite Unified's Agriculture Pathways","leadInstitution":"Yosemite Unified","approvalStatus":"","ptdExpenditure":0,"projectBudget":214350,"budgetRemaining":214350,"dashboardInstitutions":1,"dashboardApproval":"Awaiting Submittal"},
-    {"planId":"29794","grantName":"Strong Workforce Sonora","leadInstitution":"Sonora Union High","approvalStatus":"Certified","ptdExpenditure":1225,"projectBudget":609532,"budgetRemaining":608307,"dashboardInstitutions":1,"dashboardApproval":"Approved"},
-    {"planId":"29796","grantName":"Completing College Credits and Certifications Connected to Central California Careers (C8) Project","leadInstitution":"Firebaugh-Las Deltas Unified","approvalStatus":"Certified","ptdExpenditure":0,"projectBudget":569998,"budgetRemaining":569998,"dashboardInstitutions":1,"dashboardApproval":"Approved"},
-    {"planId":"29799","grantName":"Patient Care","leadInstitution":"Exeter Unified","approvalStatus":"Certified","ptdExpenditure":101613,"projectBudget":559173,"budgetRemaining":457560,"dashboardInstitutions":1,"dashboardApproval":"Approved"},
-    {"planId":"29800","grantName":"Family and Consumer Science- Education","leadInstitution":"Exeter Unified","approvalStatus":"Certified","ptdExpenditure":1664,"projectBudget":453195,"budgetRemaining":451531,"dashboardInstitutions":1,"dashboardApproval":"Approved"},
-    {"planId":"29802","grantName":"K12S SWP Round 7 (FJH CTE pathways)","leadInstitution":"Fruitvale Elementary","approvalStatus":"Certified","ptdExpenditure":0,"projectBudget":149930,"budgetRemaining":149930,"dashboardInstitutions":1,"dashboardApproval":"Approved"},
-    {"planId":"29803","grantName":"Building CTE Onramps for Middle School Students","leadInstitution":"Chawanakee Unified","approvalStatus":"","ptdExpenditure":0,"projectBudget":609627,"budgetRemaining":609627,"dashboardInstitutions":1,"dashboardApproval":"Awaiting Submittal"},
-    {"planId":"29810","grantName":"Preparing for Careers in Welding","leadInstitution":"Merced Co. Office of Education","approvalStatus":"Certified","ptdExpenditure":31475,"projectBudget":569998,"budgetRemaining":538523,"dashboardInstitutions":2,"dashboardApproval":"Approved"},
-    {"planId":"29816","grantName":"Getting Ready for Opportunities in the Workforce At Tranquility High (GROWTH) Project","leadInstitution":"Golden Plains Unified","approvalStatus":"","ptdExpenditure":0,"projectBudget":322500,"budgetRemaining":322500,"dashboardInstitutions":1,"dashboardApproval":"Awaiting Submittal"},
-    {"planId":"29841","grantName":"Agriculture Work Base Learning & College Readiness","leadInstitution":"Ripon Unified","approvalStatus":"Certified","ptdExpenditure":0,"projectBudget":145125,"budgetRemaining":145125,"dashboardInstitutions":1,"dashboardApproval":"Approved"},
-    {"planId":"29842","grantName":"Patterson High School Forklift Safety and Maintenance","leadInstitution":"Patterson Joint Unified","approvalStatus":"Certified","ptdExpenditure":0,"projectBudget":96750,"budgetRemaining":96750,"dashboardInstitutions":1,"dashboardApproval":"Approved"},
-    {"planId":"29843","grantName":"Stanislaus County Career Navigation and Exploration","leadInstitution":"Ceres Unified","approvalStatus":"Certified","ptdExpenditure":0,"projectBudget":1093274,"budgetRemaining":1093274,"dashboardInstitutions":6,"dashboardApproval":"Approved"},
-    {"planId":"29878","grantName":"MUHSD Arts, Media, & Entertainment K14 Pathway - Leading with Equity and Preparing for 2030","leadInstitution":"Merced City School District","approvalStatus":"Certified","ptdExpenditure":0,"projectBudget":603485,"budgetRemaining":603485,"dashboardInstitutions":4,"dashboardApproval":"Approved"}
-  ],
-  "round8": [
-    {"planId":"32642","grantName":"A Model for Advancing Mastery in Ag Mechanics and Advanced Manufacturing (AM4) Project","leadInstitution":"Visalia Technical Early College","approvalStatus":"","ptdExpenditure":0,"projectBudget":402737,"budgetRemaining":402737,"dashboardInstitutions":1,"dashboardApproval":"Awaiting Submittal"},
-    {"planId":"32740","grantName":"Build and Beyond: Welding & Manufacturing Pathways","leadInstitution":"Cutler-Orosi Joint Unified","approvalStatus":"","ptdExpenditure":0,"projectBudget":1432864,"budgetRemaining":1432864,"dashboardInstitutions":8,"dashboardApproval":"Awaiting Submittal"},
-    {"planId":"32741","grantName":"Protect & Serve Pathways: Preparing Central Valley Students for Service and Safety Careers","leadInstitution":"Cutler-Orosi Joint Unified","approvalStatus":"","ptdExpenditure":0,"projectBudget":1416119,"budgetRemaining":1416119,"dashboardInstitutions":8,"dashboardApproval":"Awaiting Submittal"},
-    {"planId":"32876","grantName":"FMHS Ceramics: Industry-Standard Kiln Project","leadInstitution":"El Tejon Unified","approvalStatus":"","ptdExpenditure":0,"projectBudget":14040,"budgetRemaining":14040,"dashboardInstitutions":1,"dashboardApproval":"Awaiting Submittal"}
-  ]
+  "R8": {
+    "round": 8,
+    "yearCode": "2026004",
+    "grantFY": "2025-26",
+    "quarterlyFYs": [
+      "2026004",
+      "2027004",
+      "2028004"
+    ],
+    "grants": [
+      {
+        "planId": "32642",
+        "grantName": "A Model for Advancing Mastery in Ag Mechanics and Advanced Manufacturing (AM4) Project",
+        "leadInstitution": "Visalia Technical Early College",
+        "approvalStatus": "",
+        "ptdExpenditure": 0,
+        "projectBudget": 402737,
+        "budgetRemaining": 402737,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Awaiting Submittal",
+        "quarterlyStatus": {
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false,
+          "FY27-28_Q2": false,
+          "FY27-28_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "32740",
+        "grantName": "Build and Beyond: Welding & Manufacturing Pathways",
+        "leadInstitution": "Cutler-Orosi Joint Unified",
+        "approvalStatus": "",
+        "ptdExpenditure": 0,
+        "projectBudget": 1432864,
+        "budgetRemaining": 1432864,
+        "dashboardInstitutions": 8,
+        "dashboardApproval": "Awaiting Submittal",
+        "quarterlyStatus": {
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false,
+          "FY27-28_Q2": false,
+          "FY27-28_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "32741",
+        "grantName": "Protect & Serve Pathways: Preparing Central Valley Students for Service and Safety Careers",
+        "leadInstitution": "Cutler-Orosi Joint Unified",
+        "approvalStatus": "",
+        "ptdExpenditure": 0,
+        "projectBudget": 1416119,
+        "budgetRemaining": 1416119,
+        "dashboardInstitutions": 8,
+        "dashboardApproval": "Awaiting Submittal",
+        "quarterlyStatus": {
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false,
+          "FY27-28_Q2": false,
+          "FY27-28_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "32876",
+        "grantName": "FMHS Ceramics: Industry-Standard Kiln Project",
+        "leadInstitution": "El Tejon Unified",
+        "approvalStatus": "",
+        "ptdExpenditure": 0,
+        "projectBudget": 14040,
+        "budgetRemaining": 14040,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Awaiting Submittal",
+        "quarterlyStatus": {
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false,
+          "FY27-28_Q2": false,
+          "FY27-28_Q4": false
+        },
+        "finalReport": false
+      }
+    ]
+  },
+  "R7": {
+    "round": 7,
+    "yearCode": "2025004",
+    "grantFY": "2024-25",
+    "quarterlyFYs": [
+      "2025004",
+      "2026004",
+      "2027004"
+    ],
+    "grants": [
+      {
+        "planId": "29787",
+        "grantName": "Cultivating Careers in Sustainable Agriculture at Aspire Vanguard",
+        "leadInstitution": "Aspire Vanguard College Preparatory Academy",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 127770,
+        "budgetRemaining": 127770,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29752",
+        "grantName": "CTE Wheel 7-12 Alignment",
+        "leadInstitution": "Burton Elementary",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 22067,
+        "projectBudget": 299807,
+        "budgetRemaining": 277740,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29789",
+        "grantName": "CTE: The Pathway to College and Career Readiness",
+        "leadInstitution": "Career Technical Education Charter",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 569998,
+        "budgetRemaining": 569998,
+        "dashboardInstitutions": 2,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29754",
+        "grantName": "Ceres CTE Collaboration and Health Pathway",
+        "leadInstitution": "Ceres Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 129000,
+        "budgetRemaining": 129000,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29762",
+        "grantName": "Stanislaus County Career Inspiration Center Partnership Program",
+        "leadInstitution": "Ceres Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 4348,
+        "projectBudget": 570297,
+        "budgetRemaining": 565949,
+        "dashboardInstitutions": 7,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29843",
+        "grantName": "Stanislaus County Career Navigation and Exploration",
+        "leadInstitution": "Ceres Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 1093274,
+        "budgetRemaining": 1093274,
+        "dashboardInstitutions": 6,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29803",
+        "grantName": "Building CTE Onramps for Middle School Students",
+        "leadInstitution": "Chawanakee Unified",
+        "approvalStatus": "",
+        "ptdExpenditure": 0,
+        "projectBudget": 609627,
+        "budgetRemaining": 609627,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Awaiting Submittal",
+        "quarterlyStatus": {
+          "FY24-25_Q4": false,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29763",
+        "grantName": "Equity Diversity and Inclusion in CTE Across the Region",
+        "leadInstitution": "Corcoran Joint Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 1093272,
+        "budgetRemaining": 1093272,
+        "dashboardInstitutions": 11,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29775",
+        "grantName": "Harnessing AI in Student-Led Enterprises",
+        "leadInstitution": "Cutler-Orosi Joint Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 963297,
+        "budgetRemaining": 963297,
+        "dashboardInstitutions": 8,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29776",
+        "grantName": "Advancing Agricultural Sustainability and Environmental Quality in the Central Valley",
+        "leadInstitution": "Cutler-Orosi Joint Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 882232,
+        "budgetRemaining": 882232,
+        "dashboardInstitutions": 8,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29788",
+        "grantName": "Advancing Equity & Strengthening Regional Workforces Through CTE",
+        "leadInstitution": "Delhi Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 34543,
+        "projectBudget": 569998,
+        "budgetRemaining": 535455,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29760",
+        "grantName": "Expanding Equity, Articulation, and Equal Access - Agriculture and Natural Resources",
+        "leadInstitution": "Escalon Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 475800,
+        "budgetRemaining": 475800,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29799",
+        "grantName": "Patient Care",
+        "leadInstitution": "Exeter Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 101613,
+        "projectBudget": 559173,
+        "budgetRemaining": 457560,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29800",
+        "grantName": "Family and Consumer Science- Education",
+        "leadInstitution": "Exeter Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 1664,
+        "projectBudget": 453195,
+        "budgetRemaining": 451531,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29796",
+        "grantName": "Completing College Credits and Certifications Connected to Central California Careers (C8) Project",
+        "leadInstitution": "Firebaugh-Las Deltas Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 569998,
+        "budgetRemaining": 569998,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29765",
+        "grantName": "Capacity, Inclusion, and Equity in Ag/Welding",
+        "leadInstitution": "Fowler Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 3194,
+        "projectBudget": 569998,
+        "budgetRemaining": 566804,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29755",
+        "grantName": "Dual Enrollment Pathways to Combat California's Teacher Shortage",
+        "leadInstitution": "Fresno Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 563112,
+        "budgetRemaining": 563112,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29757",
+        "grantName": "Overcoming Barriers to Internships and Early College Credit",
+        "leadInstitution": "Fresno Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 105326,
+        "projectBudget": 1093274,
+        "budgetRemaining": 987948,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29802",
+        "grantName": "K12S SWP Round 7 (FJH CTE pathways)",
+        "leadInstitution": "Fruitvale Elementary",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 149930,
+        "budgetRemaining": 149930,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29816",
+        "grantName": "Getting Ready for Opportunities in the Workforce At Tranquility High (GROWTH) Project",
+        "leadInstitution": "Golden Plains Unified",
+        "approvalStatus": "",
+        "ptdExpenditure": 0,
+        "projectBudget": 322500,
+        "budgetRemaining": 322500,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Awaiting Submittal",
+        "quarterlyStatus": {
+          "FY24-25_Q4": false,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29756",
+        "grantName": "Pre-Apprenticeship Training for High School Students (PATHSS)",
+        "leadInstitution": "Hanford Joint Union High",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 427000,
+        "budgetRemaining": 427000,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29769",
+        "grantName": "Expanding Future Readiness: Building Bridges to 21st Century Careers for Kern's Middle Schoolers",
+        "leadInstitution": "Kern Co. Office of Education",
+        "approvalStatus": "Submitted",
+        "ptdExpenditure": 0,
+        "projectBudget": 1093274,
+        "budgetRemaining": 1093274,
+        "dashboardInstitutions": 2,
+        "dashboardApproval": "Submitted",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29770",
+        "grantName": "Kern Innovation Center for Future Readiness and Student Success in College and Career",
+        "leadInstitution": "Kern Co. Office of Education",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 1093274,
+        "budgetRemaining": 1093274,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29790",
+        "grantName": "Enhancing AgriScience & Forestry Education Through Work-Based Learning & Industry Exploration",
+        "leadInstitution": "Kern Co. Office of Education",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 11203,
+        "projectBudget": 301834,
+        "budgetRemaining": 290631,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29767",
+        "grantName": "Simulation Training for Welding and Diesel Mechanics",
+        "leadInstitution": "Kern High",
+        "approvalStatus": "",
+        "ptdExpenditure": 0,
+        "projectBudget": 1064060,
+        "budgetRemaining": 1064060,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Awaiting Submittal",
+        "quarterlyStatus": {
+          "FY24-25_Q4": false,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29764",
+        "grantName": "LUSD: Cultivating Graduates for a Competitive World",
+        "leadInstitution": "Lincoln Unified",
+        "approvalStatus": "",
+        "ptdExpenditure": 0,
+        "projectBudget": 208605,
+        "budgetRemaining": 208605,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Awaiting Submittal",
+        "quarterlyStatus": {
+          "FY24-25_Q4": false,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29753",
+        "grantName": "LodiHS Agriculture Complex Expansion and Modernization",
+        "leadInstitution": "Lodi Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 280897,
+        "budgetRemaining": 280897,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29878",
+        "grantName": "MUHSD Arts, Media, & Entertainment K14 Pathway - Leading with Equity and Preparing for 2030",
+        "leadInstitution": "Merced City School District",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 603485,
+        "budgetRemaining": 603485,
+        "dashboardInstitutions": 4,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29810",
+        "grantName": "Preparing for Careers in Welding",
+        "leadInstitution": "Merced Co. Office of Education",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 31475,
+        "projectBudget": 569998,
+        "budgetRemaining": 538523,
+        "dashboardInstitutions": 2,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29751",
+        "grantName": "Agriculture Pathway Expansion",
+        "leadInstitution": "Newman-Crows Landing Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 79554,
+        "projectBudget": 418567,
+        "budgetRemaining": 339013,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29842",
+        "grantName": "Patterson High School Forklift Safety and Maintenance",
+        "leadInstitution": "Patterson Joint Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 96750,
+        "budgetRemaining": 96750,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29841",
+        "grantName": "Agriculture Work Base Learning & College Readiness",
+        "leadInstitution": "Ripon Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 145125,
+        "budgetRemaining": 145125,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29773",
+        "grantName": "Supporting Career Connections with Equity in Sanger Schools (SUCCESS) Project",
+        "leadInstitution": "Sanger Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 1030,
+        "projectBudget": 569998,
+        "budgetRemaining": 568968,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29794",
+        "grantName": "Strong Workforce Sonora",
+        "leadInstitution": "Sonora Union High",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 1225,
+        "projectBudget": 609532,
+        "budgetRemaining": 608307,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29780",
+        "grantName": "Edison High School Construction Pathway",
+        "leadInstitution": "Stockton Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 20402,
+        "projectBudget": 500007,
+        "budgetRemaining": 479605,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29781",
+        "grantName": "Expanding CTE Exploration Opportunities for Middle School",
+        "leadInstitution": "Stockton Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 43234,
+        "projectBudget": 593839,
+        "budgetRemaining": 550605,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29761",
+        "grantName": "Refining Systems of Alignment & Access to CTE Pathways for All Students",
+        "leadInstitution": "Visalia Unified",
+        "approvalStatus": "Submitted",
+        "ptdExpenditure": 0,
+        "projectBudget": 1093274,
+        "budgetRemaining": 1093274,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Submitted",
+        "quarterlyStatus": {
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "29792",
+        "grantName": "Modernizing Yosemite Unified's Agriculture Pathways",
+        "leadInstitution": "Yosemite Unified",
+        "approvalStatus": "",
+        "ptdExpenditure": 0,
+        "projectBudget": 214350,
+        "budgetRemaining": 214350,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Awaiting Submittal",
+        "quarterlyStatus": {
+          "FY24-25_Q4": false,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false,
+          "FY26-27_Q2": false,
+          "FY26-27_Q4": false
+        },
+        "finalReport": false
+      }
+    ]
+  },
+  "R6": {
+    "round": 6,
+    "yearCode": "2024004",
+    "grantFY": "2023-24",
+    "quarterlyFYs": [
+      "2024004",
+      "2025004",
+      "2026004"
+    ],
+    "grants": [
+      {
+        "planId": "25883",
+        "grantName": "Amador ROP Blueprint For Tomorrow Classroom to Career Connection",
+        "leadInstitution": "Amador County ROP",
+        "approvalStatus": "",
+        "ptdExpenditure": 0,
+        "projectBudget": 795000,
+        "budgetRemaining": 795000,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Awaiting Submittal",
+        "quarterlyStatus": {
+          "FY23-24_Q4": false,
+          "FY24-25_Q2": false,
+          "FY24-25_Q4": false,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25896",
+        "grantName": "Amador ROP Blueprint For Tomorrow College and Career Readiness Continuum",
+        "leadInstitution": "Amador County ROP",
+        "approvalStatus": "",
+        "ptdExpenditure": 0,
+        "projectBudget": 795000,
+        "budgetRemaining": 795000,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Awaiting Submittal",
+        "quarterlyStatus": {
+          "FY23-24_Q4": false,
+          "FY24-25_Q2": false,
+          "FY24-25_Q4": false,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25679",
+        "grantName": "Strengthening & Aligning CTE Pathways for College & Career Readiness - Middle/High School Expansion",
+        "leadInstitution": "Calaveras Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 15810,
+        "projectBudget": 677603,
+        "budgetRemaining": 661793,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25856",
+        "grantName": "Connecting students to the Workforce",
+        "leadInstitution": "Career Technical Education Charter",
+        "approvalStatus": "",
+        "ptdExpenditure": 0,
+        "projectBudget": 440000,
+        "budgetRemaining": 440000,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Awaiting Submittal",
+        "quarterlyStatus": {
+          "FY23-24_Q4": false,
+          "FY24-25_Q2": false,
+          "FY24-25_Q4": false,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25636",
+        "grantName": "Advancing Drone Education in Pathway Training (ADEPT) Project",
+        "leadInstitution": "Firebaugh-Las Deltas Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 3468,
+        "projectBudget": 279057,
+        "budgetRemaining": 275589,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25760",
+        "grantName": "Manufacturing a Stronger Workforce",
+        "leadInstitution": "Fresno Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 452301,
+        "projectBudget": 1480000,
+        "budgetRemaining": 1027699,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": false,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25743",
+        "grantName": "Bridging Alt Ed Students to Industry-Recognized Certifications and Career Pathways",
+        "leadInstitution": "Kern Co. Office of Education",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 6622,
+        "projectBudget": 484704,
+        "budgetRemaining": 478082,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25669",
+        "grantName": "Camp College and Career: Expanding CTE Pathway Access and Equity in Kern County",
+        "leadInstitution": "Kern Co. Office of Education",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 1480007,
+        "budgetRemaining": 1480007,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25858",
+        "grantName": "Fostering a Strong Workforce in Rural Kern County through CTE Innovation and Expansion",
+        "leadInstitution": "Kern Co. Office of Education",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 889964,
+        "budgetRemaining": 889964,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25686",
+        "grantName": "Aviation Program Expansion",
+        "leadInstitution": "Kern High ROC",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 921223,
+        "budgetRemaining": 921223,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25751",
+        "grantName": "Expanding CTE Opportunities and Pathways for Lincoln USD Middle and High School Students",
+        "leadInstitution": "Lincoln Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 286505,
+        "budgetRemaining": 286505,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": false,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25637",
+        "grantName": "Lodi High School Ag Expansion",
+        "leadInstitution": "Lodi Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 227303,
+        "budgetRemaining": 227303,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25638",
+        "grantName": "Tokay High School Ag Expansion",
+        "leadInstitution": "Lodi Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 232039,
+        "budgetRemaining": 232039,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": false,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25843",
+        "grantName": "Growing in Agriculture Mechanics",
+        "leadInstitution": "Mariposa County Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 317526,
+        "budgetRemaining": 317526,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": false,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25903",
+        "grantName": "CAD in Constrction",
+        "leadInstitution": "Merced County ROP",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 542160,
+        "budgetRemaining": 542160,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25685",
+        "grantName": "MUHSD Food Service, Hospitality, and Food Science Pathways Alignment, Development, and Expansion",
+        "leadInstitution": "Merced Union High",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 116734,
+        "projectBudget": 795000,
+        "budgetRemaining": 678266,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25643",
+        "grantName": "Patterson Cosmetology/Barbering Pathway",
+        "leadInstitution": "Patterson Joint Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 281711,
+        "budgetRemaining": 281711,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25641",
+        "grantName": "Using Work Based Learning Strategies to Increase Equity and Access for All Students",
+        "leadInstitution": "Porterville Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 663606,
+        "projectBudget": 795000,
+        "budgetRemaining": 131394,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25651",
+        "grantName": "Avenal CTE Expansion (ACE) Project",
+        "leadInstitution": "Reef-Sunset Unified",
+        "approvalStatus": "Submitted",
+        "ptdExpenditure": 0,
+        "projectBudget": 795000,
+        "budgetRemaining": 795000,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Submitted",
+        "quarterlyStatus": {
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": false,
+          "FY24-25_Q4": false,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25668",
+        "grantName": "Securing Technology to Advance RJUSD Career Technical Education Pathways",
+        "leadInstitution": "Riverdale Joint Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 795000,
+        "budgetRemaining": 795000,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25854",
+        "grantName": "Sanger CTE Advances Learning and Exploration (SCALE)",
+        "leadInstitution": "Sanger Unified",
+        "approvalStatus": "",
+        "ptdExpenditure": 20362,
+        "projectBudget": 795000,
+        "budgetRemaining": 774638,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Awaiting Submittal",
+        "quarterlyStatus": {
+          "FY23-24_Q4": false,
+          "FY24-25_Q2": false,
+          "FY24-25_Q4": false,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25646",
+        "grantName": "Wildcat Productions",
+        "leadInstitution": "Taft Union High",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 440000,
+        "budgetRemaining": 440000,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25882",
+        "grantName": "Advancing Tomorrow's Workforce: Expanding K-12 CTE Pathways in Tulare County",
+        "leadInstitution": "Tulare Co. Office of Education",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 1480000,
+        "budgetRemaining": 1480000,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": false,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25678",
+        "grantName": "Tuolumne CTE CARES",
+        "leadInstitution": "Tuolumne County Superintendent of Schools",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 821025,
+        "budgetRemaining": 821025,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25658",
+        "grantName": "BuildUP: Skills Development and Industry Connection for Valley Students",
+        "leadInstitution": "Valley ROP",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 2500,
+        "projectBudget": 906999,
+        "budgetRemaining": 904499,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25656",
+        "grantName": "StepUP: Bridging from CNA to LVN",
+        "leadInstitution": "Valley ROP",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 896664,
+        "budgetRemaining": 896664,
+        "dashboardInstitutions": 8,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25649",
+        "grantName": "Visalia Technical Early College Advanced Manufacturing Pathway",
+        "leadInstitution": "Visalia Technical Early College",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 440000,
+        "budgetRemaining": 440000,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25632",
+        "grantName": "Closing the Gap between Middle School and High School CTE Pathways",
+        "leadInstitution": "Visalia Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 795000,
+        "budgetRemaining": 795000,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25633",
+        "grantName": "Wonderful Culinary Arts Pathway",
+        "leadInstitution": "Wonderful College Prep Academy",
+        "approvalStatus": "Submitted",
+        "ptdExpenditure": 121071,
+        "projectBudget": 626200,
+        "budgetRemaining": 505129,
+        "dashboardInstitutions": 2,
+        "dashboardApproval": "Submitted",
+        "quarterlyStatus": {
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": false,
+          "FY24-25_Q4": false,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "25757",
+        "grantName": "YUSD Food Service and Hospitality",
+        "leadInstitution": "Yosemite Unified",
+        "approvalStatus": "",
+        "ptdExpenditure": 0,
+        "projectBudget": 121918,
+        "budgetRemaining": 121918,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Awaiting Submittal",
+        "quarterlyStatus": {
+          "FY23-24_Q4": false,
+          "FY24-25_Q2": false,
+          "FY24-25_Q4": false,
+          "FY25-26_Q2": false,
+          "FY25-26_Q4": false
+        },
+        "finalReport": false
+      }
+    ]
+  },
+  "R5": {
+    "round": 5,
+    "yearCode": "2023004",
+    "grantFY": "2022-23",
+    "quarterlyFYs": [
+      "2023004",
+      "2024004",
+      "2025004"
+    ],
+    "grants": [
+      {
+        "planId": "20660",
+        "grantName": "Post-Secondary and Industry Alignment",
+        "leadInstitution": "Career Technical Education Charter",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 100622,
+        "projectBudget": 485326,
+        "budgetRemaining": 384704,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": true
+      },
+      {
+        "planId": "20672",
+        "grantName": "Preparing the Future Workforce at Chawanakee Unified Middle Schools",
+        "leadInstitution": "Chawanakee Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 17877,
+        "projectBudget": 484918,
+        "budgetRemaining": 467041,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "20699",
+        "grantName": "Construction Trades: Building a Brighter Future",
+        "leadInstitution": "Coalinga-Huron Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 54343,
+        "projectBudget": 656258,
+        "budgetRemaining": 601915,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": true
+      },
+      {
+        "planId": "20683",
+        "grantName": "El Nido ESD Career Exploration",
+        "leadInstitution": "El Nido Elementary",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 229377,
+        "budgetRemaining": 229377,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": true
+      },
+      {
+        "planId": "20697",
+        "grantName": "Agricultural Mechanics and Industrial Certifications",
+        "leadInstitution": "Escalon Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 112218,
+        "projectBudget": 112218,
+        "budgetRemaining": 0,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": true
+      },
+      {
+        "planId": "20616",
+        "grantName": "Promoting Access To High Education (PATH Project)",
+        "leadInstitution": "Firebaugh-Las Deltas Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 70958,
+        "projectBudget": 493844,
+        "budgetRemaining": 422886,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": true
+      },
+      {
+        "planId": "20692",
+        "grantName": "Multimedia and Marketing",
+        "leadInstitution": "Fowler Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 202609,
+        "budgetRemaining": 202609,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": true
+      },
+      {
+        "planId": "20593",
+        "grantName": "Soaring to New Heights in CTE Pathways",
+        "leadInstitution": "Fresno Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 20388,
+        "projectBudget": 1935000,
+        "budgetRemaining": 1914612,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": true
+      },
+      {
+        "planId": "20615",
+        "grantName": "JKBS Culinary",
+        "leadInstitution": "Inyo Co. Office of Education",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 10752,
+        "projectBudget": 59164,
+        "budgetRemaining": 48412,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": true
+      },
+      {
+        "planId": "20606",
+        "grantName": "Promoting Awareness of Occupational Identity Among Students, Educators, and Community",
+        "leadInstitution": "Kern Co. Office of Education",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 1935000,
+        "budgetRemaining": 1935000,
+        "dashboardInstitutions": 5,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": true
+      },
+      {
+        "planId": "20618",
+        "grantName": "KCSOS Culinary Pathway Expansion & GROW Cafe Debut",
+        "leadInstitution": "Kern Co. Office of Education",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 29084,
+        "projectBudget": 321257,
+        "budgetRemaining": 292173,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": true
+      },
+      {
+        "planId": "20626",
+        "grantName": "Facilitating Cradle to Career Success- Expanding Kern's Data-Driven Culture to Encompass PK-16",
+        "leadInstitution": "Kern Co. Office of Education",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 695,
+        "projectBudget": 1929128,
+        "budgetRemaining": 1928433,
+        "dashboardInstitutions": 12,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": true
+      },
+      {
+        "planId": "20654",
+        "grantName": "Careers in Aerospace and Aviation",
+        "leadInstitution": "Kern High ROC",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 744782,
+        "budgetRemaining": 744782,
+        "dashboardInstitutions": 2,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": true
+      },
+      {
+        "planId": "20611",
+        "grantName": "Improving Equity and Access To Our Pathways - Phase Two",
+        "leadInstitution": "Lemoore Union High",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 13976,
+        "projectBudget": 506874,
+        "budgetRemaining": 492898,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": true
+      },
+      {
+        "planId": "20627",
+        "grantName": "Bridging Barriers to Provide Equitable Access for all Students in CTE Pathways",
+        "leadInstitution": "Lincoln Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 333057,
+        "budgetRemaining": 333057,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": true
+      },
+      {
+        "planId": "20619",
+        "grantName": "Tokay HS Ag Pathway Expansion",
+        "leadInstitution": "Lodi Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 504041,
+        "budgetRemaining": 504041,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": true
+      },
+      {
+        "planId": "20592",
+        "grantName": "Logistics Solutions",
+        "leadInstitution": "Merced County ROP",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 19777,
+        "projectBudget": 412584,
+        "budgetRemaining": 392807,
+        "dashboardInstitutions": 2,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": true
+      },
+      {
+        "planId": "20603",
+        "grantName": "Public Services Workforce Pathway for Merced Union High School District",
+        "leadInstitution": "Merced Union High",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 1799,
+        "projectBudget": 1035000,
+        "budgetRemaining": 1033201,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": true
+      },
+      {
+        "planId": "20635",
+        "grantName": "Ensuring Excellence and Equity through Engineering Expansion (E5) Project",
+        "leadInstitution": "Sanger Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 985326,
+        "budgetRemaining": 985326,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "20590",
+        "grantName": "CTE Pathways Support Plan",
+        "leadInstitution": "Sonora Union High",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 660148,
+        "budgetRemaining": 660148,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": true
+      },
+      {
+        "planId": "20690",
+        "grantName": "Stagg High School Agricultural Mechanics Shop Renovation",
+        "leadInstitution": "Stockton Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 585326,
+        "budgetRemaining": 585326,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": true
+      },
+      {
+        "planId": "20602",
+        "grantName": "AG TransFARMation and Improvement Plan",
+        "leadInstitution": "Taft Union High",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 8598,
+        "projectBudget": 612529,
+        "budgetRemaining": 603931,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": true
+      },
+      {
+        "planId": "20591",
+        "grantName": "Post Secondary Transition Planning Including Equity in Pathway Completion & Early College Credit",
+        "leadInstitution": "Tulare Co. Office of Education",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 1935000,
+        "budgetRemaining": 1935000,
+        "dashboardInstitutions": 11,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": true
+      },
+      {
+        "planId": "20624",
+        "grantName": "Engaging Pathway Students in the World of Work",
+        "leadInstitution": "Valley ROP",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 1310410,
+        "budgetRemaining": 1310410,
+        "dashboardInstitutions": 8,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": true
+      },
+      {
+        "planId": "20625",
+        "grantName": "Preparing the Next Generation of California's First Responders",
+        "leadInstitution": "Valley ROP",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 1280500,
+        "budgetRemaining": 1280500,
+        "dashboardInstitutions": 8,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": true
+      },
+      {
+        "planId": "20655",
+        "grantName": "Scaling High Quality Pathways for SED and Non Traditional Students to Post Secondary and Certifications",
+        "leadInstitution": "Visalia Unified",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 985326,
+        "budgetRemaining": 985326,
+        "dashboardInstitutions": 1,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": true
+      },
+      {
+        "planId": "20588",
+        "grantName": "Stanislaus County Career Navigation and Exploration",
+        "leadInstitution": "Yosemite ROP",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 1855000,
+        "budgetRemaining": 1855000,
+        "dashboardInstitutions": 5,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": false
+      },
+      {
+        "planId": "20589",
+        "grantName": "Stanislaus County Career Inspiration Center Collaboration",
+        "leadInstitution": "Yosemite ROP",
+        "approvalStatus": "Certified",
+        "ptdExpenditure": 0,
+        "projectBudget": 693726,
+        "budgetRemaining": 693726,
+        "dashboardInstitutions": 6,
+        "dashboardApproval": "Certified",
+        "quarterlyStatus": {
+          "FY22-23_Q4": true,
+          "FY23-24_Q2": true,
+          "FY23-24_Q4": true,
+          "FY24-25_Q2": true,
+          "FY24-25_Q4": true
+        },
+        "finalReport": true
+      }
+    ]
+  }
 }

@@ -32,6 +32,8 @@ The spreadsheet contains Round 1-8 tabs (one per funding round), Look tabs (bulk
 
 ### Phase 2: Dashboard Scan — Get Grant Listing
 
+The dashboard is the **authoritative source** for grant listings. Never rely solely on hardcoded plan IDs in `scrape_round.py`.
+
 1. Navigate to the NOVA Fiscal Reporting Dashboard: `nova.cccco.edu/swpk/fiscal-reports/plans`
 2. Filter by **region: Central/Mother Lode**
 3. Filter by **fiscal year** matching the round's Grant Award FY (see Round Reference Table above):
@@ -46,6 +48,27 @@ The spreadsheet contains Round 1-8 tabs (one per funding round), Look tabs (bulk
    - Submitted count (X/Y format — Y = number of reporting institutions)
    - Approval Status
 5. Record the **total grant count** per round — this is the **expected row count** used for validation
+6. **Compare against `scrape_round.py`** plan IDs:
+   - New grants not in `scrape_round.py` → add them, scrape them
+   - Grants in `scrape_round.py` but missing from dashboard → warn, investigate
+   - Update `scrape_round.py` with any new plan IDs after each run
+
+**Dashboard filter limitation:** `form_input` can set text values but doesn't trigger Angular state changes for combobox dropdowns. Instead, use this approach:
+
+1. Navigate to `nova.cccco.edu/swpk/fiscal-reports/plans` (wait 5s for SSO)
+2. Call `get_page_text` to extract the full dashboard listing (all regions, all rounds)
+3. The dashboard text contains repeating blocks per grant, each with:
+   - Plan ID (numeric, in the URL or as text)
+   - Lead Agency name
+   - Project Title
+   - Fiscal Year
+   - Submitted count (e.g., "1/1 Submitted" or "0/3 Submitted")
+   - Approval Status (Certified, Submitted, Awaiting Submittal, etc.)
+4. Filter to Central/Mother Lode grants by matching Lead Agency against the 68-institution list in `SPREADSHEET_CONTEXT.md`
+5. Filter to the target round's fiscal year
+6. Parse out Plan IDs, institution counts, and approval statuses
+
+**Note:** The dashboard may paginate. If fewer grants appear than expected, check for pagination controls or scroll triggers. The `get_page_text` output may need multiple calls if the page lazy-loads.
 
 ### Phase 3: Individual Grant Scraping
 
@@ -94,21 +117,46 @@ for (const row of expenditureRows) {
 const institutionCount = expenditureRows.length;
 ```
 
-5. **Extract quarterly submission status** — each grant spans 3 fiscal years. Visit each FY's page to determine which quarters have been submitted:
-   - For each grant, navigate to `?duration={yearCode}` for each of the 3 FYs listed in the Round Reference Table's "Quarterly Column FYs"
-   - Example for R7 grant: visit `?duration=2025004`, `?duration=2026004`, `?duration=2027004`
-   - On each page, check the per-institution approval status (e.g., "Q4 Approved", "Q2 Submitted")
-   - A quarter is `TRUE` (submitted) if all institutions show submitted/approved status for that quarter
-   - A quarter is blank if any institution has not submitted
+5. **Extract quarterly submission status** — each grant spans 3 fiscal years. Visit each FY's page to determine which quarters have been submitted.
 
-   **Time expectation:** This triples navigation count (3 pages per grant). For 38 R7 grants = ~114 page loads at ~5s each = ~10 minutes per round.
+   **Key optimization:** The primary page from step 4 (`?duration={grantYearCode}`) IS the first FY page. Extract Q4 status from it immediately after the financial data — no extra navigation needed. Only navigate to the 2nd and 3rd FY pages separately.
+
+   **Skip future FY pages:** Only scan FY pages where at least one quarterly deadline has passed. If both Q2 and Q4 deadlines are in the future, set both to FALSE without navigating. This saves significant time — e.g., for R7 in early 2026, only the first FY page (FY24-25) needs scanning; FY25-26 Q2 deadline isn't until 02/28/26.
+
+   **Per-FY extraction — use this JavaScript on each FY page:**
+
+   ```javascript
+   const text = document.body.innerText;
+   const lines = text.split('\n');
+   const r = {};
+   for (let i = 0; i < lines.length; i++) {
+     const t = lines[i].trim();
+     if (t === 'Q2' && i + 1 < lines.length) r.q2 = lines[i + 1].trim();
+     if (t === 'Q4' && i + 1 < lines.length) r.q4 = lines[i + 1].trim();
+     if (t === 'Final Report' && i + 1 < lines.length) r.final = lines[i + 1].trim();
+   }
+   r.planId = window.location.href.match(/plans\/(\d+)/)?.[1];
+   JSON.stringify(r);
+   ```
+
+   - Status values: `"Complete"` = submitted (TRUE), `"Incomplete"` = not submitted (blank)
+   - Q2 and Q4 are **independent** — a grant can have Q2=Complete but Q4=Incomplete on the same FY page
+   - The primary page `approvalStatus` (Certified/Submitted/etc.) is NOT a reliable proxy for individual quarter status
+
+   **FY page structure:**
+   - First FY (grant award year): shows Q4 only — **extract on same page load as step 4**
+   - Middle FY: shows Q2 and Q4
+   - Last FY: shows Q2, Q4, and Final Report
+
+   **Time expectation:** With optimization, ~2 extra pages per grant (not 3). For 38 R7 grants with 1 skippable FY = ~76 extra page loads at ~6s each = ~8 minutes per round.
 
    **Map to quarterly columns:**
-   - Col E = Grant FY Q4 → check `?duration={grantYearCode}`
-   - Col F = Grant FY+1 Q2 → check `?duration={nextYearCode}`
-   - Col G = Grant FY+1 Q4 → check `?duration={nextYearCode}`
-   - Col H = Grant FY+2 Q2 → check `?duration={nextNextYearCode}`
-   - Col I = Grant FY+2 Q4 → check `?duration={nextNextYearCode}`
+   - Col E = Grant FY Q4 → extract from primary page (step 4) → Q4 status
+   - Col F = Grant FY+1 Q2 → navigate to `?duration={nextYearCode}` → Q2 status
+   - Col G = Grant FY+1 Q4 → same page as Col F → Q4 status
+   - Col H = Grant FY+2 Q2 → navigate to `?duration={nextNextYearCode}` → Q2 status
+   - Col I = Grant FY+2 Q4 → same page as Col H → Q4 status
+   - Col J = Final Report → same page as Col H/I → Final Report status
 
 6. Save all results to `scraped_data.json` with this structure per grant:
 
@@ -129,7 +177,8 @@ const institutionCount = expenditureRows.length;
     "FY25-26_Q4": false,
     "FY26-27_Q2": false,
     "FY26-27_Q4": false
-  }
+  },
+  "finalReport": false
 }
 ```
 
@@ -143,7 +192,14 @@ mkdir -p backups
 cp "K12 Reporting Status - Central Mother Lode.xlsx" "backups/K12 Reporting Status - Central Mother Lode - $(date +%Y-%m-%d).xlsx"
 ```
 
-**Strategy:**
+**Step 1 — Run the regeneration script:**
+```bash
+python3 regenerate_spreadsheet.py
+```
+
+This script handles the full rebuild. See the file for implementation details. If the script needs modification (e.g., new rounds, changed column layout), edit `regenerate_spreadsheet.py` rather than writing a one-off script.
+
+**Strategy (implemented in `regenerate_spreadsheet.py`):**
 - For **new round tabs** not yet in the spreadsheet: Create new sheet
 - For **existing round tabs** already in the spreadsheet: **Merge and recreate**:
   1. Read existing data keyed by Proposal ID (column B)
@@ -162,7 +218,7 @@ cp "K12 Reporting Status - Central Mother Lode.xlsx" "backups/K12 Reporting Stat
 | C | # Reporting Insitutions | Number (keep original typo) | `dashboardInstitutions` from dashboard |
 | D | Grant Name | Text | `grantName` from scrape |
 | E-I | 5 quarterly columns (see Quarterly Column Mapping) | Boolean | `quarterlyStatus` from scrape: `TRUE` if submitted, blank if not |
-| J | Final Report (Due MM/DD/YYYY) | Text | Derived from Round Reference Table (header only — no per-row data) |
+| J | Final Report (Due MM/DD/YYYY) | Boolean | `finalReport` from scrape: `TRUE` if final report submitted (Complete), blank if not |
 | K | Report Waiting Approval | Text | Derived: if `dashboardApproval` is "Pending Approval" or "Submitted" → set to that status; otherwise blank |
 | L | Grant Amount | Number, `#,##0` | `projectBudget` from scrape |
 | M | Total Reported Expenditures | Number, `#,##0` | `ptdExpenditure` from scrape |
@@ -177,7 +233,7 @@ cp "K12 Reporting Status - Central Mother Lode.xlsx" "backups/K12 Reporting Stat
 - Data rows sorted alphabetically by Lead Institution (column A)
 - Last row: "Central Mother Lode Region" total row with:
   - `SUM` formulas for Grant Amount (L), Total Reported Expenditures (M), Expenditures Approved (N)
-  - `COUNTIF` for quarterly submission columns
+  - `COUNTIF` for quarterly submission columns (E-I) AND Final Report (J)
   - `% Spent` formula referencing the totals
 
 **Column widths:** A=28.38, B=10.88, C=10.88, D=59.0, E-J=7.75, K=8.75, L-N=11.75, O=8.63, P=32.38, Q=15.0
@@ -206,6 +262,13 @@ All checks must pass before saving. Run these in order:
 9. **Spot check:** Re-visit 3 random grant pages in browser and compare all fields against scraped values
 10. **Formula check:** Verify `% Spent` formula evaluates correctly for 5 random rows
 11. **Data preservation check:** After recreating a tab, verify all previously-existing Proposal IDs still have their Notes (P) and Unexpended (Q) values restored. Print any grants that existed before but are missing from the new scrape.
+12. **Quarterly status consistency:** For each grant, if `approvalStatus` is Certified/Approved/Submitted on the primary FY page, then Col E (grant FY Q4) should generally be TRUE. Flag any mismatches for manual review (note: this is a heuristic — Q2/Q4 status from the FY page is authoritative).
+13. **Quarterly monotonicity:** Quarters should not skip — if a later quarter is TRUE, all earlier quarters should also be TRUE. Flag if e.g., Col G=TRUE but Col F=FALSE.
+14. **Dashboard grant count vs scrape_round.py:** If dashboard returns more grants than `scrape_round.py` lists, flag as "new grants found — add to scrape_round.py". If fewer, flag as "grants removed from NOVA".
+15. **Final report status consistency:** If all quarterly columns (E-I) are TRUE and the final report due date has passed, Col J should be TRUE. Flag if blank.
+16. **Cross-round deduplication:** Verify no plan ID appears in multiple rounds (sanity check).
+17. **Institution count sanity:** For multi-institution grants (instCount > 1), verify the institution count hasn't changed from the previous scrape. Flag significant changes.
+18. **Stale data detection:** For grants with past-due quarterly deadlines where the quarterly column is FALSE, flag as "potentially stale — may need manual verification on NOVA".
 
 ---
 
@@ -220,6 +283,12 @@ All checks must pass before saving. Run these in order:
 - **Rounds 5-6 transitioning from Look-tab formulas:** These rounds previously used QUERY formulas referencing Look tabs (R5 Look, R6 Look). The scrape-based approach replaces all formulas with hardcoded values. The Look tabs are preserved as historical archives but are no longer referenced by the Round tabs after the first scrape-based update.
 - **#REF! errors in R5/R6:** The existing "# Reporting Institutions" column had #REF! errors from broken formula references. The scrape-based approach fixes this by using `dashboardInstitutions` as a hardcoded value.
 - **Column N approximation:** "Total Reported Expenditures Approved" is approximated — the scrape cannot distinguish approved vs. unapproved expenditure line items. If the overall grant status is "Approved" or "Certified", column N equals column M. If "Pending Approval", column N is 0. This may slightly differ from the granular per-line approval data in the Look tabs.
+- **Quarterly text patterns:** The NOVA page does NOT show "Q2 Approved" or "Q4 Submitted" as standalone text. Instead, each FY page shows "Q2" on one line followed by "Complete" or "Incomplete" on the next line, and similarly for "Q4" and "Final Report". Use the JavaScript extraction pattern in Phase 3 step 5.
+- **Q2/Q4 are independent:** A grant can have Q2=Complete but Q4=Incomplete on the same FY page (e.g., grant 25760 on FY24-25). The primary page `approvalStatus` (Certified/Submitted) cannot be used as a proxy for individual quarter status.
+- **"Unsubmitted" vs "Awaiting Submittal":** FY pages that haven't had reports submitted show "Status\nUnsubmitted" — this is distinct from "Awaiting Submittal" which appears on the primary page for grants that haven't filed their first report.
+- **Dashboard filter limitation:** `form_input` can set text values but doesn't trigger Angular state changes for combobox dropdowns. Use `get_page_text` to extract the full listing and filter in Python.
+- **Tab management:** Chrome extension tabs can disappear between sessions. Always call `tabs_context_mcp` before navigating and reuse existing authenticated tabs when available.
+- **R7 Col E proxy values (2026-03-12):** R7 FY24-25_Q4 was set to TRUE for 33 grants based on `approvalStatus` (Certified/Submitted) as a shortcut — NOT from actual FY page Q4 status. This may contain errors since approvalStatus is not a reliable proxy (see "Q2/Q4 are independent" above). On the next R7 update, do a proper per-page scan of `?duration=2025004` for all 38 grants to get authoritative Q4 values.
 
 ---
 
@@ -246,6 +315,18 @@ Pattern for determining the 5 quarterly columns (E-I) and Final Report column (J
 
 ---
 
+## Context Window Management
+
+A full update run involves 100+ browser navigations and can exceed the context window. Follow these practices to avoid losing progress mid-run:
+
+1. **Save intermediate results to files.** After completing each round's scraping, write results to `scraped_data.json` immediately — don't accumulate everything in memory.
+2. **Batch by round.** Complete one round fully (dashboard scan → per-grant scrape → update scraped_data.json) before starting the next.
+3. **Use `regenerate_spreadsheet.py`** to rebuild the spreadsheet from `scraped_data.json` — this can run independently after all scraping is done, even in a new session.
+4. **If compacted mid-run:** Read `scraped_data.json` to see what's already been saved. Check which grants in the current round still have placeholder/old quarterly values to determine where to resume.
+5. **Combine extractions per page.** On each page load, extract ALL needed data (financial + quarterly status) in a single JavaScript call to minimize back-and-forth.
+
+---
+
 ## File Inventory
 
 | File | Purpose |
@@ -254,5 +335,7 @@ Pattern for determining the 5 quarterly columns (E-I) and Final Report column (J
 | `SPREADSHEET_CONTEXT.md` | Structural documentation of the spreadsheet |
 | `scraped_data.json` | Raw data from the last NOVA scrape (overwritten each run) |
 | `CLAUDE.md` | This file (operational runbook for the update process) |
+| `scrape_round.py` | Helper script with hardcoded plan IDs per round (R5-R8). Compare against dashboard each run. |
+| `regenerate_spreadsheet.py` | Rebuilds Round 5-8 tabs from `scraped_data.json`. Preserves Notes/Unexpended columns. Run after scraping is complete. |
 | `.gitignore` | Git ignore rules (excludes `backups/`, `.playwright-mcp/`, `__pycache__/`) |
 | `backups/` | Timestamped spreadsheet backups created before each update (gitignored) |

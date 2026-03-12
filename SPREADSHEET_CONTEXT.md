@@ -18,9 +18,9 @@ Each "Round" tab is a tracker for one funding round's grants **filtered to Centr
 | Round 2 | 26 | $41,273,830 | FY20-21 Q2 → FY22-23 Q2 | 03/31/2023 |
 | Round 3 | 31 | $41,693,920 | FY20-21 Q4 → FY22-23 Q4 | 09/30/2023 |
 | Round 4 | 22 | $36,011,642 | FY21-22 Q4 → FY23-24 Q4 | 09/30/2024 |
-| Round 5 | 28 | $136,156,838 | FY22-23 Q4 → FY24-25 Q4 | 09/30/2025 |
-| Round 6 | 30 | $42,715,216 | FY23-24 Q4 → FY25-26 Q4 | 09/30/2026 |
-| Round 7 | 38 | $18,786,467 | FY24-25 Q4 → FY26-27 Q4 | 09/30/2027 |
+| Round 5 | 28 | $23,283,728 | FY22-23 Q4 → FY24-25 Q4 | 09/30/2025 |
+| Round 6 | 30 | $20,632,608 | FY23-24 Q4 → FY25-26 Q4 | 09/30/2026 |
+| Round 7 | 38 | $21,549,421 | FY24-25 Q4 → FY26-27 Q4 | 09/30/2027 |
 | Round 8 | 4 | $3,265,760 | FY25-26 Q4 → FY27-28 Q4 | 09/30/2028 |
 
 **Column layout (consistent across all Round tabs):**
@@ -29,7 +29,7 @@ Each "Round" tab is a tracker for one funding round's grants **filtered to Centr
 |--------|-------------|
 | Lead Institution | K-12 school district or ROP leading the grant |
 | Proposal ID | Unique NOVA proposal identifier |
-| # Reporting Institutions | Count of institutions filing reports (has #REF! errors in Rounds 5 & 6) |
+| # Reporting Institutions | Count of institutions filing reports |
 | Grant Name | Full project title |
 | FY Quarterly columns (varies) | Report submission status — `TRUE` = submitted, blank = not submitted |
 | Final Report | Final report submission status |
@@ -104,15 +104,20 @@ Amador County ROP, Amador County Unified, Aspire Vanguard College Preparatory Ac
 
 - **Rounds 1-3:** Fully closed. Final reports due and mostly submitted. High spend rates (92-97% overall).
 - **Round 4:** Final reports were due 09/30/2024. ~47% spent overall — some grants lagging.
-- **Round 5:** Active. Reports through FY24-25 Q2 due. ~16% spent — still early in grant lifecycle.
-- **Round 6:** Most current. FY25-26 reports in progress. ~24% spent. Many reports still pending approval.
-- **#REF! errors** in "# Reporting Institutions" column for Rounds 5 and 6 — likely broken formula references.
+- **Round 5:** Final report due 09/30/2025 (passed). All 28 grants Certified. $23.3M budget, $461K spent (2.0%). All quarterly reports submitted. 25/28 Final Reports Complete (3 Incomplete: 20672, 20635, 20588). Scraped from NOVA 2026-03-11.
+- **Round 6:** Active. $20.6M budget, $1.4M spent (6.8%). 25 of 30 grants Certified for FY23-24. FY24-25: 23/30 Q2 Complete, 18/30 Q4 Complete. FY25-26 quarterly reports not yet submitted. Scraped from NOVA 2026-03-11.
+- **Round 7:** Active. $21.5M budget, $461K spent (2.1%). 33/38 FY24-25 Q4 Complete (all Certified/Submitted grants). FY25-26 and FY26-27 not yet submitted. Scraped from NOVA 2026-03-11.
+- **Round 8:** Early lifecycle. $3.3M budget, $0 spent. All 4 grants Awaiting Submittal. Scraped from NOVA 2026-03-11.
 - **R6 Look** has 722 "Pending Approval" entries (44% of rows) — significant backlog of unapproved reports.
-- **Round 7:** Added 2026-03-11. 38 grants, $18.8M total budget, 2.45% spent. Data scraped directly from NOVA individual grant fiscal report pages. Most grants have $0 expenditure — early in lifecycle. 5 grants are "Awaiting Submittal", 2 are "Pending Approval", 31 are "Approved/Certified". No Look tab — data populated directly from NOVA scrape.
-- **Round 8:** Added 2026-03-11. 4 grants, $3.3M total budget, $0 spent. All grants are "Awaiting Submittal" — very early in grant lifecycle. No Look tab — data populated directly from NOVA scrape.
 
-## Data Sources for Round 7 & 8
+## Data Sources for Rounds 5-8
 
-Rounds 7 and 8 were populated differently from Rounds 1-6:
-- **Rounds 1-6:** Use Look tabs (bulk NOVA exports) as source data, with Google Sheets QUERY formulas in the Round tabs
-- **Rounds 7-8:** Data scraped directly from individual NOVA grant fiscal report pages (`nova.cccco.edu/swpk/fiscal-reports/plans/{planId}?duration={yearCode}`) on 2026-03-11. Values are hardcoded (not formula-driven). Quarterly submission columns are blank pending future data pulls. The "# Reporting Institutions" column uses the count from the NOVA dashboard listing rather than formula references.
+Rounds 5-8 were updated on 2026-03-11 via direct NOVA scraping:
+- Data scraped from individual NOVA grant fiscal report pages (`nova.cccco.edu/swpk/fiscal-reports/plans/{planId}?duration={yearCode}`)
+- Values are hardcoded (not formula-driven), except % Spent which uses `=M{row}/L{row}`
+- Quarterly submission status determined by visiting each FY page and extracting Q2/Q4/Final Report → Complete/Incomplete status
+- Q2 and Q4 are independent per FY page — cannot use primary page approval status as a proxy
+- "# Reporting Institutions" uses the dashboard X/Y submitted count (Y value)
+- Final Report status (Col J) tracks per-row TRUE/blank based on Final Report → Complete/Incomplete from the last FY page
+- Previous #REF! errors in R5/R6 "# Reporting Institutions" column have been fixed
+- Rounds 1-4 remain unchanged (still use Look tab formula references)
