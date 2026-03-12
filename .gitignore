@@ -2,3 +2,5 @@
 backups/
 __pycache__/
 *.pyc
+scraped_data.json
+failed_grants.txt

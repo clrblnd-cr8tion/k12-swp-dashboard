@@ -7,12 +7,24 @@ by matching on Proposal ID.
 Usage: python3 regenerate_spreadsheet.py
 """
 import json
+import os
+import sys
 from openpyxl import load_workbook
 from openpyxl.styles import Font, PatternFill, Alignment
 from openpyxl.utils import get_column_letter
 
-SPREADSHEET = 'K12 Reporting Status - Central Mother Lode.xlsx'
-SCRAPED_DATA = 'scraped_data.json'
+from utils import SPREADSHEET, SCRAPED_DATA, is_data_row
+
+# Column indices (1-based, openpyxl convention)
+COL_QUARTERLY_START = 5   # E — first quarterly column
+COL_FINAL_REPORT = 10     # J
+COL_WAITING = 11          # K
+COL_GRANT_AMOUNT = 12     # L
+COL_TOTAL_EXP = 13        # M
+COL_APPROVED_EXP = 14     # N
+COL_PCT_SPENT = 15        # O
+COL_NOTES = 16            # P
+COL_UNEXPENDED = 17       # Q
 
 # Round configurations: sheet name, quarterly column headers, quarterly keys, final report header
 ROUND_CONFIGS = {
@@ -89,12 +101,22 @@ COL_WIDTHS = [28.38, 10.88, 10.88, 59.0, 7.75, 7.75, 7.75, 7.75, 7.75, 7.75,
 
 
 def regenerate():
+    if not os.path.exists(SCRAPED_DATA):
+        print(f"ERROR: {SCRAPED_DATA} not found. Run the NOVA scrape first.")
+        sys.exit(1)
+    if not os.path.exists(SPREADSHEET):
+        print(f"ERROR: {SPREADSHEET} not found. Ensure the spreadsheet is in this directory.")
+        sys.exit(1)
+
     with open(SCRAPED_DATA, 'r') as f:
         data = json.load(f)
 
     wb = load_workbook(SPREADSHEET)
 
     for round_key in ['R5', 'R6', 'R7', 'R8']:
+        if round_key not in data:
+            print(f"WARNING: {round_key} not found in {SCRAPED_DATA}, skipping.")
+            continue
         config = ROUND_CONFIGS[round_key]
         sheet_name = config['sheet_name']
         round_data = data[round_key]
@@ -106,7 +128,7 @@ def regenerate():
             old_ws = wb[sheet_name]
             for row in old_ws.iter_rows(min_row=2, max_col=17, values_only=False):
                 pid = row[1].value
-                if pid and 'Central' not in str(pid) and 'Region' not in str(pid):
+                if is_data_row(pid):
                     preserved[str(pid)] = {
                         'notes': row[15].value if len(row) > 15 else None,
                         'unexpended': row[16].value if len(row) > 16 else None,
@@ -149,65 +171,66 @@ def regenerate():
             # E-I: Quarterly status
             for qi, qkey in enumerate(config['quarterly_keys']):
                 val = grant['quarterlyStatus'].get(qkey, False)
-                ws.cell(row=row_idx, column=5 + qi, value=True if val else None).font = DATA_FONT
+                ws.cell(row=row_idx, column=COL_QUARTERLY_START + qi, value=True if val else None).font = DATA_FONT
 
             # J: Final Report
             final = grant.get('finalReport', False)
-            ws.cell(row=row_idx, column=10, value=True if final else None).font = DATA_FONT
+            ws.cell(row=row_idx, column=COL_FINAL_REPORT, value=True if final else None).font = DATA_FONT
 
-            # K: Report Waiting Approval
+            # K: Report Waiting Approval (case-insensitive comparison)
             da = grant.get('dashboardApproval', '')
-            waiting = da if da in ('Pending Approval', 'Submitted') else None
-            ws.cell(row=row_idx, column=11, value=waiting).font = DATA_FONT
+            waiting = da if da.lower() in ('pending approval', 'submitted') else None
+            ws.cell(row=row_idx, column=COL_WAITING, value=waiting).font = DATA_FONT
 
             # L: Grant Amount
-            cell = ws.cell(row=row_idx, column=12, value=grant['projectBudget'])
+            cell = ws.cell(row=row_idx, column=COL_GRANT_AMOUNT, value=grant['projectBudget'])
             cell.font = DATA_FONT
             cell.number_format = '#,##0'
 
             # M: Total Reported Expenditures
-            cell = ws.cell(row=row_idx, column=13, value=grant['ptdExpenditure'])
+            cell = ws.cell(row=row_idx, column=COL_TOTAL_EXP, value=grant['ptdExpenditure'])
             cell.font = DATA_FONT
             cell.number_format = '#,##0'
 
-            # N: Total Reported Expenditures Approved
-            approved_exp = grant['ptdExpenditure'] if da in ('Approved', 'Certified') else 0
-            cell = ws.cell(row=row_idx, column=14, value=approved_exp)
+            # N: Total Reported Expenditures Approved (case-insensitive comparison)
+            da_lower = da.lower()
+            approved_exp = grant['ptdExpenditure'] if da_lower in ('approved', 'certified') else 0
+            cell = ws.cell(row=row_idx, column=COL_APPROVED_EXP, value=approved_exp)
             cell.font = DATA_FONT
             cell.number_format = '#,##0'
 
-            # O: % Spent (formula)
-            cell = ws.cell(row=row_idx, column=15, value=f'=M{row_idx}/L{row_idx}')
+            # O: % Spent (formula, guarded against division by zero)
+            cell = ws.cell(row=row_idx, column=COL_PCT_SPENT, value=f'=IF(L{row_idx}=0,"",M{row_idx}/L{row_idx})')
             cell.font = DATA_FONT
             cell.number_format = '0.0%'
 
             # P: Notes (preserved)
             prev = preserved.get(pid, {})
-            ws.cell(row=row_idx, column=16, value=prev.get('notes')).font = DATA_FONT
+            ws.cell(row=row_idx, column=COL_NOTES, value=prev.get('notes')).font = DATA_FONT
 
             # Q: Unexpended (preserved)
-            ws.cell(row=row_idx, column=17, value=prev.get('unexpended')).font = DATA_FONT
+            ws.cell(row=row_idx, column=COL_UNEXPENDED, value=prev.get('unexpended')).font = DATA_FONT
 
         # Total row
         total_row = len(grants) + 2
         ws.cell(row=total_row, column=1, value='Central Mother Lode Region').font = BOLD_FONT
 
         # COUNTIF for quarterly columns E-I and Final Report J
-        for col in range(5, 11):  # E through J
+        for col in range(COL_QUARTERLY_START, COL_FINAL_REPORT + 1):
             cl = get_column_letter(col)
             ws.cell(row=total_row, column=col,
                     value=f'=COUNTIF({cl}2:{cl}{total_row - 1},TRUE)').font = BOLD_FONT
 
         # SUM for L, M, N
-        for col in [12, 13, 14]:
+        for col in [COL_GRANT_AMOUNT, COL_TOTAL_EXP, COL_APPROVED_EXP]:
             cl = get_column_letter(col)
             cell = ws.cell(row=total_row, column=col,
                            value=f'=SUM({cl}2:{cl}{total_row - 1})')
             cell.font = BOLD_FONT
             cell.number_format = '#,##0'
 
-        # % Spent for total row
-        cell = ws.cell(row=total_row, column=15, value=f'=M{total_row}/L{total_row}')
+        # % Spent for total row (guarded against division by zero)
+        cell = ws.cell(row=total_row, column=COL_PCT_SPENT, value=f'=IF(L{total_row}=0,"",M{total_row}/L{total_row})')
         cell.font = BOLD_FONT
         cell.number_format = '0.0%'
 

@@ -1,5 +1,17 @@
 # K12 SWP Grant Tracking — Operational Runbook
 
+## Global Overrides
+
+This is a Python data pipeline (browser scraping + openpyxl), not a frontend or API project. The following global CLAUDE.md workflows do **not apply**:
+
+- **Frontend & Design** — no HTML/UI in this project
+- **Security Workflow** — skip auth, input validation, and injection checks (no API, no auth, no user input). Only the "sensitive data exposure" check applies.
+- **Testing Workflow** — no test framework configured. `validate.py` serves as the validation step instead.
+
+Use **context7** for openpyxl API verification when modifying `regenerate_spreadsheet.py`.
+
+---
+
 ## Project Overview
 
 This project tracks **K-12 Strong Workforce Program (SWP)** grant fiscal reporting for the **Central Mother Lode** region. Data originates from the **NOVA system** (nova.cccco.edu) and is maintained in an Excel spreadsheet.
@@ -12,14 +24,72 @@ The spreadsheet contains Round 1-8 tabs (one per funding round), Look tabs (bulk
 
 ---
 
+## Browser Automation — Tool Detection & Fallback
+
+This process supports two browser automation backends. **Claude-in-Chrome is preferred** (uses existing Chrome session with SSO). Playwright MCP is the fallback.
+
+### Detection (run at start of every session)
+
+1. Try `tabs_context_mcp`. If it succeeds → use **Claude-in-Chrome** for this session.
+2. If `tabs_context_mcp` is not available or errors → try `browser_tabs(action: "list")`.
+   - If that succeeds → use **Playwright MCP** for this session.
+   - If that also fails → neither backend is configured. Stop and ask the user to set one up.
+3. Set a mental flag for which backend is active. All subsequent tool calls use that backend's names.
+
+### Tool Mapping
+
+| Purpose | Claude-in-Chrome | Playwright MCP | Notes |
+|---------|-----------------|----------------|-------|
+| Detect availability | `tabs_context_mcp` | `browser_tabs(action: "list")` | Try chrome first, fall back to playwright |
+| Navigate | `navigate(url, tabId)` | `browser_navigate(url)` | Playwright has no tabId param — operates on active tab |
+| Get page text | `get_page_text(tabId)` | `browser_evaluate(() => document.body.innerText)` | No direct equivalent in Playwright |
+| Execute JS | `javascript_tool(text, tabId)` | `browser_evaluate(function)` | Playwright requires arrow fn wrapper: `() => { ... }` |
+| Form input | `form_input(ref, value, tabId)` | `browser_fill_form(fields)` | Different ref format (playwright uses snapshot refs) |
+| Read page structure | `read_page(tabId)` | `browser_snapshot()` | Playwright returns accessibility tree |
+| Create tab | `tabs_create_mcp` | `browser_tabs(action: "new")` | |
+| Wait | `computer(action: "wait", duration, tabId)` | `browser_wait_for(...)` | |
+| Install browser | N/A | `browser_install()` | Playwright-only; needed if browser binary missing |
+
+### JavaScript Extraction Syntax
+
+The JS extraction blocks in Phase 3 use raw code strings. Adapt per backend:
+
+**Claude-in-Chrome** (`javascript_tool`):
+- Pass JS as a plain string in the `text` parameter
+- The result of the last expression is returned automatically
+- Example: `"document.body.innerText"`
+
+**Playwright MCP** (`browser_evaluate`):
+- Wrap JS in an arrow function in the `function` parameter
+- Must explicitly return the value
+- Example: `"() => { return document.body.innerText; }"`
+
+For the multi-line extraction blocks (financial data, quarterly status), wrap the entire block:
+- Chrome: pass as-is in `text`
+- Playwright: wrap in `"() => { <existing code>; return JSON.stringify(r); }"`
+
+### SSO Authentication Difference
+
+- **Chrome:** User logs into NOVA in their normal Chrome browser before starting. SSO cookies persist.
+- **Playwright:** Launches a separate browser window. On first navigation to NOVA, the user must manually log in within that Playwright browser window. The session persists for the duration of the scraping run but is lost when the browser closes.
+
+**Playwright first-run extra step:** After detection picks Playwright, navigate to `nova.cccco.edu` and wait. If a login page appears, tell the user: "Please log into NOVA in the Playwright browser window that just opened. Let me know when you're logged in." Then proceed with the pre-flight grant page check.
+
+---
+
 ## Repeatable Process — "Update Grant Data from NOVA"
 
 ### Phase 1: Prerequisites & Authentication
 
-1. User must have **NOVA** (nova.cccco.edu) open and authenticated in Chrome
-2. Verify auth by calling `tabs_context_mcp` and confirming a NOVA tab exists
-3. Identify which rounds need updating — active rounds with final report deadlines not yet passed
-4. Confirm with the user which rounds to update before proceeding
+1. User must have **NOVA** (nova.cccco.edu) accessible — either logged in via Chrome or ready to log in via Playwright.
+2. **Detect browser backend** — follow the "Browser Automation — Tool Detection & Fallback" section above. Record which backend (Chrome or Playwright) is active for this session.
+3. **Pre-flight SSO check:**
+   - **Chrome path:** Call `tabs_context_mcp`, confirm a NOVA tab exists.
+   - **Playwright path:** Call `browser_navigate` to `nova.cccco.edu`. If a login page appears, ask the user to authenticate in the Playwright browser window. Wait for confirmation.
+4. **Pre-flight grant page check:** Navigate to one known grant page (e.g., `nova.cccco.edu/swpk/fiscal-reports/plans/29751?duration=2025004`) and extract `planId` via JavaScript. If empty after 5 seconds, SSO is not active — ask the user to log in manually and retry.
+5. Verify `scraped_data.json` exists (to preserve previous round data during partial updates). If missing, create an empty JSON structure `{}` so the script can start fresh.
+6. Identify which rounds need updating — active rounds with final report deadlines not yet passed
+7. Confirm with the user which rounds to update before proceeding
 
 **Round Reference Table:**
 
@@ -131,11 +201,16 @@ const institutionCount = expenditureRows.length;
    const r = {};
    for (let i = 0; i < lines.length; i++) {
      const t = lines[i].trim();
-     if (t === 'Q2' && i + 1 < lines.length) r.q2 = lines[i + 1].trim();
-     if (t === 'Q4' && i + 1 < lines.length) r.q4 = lines[i + 1].trim();
-     if (t === 'Final Report' && i + 1 < lines.length) r.final = lines[i + 1].trim();
+     // Use first-match-wins to avoid multi-institution pages overwriting with wrong value
+     if (t === 'Q2' && i + 1 < lines.length && !r.q2) r.q2 = lines[i + 1].trim();
+     if (t === 'Q4' && i + 1 < lines.length && !r.q4) r.q4 = lines[i + 1].trim();
+     if (t === 'Final Report' && i + 1 < lines.length && !r.final) r.final = lines[i + 1].trim();
    }
    r.planId = window.location.href.match(/plans\/(\d+)/)?.[1];
+   // Validate extracted values are expected
+   if (r.q2 && r.q2 !== 'Complete' && r.q2 !== 'Incomplete') r.q2_warning = r.q2;
+   if (r.q4 && r.q4 !== 'Complete' && r.q4 !== 'Incomplete') r.q4_warning = r.q4;
+   if (r.final && r.final !== 'Complete' && r.final !== 'Incomplete') r.final_warning = r.final;
    JSON.stringify(r);
    ```
 
@@ -158,7 +233,13 @@ const institutionCount = expenditureRows.length;
    - Col I = Grant FY+2 Q4 → same page as Col H → Q4 status
    - Col J = Final Report → same page as Col H/I → Final Report status
 
-6. Save all results to `scraped_data.json` with this structure per grant:
+6. **Error handling per grant:**
+   - After JavaScript extraction, verify `planId` is not empty. If empty, the page hasn't loaded — wait 3 seconds and retry extraction once.
+   - If retry still returns empty `planId`, log the grant's plan ID to `failed_grants.txt` and continue to the next grant.
+   - After completing all grants in a round, report the `failed_grants.txt` count. Re-attempt failed grants before moving to the next round.
+   - If a grant fails twice, skip it and flag it in the final validation output for manual review.
+
+7. Save all results to `scraped_data.json` with this structure per grant:
 
 ```json
 {
@@ -263,7 +344,7 @@ All checks must pass before saving. Run these in order:
 10. **Formula check:** Verify `% Spent` formula evaluates correctly for 5 random rows
 11. **Data preservation check:** After recreating a tab, verify all previously-existing Proposal IDs still have their Notes (P) and Unexpended (Q) values restored. Print any grants that existed before but are missing from the new scrape.
 12. **Quarterly status consistency:** For each grant, if `approvalStatus` is Certified/Approved/Submitted on the primary FY page, then Col E (grant FY Q4) should generally be TRUE. Flag any mismatches for manual review (note: this is a heuristic — Q2/Q4 status from the FY page is authoritative).
-13. **Quarterly monotonicity:** Quarters should not skip — if a later quarter is TRUE, all earlier quarters should also be TRUE. Flag if e.g., Col G=TRUE but Col F=FALSE.
+13. **Quarterly monotonicity (cross-FY only):** If any quarter in a later FY is TRUE, all quarters in earlier FYs should also be TRUE. Flag if e.g., FY25-26 has a TRUE but FY24-25 has a FALSE. **Within a single FY, Q2 and Q4 are independent** — do NOT flag Q2=TRUE/Q4=FALSE on the same FY as an error (see "Q2/Q4 are independent" edge case).
 14. **Dashboard grant count vs scrape_round.py:** If dashboard returns more grants than `scrape_round.py` lists, flag as "new grants found — add to scrape_round.py". If fewer, flag as "grants removed from NOVA".
 15. **Final report status consistency:** If all quarterly columns (E-I) are TRUE and the final report due date has passed, Col J should be TRUE. Flag if blank.
 16. **Cross-round deduplication:** Verify no plan ID appears in multiple rounds (sanity check).
@@ -289,6 +370,8 @@ All checks must pass before saving. Run these in order:
 - **Dashboard filter limitation:** `form_input` can set text values but doesn't trigger Angular state changes for combobox dropdowns. Use `get_page_text` to extract the full listing and filter in Python.
 - **Tab management:** Chrome extension tabs can disappear between sessions. Always call `tabs_context_mcp` before navigating and reuse existing authenticated tabs when available.
 - **R7 Col E proxy values (2026-03-12):** R7 FY24-25_Q4 was set to TRUE for 33 grants based on `approvalStatus` (Certified/Submitted) as a shortcut — NOT from actual FY page Q4 status. This may contain errors since approvalStatus is not a reliable proxy (see "Q2/Q4 are independent" above). On the next R7 update, do a proper per-page scan of `?duration=2025004` for all 38 grants to get authoritative Q4 values.
+- **Playwright vs Chrome tool differences:** Playwright's `browser_evaluate` requires JS wrapped in an arrow function (`() => { ... }`), unlike Chrome's `javascript_tool` which takes raw code. Playwright also has no `get_page_text` — use `browser_evaluate(() => document.body.innerText)` instead. The detection step in "Browser Automation" section determines which syntax to use for the session.
+- **Playwright SSO timeout:** Playwright browser sessions can time out during long scraping runs (100+ pages). If extraction starts returning empty results or login pages, the SSO session has expired. Ask the user to re-authenticate in the Playwright window, then resume from `failed_grants.txt` or the last saved grant in `scraped_data.json`.
 
 ---
 
@@ -320,10 +403,11 @@ Pattern for determining the 5 quarterly columns (E-I) and Final Report column (J
 A full update run involves 100+ browser navigations and can exceed the context window. Follow these practices to avoid losing progress mid-run:
 
 1. **Save intermediate results to files.** After completing each round's scraping, write results to `scraped_data.json` immediately — don't accumulate everything in memory.
-2. **Batch by round.** Complete one round fully (dashboard scan → per-grant scrape → update scraped_data.json) before starting the next.
-3. **Use `regenerate_spreadsheet.py`** to rebuild the spreadsheet from `scraped_data.json` — this can run independently after all scraping is done, even in a new session.
-4. **If compacted mid-run:** Read `scraped_data.json` to see what's already been saved. Check which grants in the current round still have placeholder/old quarterly values to determine where to resume.
-5. **Combine extractions per page.** On each page load, extract ALL needed data (financial + quarterly status) in a single JavaScript call to minimize back-and-forth.
+2. **Incremental saves within a round.** After scraping every 10 grants, write intermediate results to `scraped_data.json`. Use Python to maintain a running dict — read existing JSON, update the current round's grants list, write back. This ensures progress survives context compaction.
+3. **Batch by round.** Complete one round fully (dashboard scan → per-grant scrape → update scraped_data.json) before starting the next.
+4. **Use `regenerate_spreadsheet.py`** to rebuild the spreadsheet from `scraped_data.json` — this can run independently after all scraping is done, even in a new session.
+5. **If compacted mid-run:** Read `scraped_data.json` to see what's already been saved. For the current round, check which grants have `quarterlyStatus` with all-false values AND `ptdExpenditure` of 0 — these likely haven't been scraped yet (unless they're genuinely new/empty grants). Cross-reference against the dashboard listing to identify which grants still need scraping. Resume from the first unscraped grant.
+6. **Combine extractions per page.** On each page load, extract ALL needed data (financial + quarterly status) in a single JavaScript call to minimize back-and-forth.
 
 ---
 
@@ -337,5 +421,8 @@ A full update run involves 100+ browser navigations and can exceed the context w
 | `CLAUDE.md` | This file (operational runbook for the update process) |
 | `scrape_round.py` | Helper script with hardcoded plan IDs per round (R5-R8). Compare against dashboard each run. |
 | `regenerate_spreadsheet.py` | Rebuilds Round 5-8 tabs from `scraped_data.json`. Preserves Notes/Unexpended columns. Run after scraping is complete. |
+| `validate.py` | Automated validation checks on scraped data and spreadsheet. Run after regeneration. |
+| `requirements.txt` | Python dependencies (openpyxl). Install with `pip install -r requirements.txt`. |
+| `README.md` | Setup and usage guide for new users. |
 | `.gitignore` | Git ignore rules (excludes `backups/`, `.playwright-mcp/`, `__pycache__/`) |
 | `backups/` | Timestamped spreadsheet backups created before each update (gitignored) |

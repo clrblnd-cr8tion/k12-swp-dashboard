@@ -13,8 +13,6 @@ ROUNDS = {
         "round": 5,
         "yearCode": "2023004",
         "grantFY": "2022-23",
-        "quarterlyFYs": ["2023004", "2024004", "2025004"],
-        "quarterlyLabels": ["FY22-23_Q4", "FY23-24_Q2", "FY23-24_Q4", "FY24-25_Q2", "FY24-25_Q4"],
         "quarterlyFYMap": {
             "FY22-23_Q4": "2023004",
             "FY23-24_Q2": "2024004",
@@ -28,8 +26,6 @@ ROUNDS = {
         "round": 6,
         "yearCode": "2024004",
         "grantFY": "2023-24",
-        "quarterlyFYs": ["2024004", "2025004", "2026004"],
-        "quarterlyLabels": ["FY23-24_Q4", "FY24-25_Q2", "FY24-25_Q4", "FY25-26_Q2", "FY25-26_Q4"],
         "quarterlyFYMap": {
             "FY23-24_Q4": "2024004",
             "FY24-25_Q2": "2025004",
@@ -43,8 +39,6 @@ ROUNDS = {
         "round": 7,
         "yearCode": "2025004",
         "grantFY": "2024-25",
-        "quarterlyFYs": ["2025004", "2026004", "2027004"],
-        "quarterlyLabels": ["FY24-25_Q4", "FY25-26_Q2", "FY25-26_Q4", "FY26-27_Q2", "FY26-27_Q4"],
         "quarterlyFYMap": {
             "FY24-25_Q4": "2025004",
             "FY25-26_Q2": "2026004",
@@ -58,8 +52,6 @@ ROUNDS = {
         "round": 8,
         "yearCode": "2026004",
         "grantFY": "2025-26",
-        "quarterlyFYs": ["2026004", "2027004", "2028004"],
-        "quarterlyLabels": ["FY25-26_Q4", "FY26-27_Q2", "FY26-27_Q4", "FY27-28_Q2", "FY27-28_Q4"],
         "quarterlyFYMap": {
             "FY25-26_Q4": "2026004",
             "FY26-27_Q2": "2027004",
@@ -75,16 +67,19 @@ if __name__ == "__main__":
     round_name = sys.argv[1] if len(sys.argv) > 1 else "R7"
     config = ROUNDS[round_name]
 
+    quarterly_labels = list(config['quarterlyFYMap'].keys())
+    quarterly_fys = sorted(set(config['quarterlyFYMap'].values()))
+
     print(f"Round: {round_name}")
     print(f"Grant count: {len(config['planIds'])}")
     print(f"Year code: {config['yearCode']}")
-    print(f"Quarterly FYs: {config['quarterlyFYs']}")
-    print(f"\nURLs to visit per grant: {1 + len(config['quarterlyFYs'])} (1 primary + {len(config['quarterlyFYs'])} quarterly)")
-    print(f"Total page loads: {len(config['planIds']) * (1 + len(config['quarterlyFYs']))}")
+    print(f"Quarterly FYs: {quarterly_fys}")
+    print(f"\nURLs to visit per grant: {1 + len(quarterly_fys)} (1 primary + {len(quarterly_fys)} quarterly)")
+    print(f"Total page loads: {len(config['planIds']) * (1 + len(quarterly_fys))}")
 
     # Print first 3 as examples
     for pid in config['planIds'][:3]:
         print(f"\nGrant {pid}:")
         print(f"  Primary: /swpk/fiscal-reports/plans/{pid}?duration={config['yearCode']}")
-        for fy in config['quarterlyFYs']:
+        for fy in quarterly_fys:
             print(f"  Quarterly: /swpk/fiscal-reports/plans/{pid}?duration={fy}")
