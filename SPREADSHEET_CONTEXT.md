@@ -110,13 +110,13 @@ Amador County ROP, Amador County Unified, Aspire Vanguard College Preparatory Ac
 - **Round 4:** Final reports were due 09/30/2024. ~47% spent overall — some grants lagging.
 - **Round 5:** Final report due 09/30/2025 (passed). All 28 grants Certified. $23.3M budget, $461K spent (2.0%). All quarterly reports submitted. 25/28 Final Reports Complete (3 Incomplete: 20672, 20635, 20588). Scraped from NOVA 2026-03-11.
 - **Round 6:** Active. $20.6M budget, $1.4M spent (6.8%). 25 of 30 grants Certified for FY23-24. FY24-25: 23/30 Q2 Complete, 18/30 Q4 Complete. FY25-26 quarterly reports not yet submitted. Scraped from NOVA 2026-03-11.
-- **Round 7:** Active. $21.5M budget, $461K spent (2.1%). 33/38 FY24-25 Q4 Complete (all Certified/Submitted grants). FY25-26 and FY26-27 not yet submitted. Scraped from NOVA 2026-03-11.
-- **Round 8:** Early lifecycle. 24 grants (expanded from 4 via `/swpk/plans` discovery on 2026-03-12). 4 grants have fiscal data ($3.3M budget), 20 are plans-only (Submitted/Draft, $0 budget). 4 Certified, 14 Submitted, 6 Draft.
+- **Round 7:** Active. $21.5M budget, $461K spent (2.1%). 33/38 FY24-25 Q4 Complete, 13/38 FY25-26 Q2 Complete. FY25-26 Q4 and FY26-27 not yet submitted. Scraped from NOVA 2026-03-13 (authoritative per-page Q4 values, replacing 2026-03-12 proxy values).
+- **Round 8:** Early lifecycle. 24 grants (expanded from 4 via `/swpk/plans` discovery on 2026-03-12). 4 grants have fiscal data ($3.3M budget), 20 are plans-only (Submitted/Draft, $0 budget). Re-scraped 2026-03-13.
 - **R6 Look** has 722 "Pending Approval" entries (44% of rows) — significant backlog of unapproved reports.
 
 ## Data Sources for Rounds 5-8
 
-Rounds 5-8 were updated on 2026-03-11 via direct NOVA scraping:
+Rounds 5-8 were last updated on 2026-03-13 via direct NOVA scraping (R5/R6 data from 2026-03-11, R7/R8 re-scraped 2026-03-13):
 - Data scraped from individual NOVA grant fiscal report pages (`nova.cccco.edu/swpk/fiscal-reports/plans/{planId}?duration={yearCode}`)
 - Values are hardcoded (not formula-driven), except % Spent which uses a formula (R5: `=M{row}/L{row}`, R6-R8: `=O{row}/N{row}`)
 - Quarterly submission status determined by visiting each FY page and extracting Q2/Q4/Final Report → Complete/Incomplete status
