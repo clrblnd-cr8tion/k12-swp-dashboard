@@ -131,6 +131,15 @@ COL_WIDTHS_19 = [28.38, 10.88, 10.88, 59.0, 7.75, 7.75, 7.75, 7.75, 7.75, 7.75,
 WIDTHS_BY_LAYOUT = {17: COL_WIDTHS_17, 19: COL_WIDTHS_19}
 
 
+def _data_cell(ws, row, column, value, number_format=None):
+    """Write a cell with DATA_FONT and optional number format."""
+    cell = ws.cell(row=row, column=column, value=value)
+    cell.font = DATA_FONT
+    if number_format:
+        cell.number_format = number_format
+    return cell
+
+
 def regenerate():
     if not os.path.exists(SCRAPED_DATA):
         print(f"ERROR: {SCRAPED_DATA} not found. Run the NOVA scrape first.")
@@ -203,65 +212,52 @@ def regenerate():
         # Write data rows
         for row_idx, grant in enumerate(grants, 2):
             pid = grant['planId']
+            dc = lambda col, val, fmt=None: _data_cell(ws, row_idx, col, val, fmt)
 
-            ws.cell(row=row_idx, column=1, value=grant['leadInstitution']).font = DATA_FONT
-            ws.cell(row=row_idx, column=2, value=pid).font = DATA_FONT
-            ws.cell(row=row_idx, column=3, value=grant['dashboardInstitutions']).font = DATA_FONT
-            ws.cell(row=row_idx, column=4, value=grant['grantName']).font = DATA_FONT
+            dc(1, grant['leadInstitution'])
+            dc(2, pid)
+            dc(3, grant['dashboardInstitutions'])
+            dc(4, grant['grantName'])
 
             # E-I: Quarterly status
             for qi, qkey in enumerate(config['quarterly_keys']):
                 val = grant['quarterlyStatus'].get(qkey, False)
-                ws.cell(row=row_idx, column=L['quarterly_start'] + qi, value=True if val else None).font = DATA_FONT
+                dc(L['quarterly_start'] + qi, True if val else None)
 
             # J: Final Report
             final = grant.get('finalReport', False)
-            ws.cell(row=row_idx, column=L['final_report'], value=True if final else None).font = DATA_FONT
+            dc(L['final_report'], True if final else None)
 
             # K: Report Waiting Approval (case-insensitive comparison)
             da = grant.get('dashboardApproval', '')
-            waiting = da if da.lower() in ('pending approval', 'submitted') else None
-            ws.cell(row=row_idx, column=L['waiting'], value=waiting).font = DATA_FONT
+            da_lower = da.lower()
+            waiting = da if da_lower in ('pending approval', 'submitted') else None
+            dc(L['waiting'], waiting)
 
             # Plan Status and Lead LEA (R6-R8 only)
             if L['plan_status']:
-                ps = grant.get('planStatus', '')
-                ws.cell(row=row_idx, column=L['plan_status'], value=ps or None).font = DATA_FONT
+                dc(L['plan_status'], grant.get('planStatus', '') or None)
             if L['lead_lea']:
-                lea = grant.get('leadLEA', '')
-                ws.cell(row=row_idx, column=L['lead_lea'], value=lea or None).font = DATA_FONT
+                dc(L['lead_lea'], grant.get('leadLEA', '') or None)
 
-            # Grant Amount
-            cell = ws.cell(row=row_idx, column=L['grant_amount'], value=grant['projectBudget'])
-            cell.font = DATA_FONT
-            cell.number_format = '#,##0'
+            # Financial columns
+            dc(L['grant_amount'], grant['projectBudget'], '#,##0')
+            dc(L['total_exp'], grant['ptdExpenditure'], '#,##0')
 
-            # Total Reported Expenditures
-            cell = ws.cell(row=row_idx, column=L['total_exp'], value=grant['ptdExpenditure'])
-            cell.font = DATA_FONT
-            cell.number_format = '#,##0'
-
-            # Total Reported Expenditures Approved (case-insensitive comparison)
-            da_lower = da.lower()
             approved_exp = grant['ptdExpenditure'] if da_lower in ('approved', 'certified') else 0
-            cell = ws.cell(row=row_idx, column=L['approved_exp'], value=approved_exp)
-            cell.font = DATA_FONT
-            cell.number_format = '#,##0'
+            dc(L['approved_exp'], approved_exp, '#,##0')
 
             # % Spent (formula, guarded against division by zero)
             ga_col = get_column_letter(L['grant_amount'])
             te_col = get_column_letter(L['total_exp'])
-            cell = ws.cell(row=row_idx, column=L['pct_spent'],
-                           value=f'=IF({ga_col}{row_idx}=0,"",{te_col}{row_idx}/{ga_col}{row_idx})')
-            cell.font = DATA_FONT
-            cell.number_format = '0.0%'
+            dc(L['pct_spent'],
+               f'=IF({ga_col}{row_idx}=0,"",{te_col}{row_idx}/{ga_col}{row_idx})',
+               '0.0%')
 
-            # Notes (preserved)
+            # Notes and Unexpended (preserved from previous tab)
             prev = preserved.get(pid, {})
-            ws.cell(row=row_idx, column=L['notes'], value=prev.get('notes')).font = DATA_FONT
-
-            # Unexpended (preserved)
-            ws.cell(row=row_idx, column=L['unexpended'], value=prev.get('unexpended')).font = DATA_FONT
+            dc(L['notes'], prev.get('notes'))
+            dc(L['unexpended'], prev.get('unexpended'))
 
         # Total row
         total_row = len(grants) + 2

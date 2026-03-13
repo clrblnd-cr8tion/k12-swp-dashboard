@@ -61,21 +61,18 @@ ROUND_SHEET_NAMES = {
     'R8': 'Round 8',
 }
 
-passed = 0
-failed = 0
-warnings = 0
+counts = {"passed": 0, "failed": 0, "warnings": 0}
 
 
 def result(status, check_num, description, detail=""):
-    global passed, failed, warnings
     if status == "PASS":
-        passed += 1
+        counts["passed"] += 1
         icon = "PASS"
     elif status == "FAIL":
-        failed += 1
+        counts["failed"] += 1
         icon = "FAIL"
     else:
-        warnings += 1
+        counts["warnings"] += 1
         icon = "WARN"
     msg = f"  [{icon}] #{check_num}: {description}"
     if detail:
@@ -337,11 +334,11 @@ def main():
 
     # Summary
     print(f"\n{'=' * 50}")
-    print(f"Results: {passed} passed, {failed} failed, {warnings} warnings")
-    if failed > 0:
+    print(f"Results: {counts['passed']} passed, {counts['failed']} failed, {counts['warnings']} warnings")
+    if counts["failed"] > 0:
         print("ACTION REQUIRED: Fix failed checks before saving.")
         sys.exit(1)
-    elif warnings > 0:
+    elif counts["warnings"] > 0:
         print("Review warnings above. They may be expected for early-lifecycle grants.")
     else:
         print("All automated checks passed.")

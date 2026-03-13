@@ -88,7 +88,7 @@ For the multi-line extraction blocks (financial data, quarterly status), wrap th
    - **Playwright path:** Call `browser_navigate` to `nova.cccco.edu`. If a login page appears, ask the user to authenticate in the Playwright browser window. Wait for confirmation.
 4. **Pre-flight grant page check:** Navigate to one known grant page (e.g., `nova.cccco.edu/swpk/fiscal-reports/plans/29751?duration=2025004`) and extract `planId` via JavaScript. If empty after 5 seconds, SSO is not active — ask the user to log in manually and retry.
 5. Verify `scraped_data.json` exists (to preserve previous round data during partial updates). If missing, create an empty JSON structure `{}` so the script can start fresh.
-6. Identify which rounds need updating — active rounds with final report deadlines not yet passed
+6. Identify which rounds need updating — active rounds with final report deadlines not yet passed. For R7 and later rounds, `/swpk/plans` is used as the primary discovery source (see Phase 2b).
 7. Confirm with the user which rounds to update before proceeding
 
 **Round Reference Table:**
@@ -102,7 +102,7 @@ For the multi-line extraction blocks (financial data, quarterly status), wrap th
 
 ### Phase 2: Dashboard Scan — Get Grant Listing
 
-The dashboard is the **authoritative source** for grant listings. Never rely solely on hardcoded plan IDs in `scrape_round.py`.
+The dashboard is the **authoritative source** for grant listings with fiscal data (R5-R6, and grants that have started reporting in R7+). For R7 and later rounds, `/swpk/plans` is the primary discovery source (see Phase 2b). Never rely solely on hardcoded plan IDs in `scrape_round.py`.
 
 1. Navigate to the NOVA Fiscal Reporting Dashboard: `nova.cccco.edu/swpk/fiscal-reports/plans`
 2. Filter by **region: Central/Mother Lode**
@@ -134,7 +134,7 @@ The dashboard is the **authoritative source** for grant listings. Never rely sol
    - Fiscal Year
    - Submitted count (e.g., "1/1 Submitted" or "0/3 Submitted")
    - Approval Status (Certified, Submitted, Awaiting Submittal, etc.)
-4. Filter to Central/Mother Lode grants by matching Lead Agency against the 68-institution list in `SPREADSHEET_CONTEXT.md`
+4. Filter to Central/Mother Lode grants by matching Lead Agency against the institution list in `SPREADSHEET_CONTEXT.md`
 5. Filter to the target round's fiscal year
 6. Parse out Plan IDs, institution counts, and approval statuses
 
@@ -153,9 +153,26 @@ After the dashboard scan, extract Plan Status and Lead LEA from the NOVA plans l
 5. Store as `planStatus` and `leadLEA` fields in each grant's scraped data
 6. These fields are optional — R5 grants will not have them (`.get()` with empty string default handles this)
 
+### Phase 2b: Plans Listing Scan (R7+ only)
+
+The fiscal reports dashboard only shows grants that have started reporting. For R7 and later rounds, many plans exist in Submitted/Draft state before fiscal reporting begins. Use `/swpk/plans` as the primary discovery source.
+
+1. Navigate to `nova.cccco.edu/swpk/plans`
+2. The page shows all plans (paginated, 100 per page). Extract plan data by parsing the tab-separated page text:
+   - Each row: `ID\tPathway Improvement\tLead LEA\tRegion\tAllocation Year\tStatus\tActions`
+   - Filter for `Region = "Central/Mother Lode"` AND `Allocation Year` matching the round's grant FY
+3. Paginate through all pages using the `#qa_pagination_next` button (via JS `.click()`) to collect all matching plans
+4. This is the **authoritative plan list** — use it instead of hardcoded `scrape_round.py` plan IDs
+5. Cross-reference with fiscal reports dashboard:
+   - Plans on both → full fiscal data + plans metadata
+   - Plans only on `/swpk/plans` → attempt fiscal page, fall back to zero-value entry with $0 budget, $0 expenditure, blank quarterly status
+6. Update `scrape_round.py` planIds to match discovered list
+
+**Pagination approach:** The Angular filter dropdowns are unreliable via browser automation (po-select components cause tab detachment). Instead, extract the full unfiltered listing page by page and filter in code. Use `document.body.innerText` to get tab-separated rows, parse with regex, and collect Central/Mother Lode entries for the target allocation years. Auto-paginate by calling `document.querySelector('#qa_pagination_next').click()` via JavaScript with 2-3 second delays between pages.
+
 ### Phase 3: Individual Grant Scraping
 
-For each grant from the dashboard listing:
+For each grant from the combined listing (dashboard + Phase 2b discoveries for R7+):
 
 1. Navigate to: `nova.cccco.edu/swpk/fiscal-reports/plans/{planId}?duration={yearCode}`
 2. **Year codes** (see Round Reference Table in Phase 1 for per-round mapping):
@@ -402,6 +419,8 @@ All checks must pass before saving. Run these in order:
 - **R7 Col E proxy values (2026-03-12):** R7 FY24-25_Q4 was set to TRUE for 33 grants based on `approvalStatus` (Certified/Submitted) as a shortcut — NOT from actual FY page Q4 status. This may contain errors since approvalStatus is not a reliable proxy (see "Q2/Q4 are independent" above). On the next R7 update, do a proper per-page scan of `?duration=2025004` for all 38 grants to get authoritative Q4 values.
 - **Playwright vs Chrome tool differences:** Playwright's `browser_evaluate` requires JS wrapped in an arrow function (`() => { ... }`), unlike Chrome's `javascript_tool` which takes raw code. Playwright also has no `get_page_text` — use `browser_evaluate(() => document.body.innerText)` instead. The detection step in "Browser Automation" section determines which syntax to use for the session.
 - **Playwright SSO timeout:** Playwright browser sessions can time out during long scraping runs (100+ pages). If extraction starts returning empty results or login pages, the SSO session has expired. Ask the user to re-authenticate in the Playwright window, then resume from `failed_grants.txt` or the last saved grant in `scraped_data.json`.
+- **Plans-only grants (no fiscal data):** Grants discovered from `/swpk/plans` but not on the fiscal reports dashboard have $0 budget, $0 expenditure, blank quarterly status, and blank approval status. `leadInstitution` uses Lead LEA from plans listing. `grantName` uses Pathway Improvement from plans listing. These grants appear in the spreadsheet with empty/zero values — the `% Spent` formula handles division by zero via `=IF(N{row}=0,"",...)`.
+- **Plans listing pagination:** The `/swpk/plans` page uses Angular po-select dropdowns for filters, which don't respond reliably to programmatic interaction (tab detachment issue). Instead, scrape the full unfiltered listing (all 1800+ plans) page by page and filter in code. The pagination button `#qa_pagination_next` is clickable via JavaScript `.click()`. Use 2-3 second delays between pages. The table data is tab-separated in `document.body.innerText`.
 
 ---
 

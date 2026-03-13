@@ -21,7 +21,7 @@ Each "Round" tab is a tracker for one funding round's grants **filtered to Centr
 | Round 5 | 28 | $23,283,728 | FY22-23 Q4 → FY24-25 Q4 | 09/30/2025 |
 | Round 6 | 30 | $20,632,608 | FY23-24 Q4 → FY25-26 Q4 | 09/30/2026 |
 | Round 7 | 38 | $21,549,421 | FY24-25 Q4 → FY26-27 Q4 | 09/30/2027 |
-| Round 8 | 4 | $3,265,760 | FY25-26 Q4 → FY27-28 Q4 | 09/30/2028 |
+| Round 8 | 24 | $3,265,760 | FY25-26 Q4 → FY27-28 Q4 | 09/30/2028 |
 
 **Column layout:**
 
@@ -100,9 +100,9 @@ These are **bulk data exports from NOVA** containing fiscal report data for **AL
 3. **Round tabs** are manually curated trackers that reference the Look data for Central Mother Lode grants only
 4. The Round tabs track whether each quarterly report has been submitted (TRUE/blank) and summarize financials (grant amount, expenditures, % spent)
 
-## 68 Central Mother Lode Institutions (across all rounds)
+## 73 Central Mother Lode Institutions (across all rounds)
 
-Amador County ROP, Amador County Unified, Aspire Vanguard College Preparatory Academy, be.tech, Burton Elementary, Calaveras Unified, Career Technical Education Charter, Ceres Unified, Chawanakee Unified, Clovis Unified, Coalinga-Huron Unified, Corcoran Joint Unified, Cutler-Orosi Joint Unified, Delhi Unified, El Nido Elementary, El Tejon Unified, Escalon Unified, Exeter Unified, Firebaugh-Las Deltas Unified, Fowler Unified, Fresno Unified, Fruitvale Elementary, Galt Joint Union High, Golden Plains Unified, Hanford Joint Union High, Hilmar Unified, Inyo Co. Office of Education, Kern Co. Office of Education, Kern High, Kern High ROC, Kings County ROP, Le Grand Union High, Lemoore Union High, Lincoln Unified, Linden Unified, Lodi Unified, Madera Unified, Manteca Unified, Mariposa County Unified, McFarland Unified, Merced City Elementary, Merced City School District, Merced Co. Office of Education, Merced County ROP, Merced Union High, Modesto City High, Newman-Crows Landing Unified, Oakdale Joint Unified, Patterson Joint Unified, Porterville Unified, Reef-Sunset Unified, Ripon Unified, Riverdale Joint Unified, San Joaquin Co. Office of Education, Sanger Unified, Sonora Union High, Stockton Unified, Taft Union High, Tulare Co. Office of Education, Tuolumne County Superintendent of Schools, Valley ROP, Visalia Technical Early College, Visalia Unified, Wasco Union High, Waterford Unified, Wonderful College Prep Academy, Yosemite ROP, Yosemite Unified
+Amador County ROP, Amador County Unified, Aspire Vanguard College Preparatory Academy, be.tech, Burton Elementary, Calaveras Unified, Career Technical Education Charter, Ceres Unified, Chawanakee Unified, Clovis Unified, Coalinga-Huron Unified, Corcoran Joint Unified, Cutler-Orosi Joint Unified, Delhi Unified, El Nido Elementary, El Tejon Unified, Escalon Unified, Exeter Unified, Firebaugh-Las Deltas Unified, Fowler Unified, Fresno ROP, Fresno Unified, Fruitvale Elementary, Galt Joint Union High, Golden Plains Unified, Grow Public Schools, Hanford Joint Union High, Hilmar Unified, Inyo Co. Office of Education, Kern Co. Office of Education, Kern High, Kern High ROC, Kings County ROP, Kingsburg Joint Union High, Le Grand Union High, Lemoore Union High, Lincoln Unified, Linden Unified, Lodi Unified, Madera Unified, Manteca Unified, Mariposa County Unified, McFarland Unified, Merced City Elementary, Merced City School District, Merced Co. Office of Education, Merced County ROP, Merced Union High, Modesto City High, Newman-Crows Landing Unified, Oakdale Joint Unified, Patterson Joint Unified, Porterville Unified, Reef-Sunset Unified, Richland Union Elementary, Ripon Unified, Riverdale Joint Unified, San Joaquin Co. Office of Education, Sanger Unified, Sonora Union High, Stockton Unified, Taft Union High, Tehachapi Unified, Tulare Co. Office of Education, Tuolumne County Superintendent of Schools, Valley ROP, Visalia Technical Early College, Visalia Unified, Wasco Union High, Waterford Unified, Wonderful College Prep Academy, Yosemite ROP, Yosemite Unified
 
 ## Current Status & Known Issues
 
@@ -111,7 +111,7 @@ Amador County ROP, Amador County Unified, Aspire Vanguard College Preparatory Ac
 - **Round 5:** Final report due 09/30/2025 (passed). All 28 grants Certified. $23.3M budget, $461K spent (2.0%). All quarterly reports submitted. 25/28 Final Reports Complete (3 Incomplete: 20672, 20635, 20588). Scraped from NOVA 2026-03-11.
 - **Round 6:** Active. $20.6M budget, $1.4M spent (6.8%). 25 of 30 grants Certified for FY23-24. FY24-25: 23/30 Q2 Complete, 18/30 Q4 Complete. FY25-26 quarterly reports not yet submitted. Scraped from NOVA 2026-03-11.
 - **Round 7:** Active. $21.5M budget, $461K spent (2.1%). 33/38 FY24-25 Q4 Complete (all Certified/Submitted grants). FY25-26 and FY26-27 not yet submitted. Scraped from NOVA 2026-03-11.
-- **Round 8:** Early lifecycle. $3.3M budget, $0 spent. All 4 grants Awaiting Submittal. Scraped from NOVA 2026-03-11.
+- **Round 8:** Early lifecycle. 24 grants (expanded from 4 via `/swpk/plans` discovery on 2026-03-12). 4 grants have fiscal data ($3.3M budget), 20 are plans-only (Submitted/Draft, $0 budget). 4 Certified, 14 Submitted, 6 Draft.
 - **R6 Look** has 722 "Pending Approval" entries (44% of rows) — significant backlog of unapproved reports.
 
 ## Data Sources for Rounds 5-8
