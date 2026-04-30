@@ -533,7 +533,7 @@ td{padding:9px 13px;vertical-align:middle}
 <body>
 <div id="pw-gate" style="display:flex;position:fixed;inset:0;z-index:9999;background:#1B3A8F;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',system-ui,sans-serif"><script>if(sessionStorage.getItem('swp_auth')==='1')document.currentScript.parentElement.style.display='none';</script>
   <div style="background:#0D1F5C;border-radius:14px;padding:40px 48px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.4);text-align:center">
-    <div style="margin-bottom:20px"><img src="{logo_src}" alt="CVML Logo" style="width:220px;height:auto"></div>
+    <div style="margin-bottom:20px"><img src="__LOGO_SRC__" alt="CVML Logo" style="width:220px;height:auto"></div>
     <div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:4px">K12 SWP Grant Dashboard</div>
     <div style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:28px">Central Mother Lode Region</div>
     <form id="pw-form">
