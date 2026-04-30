@@ -217,6 +217,27 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>K12 SWP Grant Dashboard — Central Mother Lode</title>
+<script>
+(function(){
+  if(sessionStorage.getItem('swp_auth')==='1') return;
+  document.addEventListener('DOMContentLoaded',function(){
+    var gate=document.getElementById('pw-gate');
+    var inp=document.getElementById('pw-input');
+    var err=document.getElementById('pw-err');
+    document.getElementById('pw-form').addEventListener('submit',function(e){
+      e.preventDefault();
+      if(inp.value==='strongworkforce2026'){
+        sessionStorage.setItem('swp_auth','1');
+        gate.style.display='none';
+      } else {
+        err.style.display='block';
+        inp.value='';
+        inp.focus();
+      }
+    });
+  });
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -510,6 +531,22 @@ td{padding:9px 13px;vertical-align:middle}
 </style>
 </head>
 <body>
+<div id="pw-gate" style="display:flex;position:fixed;inset:0;z-index:9999;background:#1B3A8F;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',system-ui,sans-serif"><script>if(sessionStorage.getItem('swp_auth')==='1')document.currentScript.parentElement.style.display='none';</script>
+  <div style="background:#0D1F5C;border-radius:14px;padding:40px 48px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.4);text-align:center">
+    <div style="margin-bottom:20px"><img src="{logo_src}" alt="CVML Logo" style="width:220px;height:auto"></div>
+    <div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:4px">K12 SWP Grant Dashboard</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:28px">Central Mother Lode Region</div>
+    <form id="pw-form">
+      <input id="pw-input" type="password" placeholder="Enter password" autofocus
+        style="width:100%;padding:12px 16px;border:2px solid rgba(255,255,255,0.2);border-radius:8px;font-size:15px;outline:none;margin-bottom:12px;font-family:inherit;background:rgba(255,255,255,0.1);color:#fff;">
+      <div id="pw-err" style="display:none;color:#f87171;font-size:13px;margin-bottom:10px">Incorrect password. Please try again.</div>
+      <button type="submit"
+        style="width:100%;padding:12px;background:#00b3be;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">
+        Sign In
+      </button>
+    </form>
+  </div>
+</div>
 <div id="app">
 
 <!-- HEADER -->
