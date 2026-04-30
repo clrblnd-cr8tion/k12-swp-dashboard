@@ -4,3 +4,11 @@ __pycache__/
 *.pyc
 scraped_data.json
 failed_grants.txt
+.DS_Store
+.claude/
+.superpowers/
+docs/superpowers/
+init_scrape.py
+Logo-w-Tagline_CVML_Reversed.svg
+~$*
+*.xlsx

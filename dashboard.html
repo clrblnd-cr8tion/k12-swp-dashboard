@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K12 SWP Grant Dashboard — Central Mother Lode</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:       #1B3A8F;
+  --navy-light: #2952C8;
+  --blue:       #3B82F6;
+  --blue-bg:    #EFF6FF;
+  --blue-mid:   #BFDBFE;
+  --green:      #059669;
+  --green-bg:   #D1FAE5;
+  --amber:      #D97706;
+  --amber-bg:   #FEF3C7;
+  --red:        #DC2626;
+  --red-bg:     #FEE2E2;
+  --text:       #0F172A;
+  --muted:      #64748B;
+  --border:     #E2E8F0;
+  --bg:         #F1F5FB;
+  --card:       #FFFFFF;
+  --r:          10px;
+  --font: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+
+/* ─── HEADER ─────────────────────────────────────────────── */
+.hdr{background:var(--navy);color:#fff;position:sticky;top:0;z-index:200;box-shadow:0 4px 24px rgba(0,0,0,.18)}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;padding:12px 24px 10px;border-bottom:1px solid rgba(255,255,255,.1)}
+.hdr-title{font-size:16px;font-weight:800;letter-spacing:-.3px;display:flex;align-items:center;gap:10px}
+.rgn-badge{background:rgba(255,255,255,.15);padding:2px 10px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.hdr-meta{font-size:12px;color:rgba(255,255,255,.55)}
+
+/* tabs */
+.tabs{display:flex;padding:0 16px;border-bottom:1px solid rgba(255,255,255,.1);overflow-x:auto}
+.tab{background:none;border:none;color:rgba(255,255,255,.55);font-family:var(--font);font-size:13px;font-weight:600;padding:10px 15px;cursor:pointer;position:relative;white-space:nowrap;transition:color .15s}
+.tab:hover{color:rgba(255,255,255,.85)}
+.tab.on{color:#fff}
+.tab.on::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:#60A5FA;border-radius:3px 3px 0 0}
+
+/* filter bar */
+.fbar{display:flex;align-items:center;gap:10px;padding:9px 24px;background:#fff;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.pills{display:flex;gap:5px}
+.pill{background:var(--bg);border:1.5px solid var(--border);color:var(--muted);font-family:var(--font);font-size:12px;font-weight:700;padding:4px 13px;border-radius:100px;cursor:pointer;transition:all .15s}
+.pill:hover{border-color:var(--navy);color:var(--navy)}
+.pill.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.srch{flex:1;max-width:280px;padding:6px 13px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font);font-size:13px;color:var(--text);outline:none;transition:border-color .15s}
+.srch:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.rcount{margin-left:auto;font-size:12px;color:var(--muted);font-weight:500;white-space:nowrap}
+
+/* ─── MAIN ────────────────────────────────────────────────── */
+.main{padding:20px 24px;max-width:1700px;margin:0 auto}
+.view{display:none;animation:fadeUp .2s ease}
+.view.on{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── KPI CARDS ──────────────────────────────────────────── */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+.kpi{background:var(--card);border-radius:var(--r);padding:18px 20px;border:1px solid var(--border);box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.kpi-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:6px}
+.kpi-val{font-size:28px;font-weight:800;letter-spacing:-.5px;line-height:1;margin-bottom:3px}
+.kpi-sub{font-size:12px;color:var(--muted)}
+.kpi.red .kpi-val{color:var(--red)}
+.kpi.grn .kpi-val{color:var(--green)}
+.kpi.nvy .kpi-val{color:var(--navy)}
+
+/* ─── TABLE ──────────────────────────────────────────────── */
+.tbl-wrap{background:var(--card);border-radius:var(--r);border:1px solid var(--border);overflow:auto;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:#F8FAFC;padding:10px 13px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none;position:sticky;top:0}
+thead th:hover{color:var(--navy);background:var(--blue-bg)}
+thead th.srt{color:var(--navy)}
+.si{margin-left:3px;opacity:.5}
+.srt .si{opacity:1}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:#F8FAFC}
+td{padding:9px 13px;vertical-align:middle}
+.inst{font-weight:600;max-width:210px}
+.gname{font-size:11px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:210px}
+
+/* progress bar */
+.pb-wrap{width:90px;background:var(--bg);border-radius:100px;height:6px;overflow:hidden}
+.pb{height:100%;border-radius:100px;background:var(--blue);transition:width .8s cubic-bezier(.4,0,.2,1)}
+.pb.red{background:var(--red)}
+.pb.grn{background:var(--green)}
+.pct-lbl{font-size:12px;font-weight:700;margin-top:3px}
+
+/* quarterly icons */
+.qi{display:flex;gap:3px;align-items:center}
+.q{width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800}
+.q.ok{background:var(--green-bg);color:var(--green)}
+.q.bad{background:var(--red-bg);color:var(--red)}
+.q.fut{background:var(--bg);color:#CBD5E1}
+
+/* badges */
+.rbdg{display:inline-flex;align-items:center;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:700;background:var(--blue-bg);color:var(--navy)}
+.sbdg{display:inline-flex;align-items:center;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:600}
+.sbdg.cert{background:var(--green-bg);color:#065F46}
+.sbdg.subm{background:var(--amber-bg);color:#92400E}
+.sbdg.none{background:var(--bg);color:var(--muted)}
+.arf{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:var(--red-bg);color:var(--red);border-radius:50%;font-size:11px}
+
+/* ─── VIEW 2: PORTFOLIO ──────────────────────────────────── */
+.rc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+.rc{background:var(--card);border:2px solid var(--border);border-radius:var(--r);padding:20px;cursor:pointer;transition:all .2s;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.rc:hover{border-color:var(--navy);transform:translateY(-2px);box-shadow:0 8px 24px rgba(27,58,143,.12)}
+.rc.on{border-color:var(--navy);background:var(--blue-bg)}
+.rc-lbl{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.rc-budget{font-size:24px;font-weight:800;letter-spacing:-.5px;line-height:1;margin-bottom:3px}
+.rc-sub{font-size:12px;color:var(--muted);margin-bottom:10px}
+.rc-pct{font-size:14px;font-weight:700;color:var(--navy);margin-top:5px}
+.rgl{background:var(--card);border-radius:var(--r);border:1px solid var(--border);overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.rgl-hdr{padding:11px 16px;background:var(--blue-bg);border-bottom:1px solid var(--blue-mid);font-size:13px;font-weight:700;color:var(--navy)}
+
+/* ─── VIEW 3: MATRIX ─────────────────────────────────────── */
+.mtx-wrap{background:var(--card);border-radius:var(--r);border:1px solid var(--border);overflow:auto;box-shadow:0 1px 4px rgba(0,0,0,.04);margin-bottom:24px}
+.mtx th,.mtx td{padding:7px 10px;text-align:center;white-space:nowrap;border-bottom:1px solid var(--border)}
+.mtx th:first-child,.mtx td:first-child{text-align:left;position:sticky;left:0;background:inherit;z-index:2;padding-left:14px;min-width:190px}
+.mtx thead th{background:#F8FAFC;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);position:sticky;top:0;z-index:3}
+.mtx thead th:first-child{z-index:4}
+.mtx thead th.pd{background:#FFF5F5;color:var(--red)}
+.mc{width:26px;height:26px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;margin:0 auto}
+.mc.ok{background:var(--green-bg);color:var(--green)}
+.mc.bad{background:var(--red-bg);color:var(--red)}
+.mc.fut{background:transparent;color:#CBD5E1}
+.mtx-foot td{font-weight:700;background:#F8FAFC;border-top:2px solid var(--border);font-size:12px;color:var(--muted)}
+.sec-ttl{font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px;letter-spacing:-.2px}
+
+/* ─── VIEW 4: ALERTS ─────────────────────────────────────── */
+.alrt-panel{background:#FEF2F2;border:1px solid #FECACA;border-radius:var(--r);margin-bottom:18px;overflow:hidden}
+.alrt-hdr{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;cursor:pointer;user-select:none}
+.alrt-ttl{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:700;color:#991B1B}
+.alrt-n{background:var(--red);color:#fff;padding:1px 9px;border-radius:100px;font-size:12px;font-weight:800}
+.alrt-tog{font-size:12px;color:#991B1B;font-weight:600}
+.alrt-body{padding:0 18px 14px}
+.alrt-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid #FECACA;font-size:13px}
+.alrt-inst{font-weight:700;min-width:180px}
+.alrt-det{color:#7F1D1D;font-size:12px}
+.sf-row{display:flex;gap:7px;margin-bottom:14px}
+.sf-btn{background:var(--bg);border:1.5px solid var(--border);color:var(--muted);font-family:var(--font);font-size:12px;font-weight:600;padding:5px 13px;border-radius:8px;cursor:pointer;transition:all .15s}
+.sf-btn.on{background:var(--navy);border-color:var(--navy);color:#fff}
+
+/* ─── VIEW 5: CARDS ──────────────────────────────────────── */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.gc{background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:all .2s;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.gc:hover{box-shadow:0 8px 24px rgba(0,0,0,.1);transform:translateY(-2px)}
+.gc.risk{border-color:#FECACA}
+.gc.exp{border-color:var(--navy)}
+.gc-hdr{padding:15px 17px 11px}
+.gc-bdgs{display:flex;gap:5px;margin-bottom:7px;align-items:center;flex-wrap:wrap}
+.gc-inst{font-size:15px;font-weight:800;line-height:1.3;margin-bottom:3px}
+.gc-gname{font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gc-metrics{display:flex;gap:14px;padding:11px 17px;background:#F8FAFC;border-top:1px solid var(--border)}
+.gc-m{display:flex;flex-direction:column;gap:1px}
+.gc-ml{font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;color:var(--muted)}
+.gc-mv{font-size:14px;font-weight:700}
+.gc-qi{display:flex;align-items:center;gap:3px;padding:9px 17px;border-top:1px solid var(--border)}
+.gc-ql{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-right:4px}
+.gc-det{overflow:hidden;max-height:0;transition:max-height .3s ease}
+.gc-det.open{max-height:280px}
+.gc-det-inner{padding:12px 17px;border-top:1px solid var(--border)}
+.dr{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px}
+.dr:last-child{border-bottom:none}
+.dl{color:var(--muted);font-weight:500}
+.dv{font-weight:600;text-align:right;max-width:55%}
+
+/* ─── MISC ───────────────────────────────────────────────── */
+.empty{text-align:center;padding:48px 24px;color:var(--muted);font-size:14px}
+.empty .ico{font-size:36px;margin-bottom:12px}
+.num{font-variant-numeric:tabular-nums}
+.inst-link{color:var(--navy);text-decoration:none;font-weight:600}
+.inst-link:hover{text-decoration:underline;color:var(--navy-light)}
+
+/* ─── VIEW 6: DEADLINE CALENDAR ─────────────────────────── */
+.dl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(680px,1fr));gap:20px}
+.dl-card{background:var(--card);border-radius:var(--r);border:1px solid var(--border);overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.dl-card-top{height:4px}
+.dl-hdr{display:flex;align-items:flex-start;justify-content:space-between;padding:16px 20px 12px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:10px}
+.dl-round-name{font-size:18px;font-weight:800;letter-spacing:-.3px}
+.dl-round-fy{font-size:12px;color:var(--muted);font-weight:500;margin-top:2px}
+.dl-hdr-meta{display:flex;gap:18px;flex-wrap:wrap}
+.dl-hdr-stat{display:flex;flex-direction:column;align-items:flex-end}
+.dl-hdr-stat-val{font-size:15px;font-weight:700;color:var(--text)}
+.dl-hdr-stat-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;color:var(--muted)}
+.dl-table{width:100%;border-collapse:collapse;font-size:13px}
+.dl-table th{background:#F8FAFC;padding:9px 16px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);border-bottom:1px solid var(--border)}
+.dl-table td{padding:10px 16px;border-bottom:1px solid var(--border);vertical-align:middle}
+.dl-table tr:last-child td{border-bottom:none}
+.dl-table tr:hover td{background:#FAFBFC}
+.dl-row-warn td{background:#FFFBF5}
+.dl-row-warn:hover td{background:#FEF3C7}
+.dl-row-final td{background:#F8FAFC;font-weight:600}
+.dl-row-final-warn td{background:#FFF5F5}
+.dl-period{font-weight:600;white-space:nowrap}
+.dl-date{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--text)}
+.dl-date-full{font-weight:600}
+.dl-date-year{font-size:11px;color:var(--muted);display:block}
+.dl-days{font-size:12px;font-weight:600;white-space:nowrap}
+.dl-days.past{color:var(--muted)}
+.dl-days.overdue{color:var(--red)}
+.dl-days.soon{color:#1D4ED8}
+.dl-days.future{color:var(--muted)}
+.dl-bar-wrap{width:120px;background:var(--bg);border-radius:100px;height:5px;margin-top:4px}
+.dl-bar{height:100%;border-radius:100px;transition:width .6s ease}
+.dl-count{white-space:nowrap}
+.dl-count-num{font-size:14px;font-weight:700}
+.dl-count-den{font-size:12px;color:var(--muted)}
+.dl-status{display:inline-flex;align-items:center;padding:3px 10px;border-radius:100px;font-size:12px;font-weight:700;white-space:nowrap}
+.dl-status.done{background:var(--green-bg);color:var(--green)}
+.dl-status.missing{background:var(--red-bg);color:var(--red)}
+.dl-status.partial{background:var(--amber-bg);color:var(--amber)}
+.dl-status.upcoming{background:var(--blue-bg);color:var(--navy)}
+.dl-status.future{background:var(--bg);color:var(--muted)}
+.dl-legend{display:flex;gap:16px;padding:10px 20px;border-top:1px solid var(--border);background:#F8FAFC;flex-wrap:wrap}
+.dl-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--muted)}
+.dl-legend-dot{width:10px;height:10px;border-radius:50%}
+
+/* ─── DEADLINE BAR ───────────────────────────────────────── */
+.dbar{background:#0F172A;padding:7px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;border-bottom:2px solid #1E293B}
+.dbar-sec{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.dbar-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;white-space:nowrap}
+.dbar-lbl.past-lbl{color:#F87171}
+.dbar-lbl.up-lbl{color:#60A5FA}
+.dbar-div{width:1px;height:20px;background:#334155;flex-shrink:0;margin:0 4px}
+.dchip{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:100px;font-size:11px;font-weight:700;white-space:nowrap;line-height:1.3}
+.dchip.overdue{background:#450A0A;color:#FCA5A5;border:1px solid #7F1D1B}
+.dchip.recent{background:#422006;color:#FED7AA;border:1px solid #7C2D12}
+.dchip.soon{background:#0C2A4A;color:#93C5FD;border:1px solid #1D4ED8}
+.dchip.future{background:#1E293B;color:#94A3B8;border:1px solid #334155}
+.dchip.done{background:#052E16;color:#6EE7B7;border:1px solid #065F46}
+
+/* per-grant deadline chip in table */
+.gdl{display:inline-flex;flex-direction:column;align-items:flex-start;gap:2px}
+.gdl-chip{display:inline-flex;align-items:center;padding:2px 7px;border-radius:6px;font-size:11px;font-weight:700;white-space:nowrap}
+.gdl-chip.overdue{background:var(--red-bg);color:var(--red)}
+.gdl-chip.soon{background:#DBEAFE;color:#1D4ED8}
+.gdl-chip.ok{background:var(--green-bg);color:var(--green)}
+.gdl-chip.future{background:var(--bg);color:var(--muted)}
+@media(max-width:900px){
+  .kpi-row{grid-template-columns:repeat(2,1fr)}
+  .rc-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+/* ─── BURN RATE BADGES ───────────────────────────────────── */
+.br-badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:700;white-space:nowrap}
+.br-ok{background:#D1FAE5;color:#065F46}
+.br-warn{background:#FEF3C7;color:#92400E}
+.br-risk{background:#FEE2E2;color:#991B1B}
+
+/* ─── UNSPENT FUNDS AT RISK PANEL ───────────────────────── */
+.unspent-panel{background:#FFF7ED;border:1px solid #FED7AA;border-radius:var(--r);margin-bottom:18px;overflow:hidden}
+.unspent-hdr{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;cursor:pointer;user-select:none}
+.od-panel{border-radius:var(--r);margin-bottom:18px;overflow:hidden;border:1px solid #FECACA;background:#FEF2F2}
+.od-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;font-weight:700;font-size:13px;color:var(--red);cursor:pointer;user-select:none}
+.od-hdr-ttl{display:flex;align-items:center;gap:8px}
+.od-total{background:var(--red);color:#fff;padding:1px 9px;border-radius:100px;font-size:12px;font-weight:800}
+.od-body{padding:0 18px 12px}
+.od-group{margin-top:10px}
+.od-group-hdr{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--red);margin-bottom:4px}
+.od-group-hdr.amber{color:var(--amber)}
+.od-cnt{background:var(--red-bg);color:var(--red);padding:0 7px;border-radius:100px;font-size:11px;font-weight:700}
+.od-cnt.amber{background:var(--amber-bg);color:var(--amber)}
+.od-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-top:1px solid #FECACA;font-size:12px}
+.od-row.amber{border-top-color:#FDE68A}
+.od-gname{flex:1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
+.od-detail{color:var(--red);font-weight:700;white-space:nowrap}
+.od-detail.amber{color:var(--amber)}
+.unspent-ttl{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:700;color:#92400E}
+.unspent-n{background:#F97316;color:#fff;padding:1px 9px;border-radius:100px;font-size:12px;font-weight:800}
+
+/* ─── TOOL BUTTONS (export / print) ─────────────────────── */
+.tool-btn{background:#fff;border:1.5px solid var(--border);color:var(--muted);font-family:var(--font);font-size:12px;font-weight:600;padding:5px 13px;border-radius:8px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.tool-btn:hover{border-color:var(--navy);color:var(--navy)}
+
+/* ─── LOGO ───────────────────────────────────────────────── */
+.hdr-logo{height:36px;width:auto;object-fit:contain;border-radius:4px}
+
+/* ─── PRINT STYLES ───────────────────────────────────────── */
+@media print {
+  *{animation:none!important;transition:none!important;opacity:1!important}
+  .hdr,.fbar,.dbar,#dbar,.tabs,.alrt-panel,.unspent-panel,.od-panel,.tool-btn,.pills,.srch,.rcount,.sf-row{display:none!important}
+  .view{display:none!important}
+  .view.on{display:block!important}
+  body{font-size:12px;background:#fff}
+  .main{padding:0;max-width:100%}
+  .tbl-wrap{box-shadow:none;border:1px solid #ccc;overflow:visible!important}
+  .kpi-row{grid-template-columns:repeat(4,1fr)}
+  @page{margin:1.5cm}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-top">
+    <div class="hdr-title">
+      <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNzUgOTEuNjciPjxkZWZzPjxzdHlsZT4uY2xzLTF7ZmlsbDojZmZmO30uY2xzLTJ7ZmlsbDojYTVkODY3O30uY2xzLTN7ZmlsbDojMDBiM2JlO308L3N0eWxlPjwvZGVmcz48cGF0aCBjbGFzcz0iY2xzLTIiIGQ9Ik0xMDEuMjYsNTkuNjZsLjMyLDUuMTktNC45LjMyYy0uMDksMC0uMTQuMDMtLjE4LjEtLjAxLDAtLjA2LDAtLjE2LS4wNS0uMDQtLjAyLS4wOC0uMDMtLjEyLS4wM2gtLjAybC0xLjE1LjA3Yy0uMDUtLjAxLS4yNC0uMDctLjQzLS4zMywwLDAtLjYxLS43OC0xLjE0LTEuNDEtLjAxLS4wMS0uMDMtLjAzLS4wNC0uMDQsMCwwLS4yMS0uMTUtLjM3LS4yNS0uMS0uMDYtLjIxLS4xMi0uMjctLjI2LDAtLjAyLS4wMi0uMDUtLjA0LS4wNy0uMDItLjAyLS40MS0uNS0uODMtLjg4LS4wMi0uMDItLjAzLS4wMy0uMDUtLjA0bC0uMjctLjEzLS4zNC0uMjdzLS4wNi0uMDMtLjA4LS4wNGMwLDAtLjE1LS4wNi0uMjYtLjMzLS4wMi0uMTYtLjEzLS43NS0uMzctMS4xMWwtLjEtLjE1Yy0uMTYtLjI1LS4yNS0uMzktLjU5LS41OS0uMzQtLjE5LS45LS40OC0uOTMtLjQ5LS4wNC0uMDItLjA5LS4wMy0uMTQtLjAzLS4wOCwwLS4xNC0uMDYtLjE1LS4yLS4wNS0uNDktLjEtLjY1LS4xMS0uNjgsMC0uMDItLjAxLS4wMy0uMDItLjA0LDAsMC0uMDItLjEuMTMtLjIzLjA2LS4wNS4xLS4xMy4wOS0uMjFsLS4wNy0uODFjMC0uMDYtLjA0LS4xMi0uMDgtLjE2bC0xLjUxLTEuNDFjLS4wNS0uMDktLjE3LS4yMy0uNC0uMzItLjIyLS4wOS0uNTMtLjI3LS41My0uMjctLjAyLS4wMS0uMzEtLjIxLS40NC0uOC4wMi0uMDYuMDMtLjEyLjAzLS4xOC4wMy0uMjMuMDMtLjUtLjMzLS43NS0uMjItLjE2LS4zOS0uMTgtLjU3LS4wOWwtLjAzLS4wNGMtLjA3LS4wOS0uMS0uMTItLjA2LS40My4wNS0uMzktLjAzLS41NC0uMTYtLjc0LS4wMi0uMDMtLjA0LS4wNi0uMDctLjEtLjEyLS4yMS0uMjgtLjQxLS4zMy0uNDgtLjAyLS4wNS0uMDctLjE4LS4xMS0uNDItLjA1LS4yNi0uMDUtLjc0LS4wNC0uOTRsLjA0LS4xNGMuMDItLjA3LDAtLjE1LS4wMy0uMjFsLS4wOS0uMTVjLS4wMi0uMTMtLjA3LS41My0uMDQtLjg3LjA0LS40Mi4xMy0uNzYuMTktLjkzLjA3LjA2LjI0LjE1LjU0LjEyLjAyLDAsLjA0LDAsLjA2LS4wMWwuNTEtLjE3cy4wNC0uMDIuMDYtLjAzYzAsMCwuMTQtLjEuMzMtLjIxLjM0LS4yMS4zNC0uNzMuMzQtLjksMC0uMjEsMC0uMzguMTItLjQ0bC4yNy0uMTNjLjEtLjAzLjI4LS4wNC4zOCwwbC40NS4xNHMuMzYuMTIuODQuMDNjLjAyLDAsLjUzLS4xOC44MS0uMzMuMDEsMCwuMDMtLjAyLjA0LS4wMi4xLS4wOC42Mi0uNS43NC0uODgsMCwwLC4xNC0uNTMuMjItLjc4LjAyLS4xMS4xMi0uNC4yOC0uNTRsMjAuNDcsMTUuNTMtOS4wNi43NmMtLjE0LjAxLS4yNS4xMy0uMjQuMjhaTTM1LjY2LDEuNjRoLTEwLjQyYy0uMDgsMC0uMTQuMDctLjEyLjE1bDkuMTgsMzguMjRjLjAzLjEzLjIxLjEzLjI1LDBsNS4xMy0xOC41N3MwLS4wNSwwLS4wN2wtMy44Ny0xOS42M2MtLjAxLS4wNy0uMDgtLjEzLS4xNS0uMTNaIi8+PHBhdGggY2xhc3M9ImNscy0zIiBkPSJNMzUuNjIsNjguNDV2LjAzcy01LjcsMC01LjcsMGMtLjA3LDAtLjEzLS4wNS0uMTUtLjEybC01LjU3LTIxLjM1Yy0uMDUtLjE4LS4zMS0uMTQtLjMxLjA0bC4wNCwyMS4yN2MwLC4wOS0uMDcuMTYtLjE2LjE2aC04LjM1Yy0uMDksMC0uMTYtLjA3LS4xNi0uMTZsLjQ5LTI1LjRjMC0uMS0uMDgtLjE3LS4xOC0uMTYtLjg5LjEzLTEuODQuMi0yLjg3LjItMi4zNiwwLTQuMzgtLjMyLTYuMDUtLjk2LTEuNjctLjY0LTIuOTgtMS41OS0zLjk0LTIuODQtLjk2LTEuMjUtMS42NS0yLjY5LTIuMDgtNC4zMi0uNDMtMS42My0uNjQtMy41NS0uNjQtNS43NXYtMTQuNzdjMC0yLjI1LjIxLTQuMi42NC01Ljg2LjQyLTEuNjYsMS4xMi0zLjExLDIuMDgtNC4zNS45Ni0xLjI0LDIuMjctMi4xNywzLjkzLTIuOCwxLjY2LS42MiwzLjY4LS45NCw2LjA2LS45NHM0LjIyLjI4LDUuODMuODVjMS42MS41NywyLjg3LDEuNCwzLjc4LDIuNS45MSwxLjEsMS41NiwyLjM1LDEuOTYsMy43NS40LDEuNC42LDMuMDIuNiw0Ljg3djMuNDljMCwuMDktLjA3LjE2LS4xNi4xNmgtOC44MmMtLjA5LDAtLjE2LS4wNy0uMTYtLjE2di00LjAyYzAtLjY1LDAtMS4xNC0uMDItMS40Ny0uMDItLjMzLS4wOC0uNzYtLjE4LTEuMjktLjEtLjUyLS4yNS0uOTItLjQ1LTEuMTktLjItLjI3LS41LS41LS45MS0uNzEtLjQxLS4yMS0uOS0uMzEtMS40OC0uMzFzLTEuMDcuMS0xLjQ4LjMxYy0uNDEuMjEtLjcyLjQ2LS45My43NS0uMjEuMjktLjM4LjY5LS41MSwxLjItLjEzLjUxLS4yLjk3LS4yMywxLjM5LS4wMy40Mi0uMDQuOTMtLjA0LDEuNTV2MTkuMzFjMCwxLjY3LjIyLDIuOTQuNjYsMy44MS40NC44NywxLjI4LDEuMzEsMi41MywxLjMxLjU2LDAsMS4wNC0uMSwxLjQ0LS4zMS40LS4yMS43LS40NS45MS0uNzQuMi0uMjguMzYtLjY4LjQ3LTEuMi4xMS0uNTIuMTctLjk3LjE5LTEuMzUuMDItLjM4LjAyLS44OS4wMi0xLjUydi00LjE5YzAtLjA5LjA3LS4xNi4xNi0uMTZoMTAuNzJjLjA2LDAsLjExLjA0LjEyLjFsNi4xNiwyMy42OWMuMDMuMTMuMjEuMTMuMjUsMEw0Ny4zMiwxLjYzYy4wMi0uMDcuMDgtLjExLjE1LS4xMWw5LjI5LjExYy4xLDAsLjE4LjEuMTUuMmwtMjEuMjgsNjYuNjFaTTUwLjUzLDI4LjEzbC04LjA5LDI1LjQ4czAsLjAzLDAsLjA0bC0uMjIsMTQuNjZjMCwuMDkuMDcuMTYuMTYuMTZoOC4yN2MuMDksMCwuMTYtLjA3LjE2LS4xNWwuMDQtNDAuMTVjMC0uMTgtLjI1LS4yMi0uMzEtLjA1Wk04NC41Nyw2Ni44MXMtLjE2LS4wNy0uMTgtLjA4Yy0uNTEtLjIxLS4zLS42NS0uMjktLjg0LjAxLS4yLjE2LS41Ni0uMjMtLjU3LS40LS4wMi0uNjMtLjMxLS43Ni0uNDctLjEzLS4xNi0uMjUtLjUyLS41NC0uNjEtLjI5LS4wOS0uNDMtLjI1LS42LS41Mi0uMTYtLjI3LS4yNS0uMzYtLjQxLS42MS0uMTUtLjIzLS40NC0uNjYtLjU5LS44M2gtMTYuNDljLS4wOSwwLS4xNi0uMDctLjE2LS4xNlYyNy4yMWMwLS4wOS0uMDctLjE2LS4xNi0uMTZoLTkuMDNjLS4wOSwwLS4xNi4wNy0uMTYuMTZ2NDEuMTJjMCwuMDkuMDcuMTUuMTYuMTVoMjkuNzZjLjExLS4zOC4xNy0uODcuMTctLjg3LjA0LS41OS0uNS0uNzktLjUtLjc5Wk0xMjkuODEsNjUuNjJsMS45NCwyLjk3aC0yLjA0bC0xLjctMi42NmgtMS4zN3YyLjY2aC0xLjc1di04LjMzaDMuNjNjMS4wMSwwLDEuNzkuMywyLjMxLjg0LjQ0LjQ2LjY4LDEuMTIuNjgsMS45di4wMmMwLDEuMzQtLjY5LDIuMTktMS43LDIuNThaTTEyOS43NCw2My4xMWMwLS43OS0uNTItMS4xOS0xLjM3LTEuMTloLTEuNzN2Mi4zOWgxLjc3Yy44NSwwLDEuMzQtLjQ4LDEuMzQtMS4xOHYtLjAyWk0xMzQuODcsNjUuMjFoMy43NHYtMS42M2gtMy43NHYtMS42OWg0LjI1di0xLjYzaC01Ljk4djguMzNoNi4wNHYtMS42M2gtNC4zMXYtMS43NVpNMTQ0LjQyLDY1LjM4aDEuNzZ2MS4xOWMtLjQ0LjMzLTEuMDEuNS0xLjY0LjUtMS40MSwwLTIuNC0xLjEyLTIuNC0yLjY0di0uMDJjMC0xLjQxLDEuMDEtMi41OSwyLjI4LTIuNTkuOTIsMCwxLjQ2LjMxLDIuMDcuODRsMS4xLTEuMzljLS44My0uNzQtMS42OS0xLjE0LTMuMTItMS4xNC0yLjQsMC00LjE2LDEuOTQtNC4xNiw0LjN2LjAyYzAsMi40NiwxLjcsNC4yOCw0LjE3LDQuMjgsMS40NSwwLDIuNTctLjYsMy4zOS0xLjMydi0zLjYyaC0zLjQ1djEuNThaTTE0OS43LDY4LjU5aDEuNzR2LTguMzJoLTEuNzR2OC4zMlpNMTYxLjQ1LDY0LjR2LjAyYzAsMi4zNy0xLjc4LDQuMzEtNC4yMyw0LjMxcy00LjIxLTEuOTItNC4yMS00LjI4di0uMDJjMC0yLjM3LDEuNzgtNC4zLDQuMjMtNC4zczQuMjEsMS45Miw0LjIxLDQuMjhaTTE1OS42Myw2NC40M2MwLTEuNDMtMS0yLjYyLTIuNC0yLjYycy0yLjM4LDEuMTYtMi4zOCwyLjU5di4wMmMwLDEuNDMsMSwyLjYyLDIuNCwyLjYyczIuMzgtMS4xNywyLjM4LTIuNTl2LS4wMlpNMTY4LjMzLDY1LjM5bC0zLjcyLTUuMTNoLTEuNjF2OC4zM2gxLjcydi01LjI5bDMuODQsNS4yOWgxLjQ4di04LjMzaC0xLjcydjUuMTNaTTE3Ni4yMSw2MC4yMWwzLjQsOC4zOWgtMS44MmwtLjczLTEuODdoLTMuMzVsLS43MywxLjg3aC0xLjc4bDMuNC04LjM5aDEuNjFaTTE3Ni40Myw2NS4xMWwtMS4wNS0yLjctMS4wNSwyLjdoMi4xMVpNMTgyLjUxLDYwLjI3aC0xLjc0djguMzNoNS43di0xLjY3aC0zLjk2di02LjY2Wk0xOTQuOTYsNjcuMDVjLTEuMzYsMC0yLjMtMS4xOS0yLjMtMi42MnYtLjAyYzAtMS40My45Ni0yLjU5LDIuMy0yLjU5Ljc5LDAsMS40Mi4zNiwyLjAzLjk0bDEuMTEtMS4zNGMtLjc0LS43Ni0xLjYzLTEuMjgtMy4xMy0xLjI4LTIuNDQsMC00LjE0LDEuOTQtNC4xNCw0LjN2LjAyYzAsMi4zOSwxLjczLDQuMjgsNC4wNyw0LjI4LDEuNTMsMCwyLjQ0LS41NywzLjI1LTEuNDlsLTEuMTEtMS4xOGMtLjYyLjYtMS4xOC45OC0yLjA5Ljk4Wk0yMDcuMjksNjQuNHYuMDJjMCwyLjM3LTEuNzgsNC4zMS00LjIzLDQuMzFzLTQuMi0xLjkyLTQuMi00LjI4di0uMDJjMC0yLjM3LDEuNzgtNC4zLDQuMjMtNC4zczQuMjEsMS45Miw0LjIxLDQuMjhaTTIwNS40Nyw2NC40M2MwLTEuNDMtMS0yLjYyLTIuNC0yLjYycy0yLjM4LDEuMTYtMi4zOCwyLjU5di4wMmMwLDEuNDMsMSwyLjYyLDIuNCwyLjYyczIuMzgtMS4xNywyLjM4LTIuNTl2LS4wMlpNMjE0LjE3LDY1LjM5bC0zLjcyLTUuMTNoLTEuNjF2OC4zM2gxLjcydi01LjI5bDMuODQsNS4yOWgxLjQ4di04LjMzaC0xLjcydjUuMTNaTTIyMS4wNSw2My42MWMtMS4zNy0uMzctMS43MS0uNTUtMS43MS0xLjA5di0uMDJjMC0uNDEuMzUtLjczLDEuMDItLjczczEuMzYuMzEsMi4wNi44MmwuOTEtMS4zOGMtLjgtLjY4LTEuNzktMS4wNi0yLjk1LTEuMDYtMS42MiwwLTIuNzgsMS0yLjc4LDIuNTF2LjAyYzAsMS42NSwxLjAzLDIuMTIsMi42MywyLjU0LDEuMzMuMzYsMS42LjYsMS42LDEuMDZ2LjAyYzAsLjQ5LS40My43OC0xLjE1Ljc4LS45MSwwLTEuNjUtLjM5LTIuMzctMS4wMWwtMS4wMywxLjNjLjk1Ljg5LDIuMTYsMS4zMywzLjM3LDEuMzMsMS43MSwwLDIuOTEtLjkzLDIuOTEtMi41OHYtLjAyYzAtMS40NS0uOTEtMi4wNi0yLjUyLTIuNVpNMjMzLjA1LDY0LjR2LjAyYzAsMi4zNy0xLjc4LDQuMzEtNC4yMyw0LjMxcy00LjIxLTEuOTItNC4yMS00LjI4di0uMDJjMC0yLjM3LDEuNzgtNC4zLDQuMjMtNC4zczQuMjEsMS45Miw0LjIxLDQuMjhaTTIzMS4yMiw2NC40M2MwLTEuNDMtMS0yLjYyLTIuNC0yLjYycy0yLjM4LDEuMTYtMi4zOCwyLjU5di4wMmMwLDEuNDMsMSwyLjYyLDIuNCwyLjYyczIuMzgtMS4xNywyLjM4LTIuNTl2LS4wMlpNMjM5LjUxLDY1LjYybDEuOTQsMi45N2gtMi4wNGwtMS43LTIuNjZoLTEuMzd2Mi42NmgtMS43NHYtOC4zM2gzLjYzYzEuMDEsMCwxLjc5LjMsMi4zMS44NC40NC40Ni42OCwxLjEyLjY4LDEuOXYuMDJjMCwxLjM0LS42OSwyLjE5LTEuNywyLjU4Wk0yMzkuNDQsNjMuMTFjMC0uNzktLjUyLTEuMTktMS4zNy0xLjE5aC0xLjczdjIuMzloMS43N2MuODUsMCwxLjM0LS40OCwxLjM0LTEuMTh2LS4wMlpNMjQyLjE5LDYxLjk1aDIuNDF2Ni42NGgxLjc1di02LjY0aDIuNDF2LTEuNjloLTYuNTd2MS42OVpNMjUwLjAxLDY4LjU5aDEuNzR2LTguMzJoLTEuNzR2OC4zMlpNMjU4LjgzLDY1LjA0YzAsMS4zMi0uNjUsMi0xLjcxLDJzLTEuNzEtLjctMS43MS0yLjA2di00LjcxaC0xLjc1djQuNzZjMCwyLjQ1LDEuMywzLjcsMy40MywzLjdzMy40OC0xLjI0LDMuNDgtMy43NnYtNC43aC0xLjc1djQuNzdaTTI2OC41LDYwLjI3bC0yLjA5LDMuNTItMi4wOS0zLjUyaC0xLjg4djguMzNoMS43MXYtNS40bDIuMjEsMy41MmguMDVsMi4yMy0zLjU2djUuNDNoMS43M3YtOC4zM2gtMS44OFoiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMjUuNzEsODkuNjdjLjAzLjA5LjA0LjE5LjA0LjI5LDAsLjEzLS4wMi4yNy0uMDYuNDItLjA0LjE1LS4xLjMtLjE5LjQ1LS4wOC4xNS0uMTkuMy0uMzEuNDQtLjEyLjE0LS4yNy4yOC0uNDMuNGwtLjIxLS4xOXMtLjA1LS4wNi0uMDctLjA4Yy0uMDEtLjAzLS4wMi0uMDYtLjAyLS4wOSwwLS4wMywwLS4wNS4wMy0uMDkuMDItLjAzLjA0LS4wNi4wNy0uMDguMDMtLjAzLjA3LS4wNy4xMS0uMTEuMDQtLjA0LjA4LS4wOS4xMy0uMTUuMDQtLjA2LjA4LS4xMi4xMi0uMTguMDQtLjA3LjA2LS4xNC4wOC0uMjEtLjA5LDAtLjE4LS4wMy0uMjUtLjA3LS4wNy0uMDQtLjE0LS4wOS0uMTktLjE1LS4wNS0uMDYtLjA5LS4xMy0uMTItLjIxLS4wMy0uMDgtLjA0LS4xNi0uMDQtLjI2LDAtLjA4LjAyLS4xNi4wNS0uMjQuMDMtLjA3LjA4LS4xNC4xNC0uMTkuMDYtLjA1LjEzLS4xLjIxLS4xMy4wOC0uMDMuMTctLjA1LjI3LS4wNS4xMiwwLC4yMi4wMi4zMS4wNi4wOS4wNC4xNi4xLjIyLjE3LjA2LjA3LjEuMTUuMTMuMjRaTTExOS44MSw5MC41aDMuNzF2LTEuMDNoLTIuMzd2LTEuMzdoMS44MXYtLjk5aC0xLjgxdi0xLjM0aDIuMzd2LTEuMDNoLTMuNzF2NS43NlpNOTguNSw5MC41aDEuMzV2LTIuMjRoMS45N3YtMS4wM2gtMS45N3YtMS40NmgyLjM3di0xLjAzaC0zLjcxdjUuNzZaTTEzMi41Miw4Ny40MWMtLjA5LjI0LS4yMy40NS0uNDIuNjJzLS40My4zMS0uNzIuNGMtLjI5LjEtLjY0LjE0LTEuMDMuMTRoLS43djEuOTNoLTEuMzR2LTUuNzZoMi4wM2MuNDEsMCwuNzUuMDUsMS4wNS4xNC4yOS4xLjUzLjIzLjcyLjQuMTkuMTcuMzMuMzcuNDIuNi4wOS4yMy4xMy40OC4xMy43NCwwLC4yOS0uMDUuNTUtLjE0Ljc5Wk0xMzEuMzIsODYuNjJjMC0uMTMtLjAyLS4yNS0uMDYtLjM2LS4wNC0uMTEtLjEtLjItLjE4LS4yOC0uMDgtLjA4LS4xOC0uMTQtLjMtLjE4LS4xMi0uMDQtLjI3LS4wNi0uNDQtLjA2aC0uN3YxLjgzaC43Yy4zNSwwLC42LS4wOC43NS0uMjUuMTUtLjE3LjIzLS40LjIzLS43Wk0xMTYuMDQsODYuMjdjLjE0LS4xNi4zMi0uMjguNTItLjM3LjItLjA5LjQyLS4xMy42Ni0uMTMuMTQsMCwuMjYuMDEuMzcuMDMuMS4wMi4yLjA1LjI3LjA4LjA4LjAzLjE0LjA2LjIuMS4wNi4wNC4xMS4wNy4xNi4xLjA1LjAzLjA5LjA2LjEzLjA4LjA0LjAyLjA5LjAzLjEzLjAzLjA3LDAsLjEzLS4wMi4xNy0uMDUuMDQtLjAzLjA3LS4wNi4xLS4xbC40NS0uNjFjLS4xMS0uMTEtLjIzLS4yMi0uMzctLjMxLS4xNC0uMDktLjI5LS4xNy0uNDYtLjI0LS4xNy0uMDctLjM0LS4xMi0uNTQtLjE2LS4xOS0uMDQtLjM5LS4wNi0uNjEtLjA2LS40NSwwLS44NS4wNy0xLjIyLjIyLS4zNy4xNS0uNjkuMzUtLjk1LjYxLS4yNi4yNi0uNDcuNTctLjYyLjkzLS4xNS4zNi0uMjIuNzUtLjIyLDEuMThzLjA2LjgxLjE5LDEuMTdjLjEzLjM2LjMxLjY3LjU2LjkzLjI0LjI2LjU0LjQ3Ljg4LjYyLjM1LjE1Ljc0LjIyLDEuMTguMjIuNDgsMCwuODktLjA4LDEuMjQtLjIzLjM1LS4xNS42NC0uMzguODctLjY5bC0uNTMtLjU2cy0uMDYtLjA1LS4wOS0uMDZjLS4wMy0uMDEtLjA2LS4wMi0uMS0uMDItLjA0LDAtLjA4LDAtLjExLjAzLS4wNC4wMi0uMDcuMDQtLjEuMDctLjA4LjA3LS4xNi4xMy0uMjQuMTdzLS4xNi4wOC0uMjUuMTFjLS4wOS4wMy0uMTguMDUtLjI4LjA2LS4xLjAxLS4yMS4wMi0uMzMuMDItLjIxLDAtLjQxLS4wNC0uNTktLjEyLS4xOC0uMDgtLjM1LS4yLS40OC0uMzYtLjE0LS4xNi0uMjUtLjM1LS4zMy0uNTgtLjA4LS4yMy0uMTItLjQ5LS4xMi0uNzlzLjA0LS41NC4xMi0uNzZjLjA4LS4yMy4xOS0uNDIuMzQtLjU4Wk0xMDguMyw4Ni40NmMuMTQuMzYuMjIuNzQuMjIsMS4xNnMtLjA3LjgtLjIyLDEuMTZjLS4xNC4zNi0uMzUuNjctLjYxLjk0LS4yNi4yNy0uNTguNDctLjk0LjYyLS4zNy4xNS0uNzguMjMtMS4yMi4yM3MtLjg2LS4wOC0xLjIzLS4yM2MtLjM3LS4xNS0uNjgtLjM2LS45NS0uNjItLjI2LS4yNy0uNDctLjU4LS42MS0uOTQtLjE0LS4zNi0uMjItLjc1LS4yMi0xLjE2cy4wNy0uOC4yMi0xLjE2Yy4xNC0uMzYuMzUtLjY3LjYxLS45My4yNi0uMjYuNTgtLjQ3Ljk1LS42Mi4zNy0uMTUuNzgtLjIzLDEuMjMtLjIzcy44Ni4wOCwxLjIyLjIzYy4zNy4xNS42OC4zNi45NC42Mi4yNi4yNi40Ni41Ny42MS45M1pNMTA3LjE1LDg3LjYyYzAtLjI4LS4wNC0uNTQtLjExLS43Ny0uMDctLjIzLS4xOC0uNDItLjMyLS41OC0uMTQtLjE2LS4zMS0uMjgtLjUxLS4zNi0uMi0uMDgtLjQzLS4xMy0uNjgtLjEzcy0uNDkuMDQtLjY5LjEzYy0uMi4wOC0uMzcuMjEtLjUxLjM2LS4xNC4xNi0uMjQuMzUtLjMyLjU4LS4wNy4yMy0uMTEuNDgtLjExLjc3cy4wNC41NS4xMS43N2MuMDcuMjMuMTguNDIuMzIuNTguMTQuMTYuMzEuMjguNTEuMzYuMi4wOC40My4xMi42OS4xMnMuNDgtLjA0LjY4LS4xMmMuMi0uMDguMzctLjIuNTEtLjM2LjE0LS4xNi4yNC0uMzUuMzItLjU4LjA3LS4yMy4xMS0uNDkuMTEtLjc3Wk0xMTIuODEsODguNDlsMS4yMywyLjAxaC0xLjIxYy0uMjIsMC0uMzktLjA4LS40OC0uMjVsLS45Ni0xLjY3Yy0uMDQtLjA3LS4wOS0uMTMtLjE1LS4xNi0uMDYtLjAzLS4xNC0uMDUtLjI0LS4wNWgtLjM0djIuMTNoLTEuMzR2LTUuNzZoMS44OGMuNDIsMCwuNzcuMDQsMS4wNy4xMy4yOS4wOS41My4yMS43Mi4zNi4xOS4xNS4zMi4zMy40MS41NC4wOC4yMS4xMy40NC4xMy42OCwwLC4xOS0uMDMuMzYtLjA4LjUzLS4wNS4xNy0uMTIuMzItLjIyLjQ2LS4xLjE0LS4yMi4yNy0uMzYuMzgtLjE0LjExLS4zMS4yLS41LjI3LjA5LjA0LjE3LjEuMjUuMTcuMDguMDcuMTUuMTUuMi4yNFpNMTEyLjIxLDg2LjU0YzAtLjI1LS4wOC0uNDUtLjI1LS41OS0uMTctLjE0LS40Mi0uMjEtLjc3LS4yMWgtLjU0djEuNzFoLjU0Yy4xOCwwLC4zNC0uMDIuNDYtLjA3LjEzLS4wNS4yMy0uMTEuMzEtLjE5LjA4LS4wOC4xNC0uMTguMTgtLjI5LjA0LS4xMS4wNi0uMjMuMDYtLjM1Wk05MC45OCw4OC40OWwxLjIzLDIuMDFoLTEuMjFjLS4yMiwwLS4zOS0uMDgtLjQ4LS4yNWwtLjk2LTEuNjdjLS4wNC0uMDctLjA5LS4xMy0uMTUtLjE2LS4wNi0uMDMtLjE0LS4wNS0uMjQtLjA1aC0uMzR2Mi4xM2gtMS4zNHYtNS43NmgxLjg3Yy40MiwwLC43Ny4wNCwxLjA3LjEzLjI5LjA5LjUzLjIxLjcyLjM2LjE5LjE1LjMyLjMzLjQxLjU0LjA4LjIxLjEzLjQ0LjEzLjY4LDAsLjE5LS4wMy4zNi0uMDguNTMtLjA1LjE3LS4xMi4zMi0uMjIuNDYtLjEuMTQtLjIyLjI3LS4zNi4zOC0uMTQuMTEtLjMxLjItLjUuMjcuMDkuMDQuMTcuMS4yNS4xNy4wOC4wNy4xNS4xNS4yLjI0Wk05MC4zOCw4Ni41NGMwLS4yNS0uMDgtLjQ1LS4yNS0uNTktLjE3LS4xNC0uNDItLjIxLS43Ny0uMjFoLS41NHYxLjcxaC41NGMuMTgsMCwuMzQtLjAyLjQ2LS4wNy4xMy0uMDUuMjMtLjExLjMxLS4xOS4wOC0uMDguMTQtLjE4LjE4LS4yOS4wNC0uMTEuMDYtLjIzLjA2LS4zNVpNMzAuMzcsODQuNzRoLTEuMzR2NS43NmgzLjQ3di0xLjA3aC0yLjE0di00LjdaTTM4LjE0LDg2LjQ3Yy4xNC4zNS4yMi43My4yMiwxLjE1cy0uMDcuOC0uMjIsMS4xNWMtLjE0LjM1LS4zNS42Ni0uNjEuOTEtLjI2LjI2LS41OC40Ni0uOTQuNi0uMzcuMTQtLjc4LjIyLTEuMjIuMjJoLTIuMjR2LTUuNzZoMi4yNGMuNDUsMCwuODYuMDcsMS4yMi4yMi4zNy4xNC42OC4zNS45NC42LjI2LjI2LjQ2LjU2LjYxLjkxWk0zNi45OSw4Ny42MmMwLS4yOC0uMDQtLjU0LS4xMS0uNzctLjA3LS4yMy0uMTgtLjQyLS4zMi0uNTgtLjE0LS4xNi0uMzEtLjI4LS41MS0uMzctLjItLjA5LS40My0uMTMtLjY4LS4xM2gtLjg5djMuNzFoLjg5Yy4yNiwwLC40OC0uMDQuNjgtLjEzLjItLjA5LjM3LS4yMS41MS0uMzcuMTQtLjE2LjI0LS4zNS4zMi0uNTguMDctLjIzLjExLS40OS4xMS0uNzhaTTQ1LjYsODcuNzljMCwuMDksMCwuMTksMCwuMjksMCwuMS4wMS4yMS4wMi4zMmwtMi43NC0zLjQ2cy0uMDctLjA4LS4xLS4xMWMtLjAzLS4wMy0uMDYtLjA1LS4wOS0uMDYtLjAzLS4wMS0uMDctLjAyLS4xMS0uMDMtLjA0LDAtLjA5LDAtLjE1LDBoLS43djUuNzZoMS4xOHYtMy4wOWMwLS4wOCwwLS4xNywwLS4yNywwLS4xLS4wMS0uMTktLjAyLS4yOWwyLjcyLDMuNDNjLjA3LjA4LjEzLjE0LjIxLjE3LjA3LjAzLjE2LjA1LjI2LjA1aC43di01Ljc2aC0xLjE4djMuMDVaTTM5LjIzLDkwLjVoMS4zNHYtNS43NmgtMS4zNHY1Ljc2Wk0xOS4zNyw4Ny45N2MuMTguMjEuMjcuNDcuMjcuOCwwLC4yNS0uMDUuNDctLjE0LjY4LS4wOS4yMS0uMjMuMzktLjQyLjU1LS4xOC4xNi0uNDEuMjgtLjY4LjM3LS4yNy4wOS0uNTguMTMtLjkyLjEzaC0yLjN2LTUuNzZoMi4xMmMuNCwwLC43NC4wNCwxLjAyLjExLjI4LjA3LjUxLjE4LjY4LjMxLjE4LjEzLjMuMy4zOS40OS4wOC4xOS4xMi40MS4xMi42NCwwLC4xMy0uMDIuMjUtLjA2LjM3LS4wNC4xMi0uMS4yMy0uMTcuMzQtLjA4LjExLS4xOC4yLS4zLjI5LS4xMi4wOS0uMjcuMTYtLjQ1LjIyLjM4LjA5LjY2LjI0Ljg0LjQ1Wk0xNi41Miw4Ny4xNmguN2MuMTUsMCwuMjgtLjAxLjQtLjAzLjEyLS4wMi4yMi0uMDYuMy0uMTEuMDgtLjA1LjE1LS4xMy4xOS0uMjIuMDQtLjA5LjA3LS4yMS4wNy0uMzVzLS4wMi0uMjUtLjA1LS4zNGMtLjAzLS4wOS0uMDktLjE2LS4xNi0uMjItLjA3LS4wNi0uMTYtLjA5LS4yNy0uMTItLjExLS4wMi0uMjQtLjA0LS4zOS0uMDRoLS43OHYxLjQyWk0xOC4zMiw4OC43NGMwLS4xMS0uMDEtLjItLjA0LS4yOHMtLjA4LS4xNi0uMTQtLjIxYy0uMDctLjA2LS4xNi0uMS0uMjctLjEzLS4xMS0uMDMtLjI1LS4wNS0uNDItLjA1aC0uOTN2MS40NGguOTRjLjE4LDAsLjMyLS4wMi40My0uMDcuMTEtLjA0LjItLjEuMjYtLjE3LjA2LS4wNy4xMS0uMTUuMTMtLjI0LjAyLS4wOS4wNC0uMTguMDQtLjI3Wk05NS45OCw4Ny41N2MtLjA4LS4wNi0uMTctLjEyLS4yNy0uMTUuMDctLjA0LjE0LS4wOC4yLS4xNC4wNy0uMDYuMTMtLjEzLjE5LS4yMWwxLjcxLTIuMzNoLTEuMTZjLS4xMywwLS4yNC4wMi0uMzMuMDYtLjA5LjA0LS4xNy4xMS0uMjQuMjFsLTEuMywxLjg4Yy0uMDkuMTItLjIzLjE5LS40My4xOWgtLjIxdi0yLjMzaC0xLjM0djUuNzZoMS4zNHYtMi40NWguMzJjLjEyLDAsLjIyLjAyLjI5LjA1LjA3LjAzLjEzLjA4LjE4LjE2bDEuMzEsMi4wMXMuMDUuMDcuMDguMWMuMDMuMDMuMDYuMDYuMS4wOC4wNC4wMi4wOS4wNC4xNC4wNS4wNS4wMS4xMi4wMi4yLjAyaDEuMTlsLTEuNzQtMi42N2MtLjA3LS4xMS0uMTQtLjE5LS4yMy0uMjZaTTI0LjA1LDg4LjE1YzAsLjItLjAzLjM4LS4wOC41NC0uMDUuMTYtLjEzLjI5LS4yMi40MS0uMS4xMS0uMjIuMi0uMzYuMjUtLjE0LjA2LS4zLjA5LS40OC4wOXMtLjM0LS4wMy0uNDgtLjA5Yy0uMTQtLjA2LS4yNi0uMTQtLjM2LS4yNi0uMS0uMTEtLjE3LS4yNS0uMjItLjQxLS4wNS0uMTYtLjA4LS4zNC0uMDgtLjU0di0zLjQxaC0xLjM0djMuNDFjMCwuMzUuMDYuNjguMTcuOTcuMTEuMy4yOC41NS40OS43Ni4yMS4yMS40Ny4zOC43OC41LjMxLjEyLjY1LjE4LDEuMDQuMThzLjczLS4wNiwxLjAzLS4xOGMuMzEtLjEyLjU3LS4yOC43OC0uNS4yMS0uMjEuMzgtLjQ3LjQ5LS43Ni4xMS0uMy4xNy0uNjIuMTctLjk3di0zLjQxaC0xLjM0djMuNDFaTTI2LjUxLDkwLjVoMS4zNHYtNS43NmgtMS4zNHY1Ljc2Wk00OS4zOSw4Ni4yOGMuMTQtLjE2LjMxLS4yOS41MS0uMzcuMi0uMDkuNDMtLjEzLjY4LS4xMy4xMywwLC4yNiwwLC4zNi4wMi4xMS4wMS4yMS4wMy4zMS4wNi4xLjAzLjE5LjA3LjI5LjExLjA5LjA1LjE5LjEuMy4xNi4wOC4wNS4xNy4wOC4yNS4wOC4wNiwwLC4xMi0uMDIuMTctLjA1LjA1LS4wMy4xLS4wOC4xMy0uMTNsLjM5LS41OWMtLjEyLS4xMS0uMjUtLjIxLS40LS4zMS0uMTUtLjA5LS4zMS0uMTgtLjQ5LS4yNS0uMTgtLjA3LS4zNy0uMTItLjU4LS4xNi0uMjEtLjA0LS40NC0uMDYtLjY4LS4wNi0uNDYsMC0uODguMDctMS4yNi4yMi0uMzguMTUtLjcuMzUtLjk2LjYxLS4yNi4yNi0uNDcuNTctLjYxLjkzLS4xNC4zNi0uMjEuNzUtLjIxLDEuMThzLjA3LjgxLjIyLDEuMTdjLjE1LjM2LjM1LjY3LjYyLjkzLjI2LjI2LjU3LjQ3LjkzLjYyLjM2LjE1Ljc1LjIyLDEuMTcuMjIuMjMsMCwuNDUtLjAxLjY2LS4wNC4yLS4wMi40LS4wNi41OC0uMTEuMTgtLjA1LjM1LS4xMS41MS0uMTkuMTYtLjA4LjMxLS4xNy40Ni0uMjh2LTIuNDNoLTIuMDV2Ljc0YzAsLjA3LjAyLjEzLjA3LjE3LjA1LjA0LjExLjA3LjIuMDdoLjU3di44N2MtLjEzLjA1LS4yNi4wOS0uNC4xMy0uMTQuMDMtLjMxLjA1LS40OS4wNS0uMjQsMC0uNDctLjA0LS42Ny0uMTMtLjItLjA5LS4zOC0uMjEtLjUzLS4zNy0uMTUtLjE2LS4yNy0uMzYtLjM1LS42LS4wOC0uMjQtLjEzLS41MS0uMTMtLjgxLDAtLjI4LjA0LS41My4xMS0uNzVzLjE5LS40Mi4zMy0uNThaTTY2LjMxLDkwLjVoMy43MXYtMS4wM2gtMi4zN3YtMS4zN2gxLjgxdi0uOTloLTEuODF2LTEuMzRoMi4zN3YtMS4wM2gtMy43MXY1Ljc2Wk04Ni40Nyw4Ni40NmMuMTQuMzYuMjIuNzQuMjIsMS4xNnMtLjA3LjgtLjIyLDEuMTZjLS4xNC4zNi0uMzUuNjctLjYxLjk0LS4yNi4yNy0uNTguNDctLjk0LjYyLS4zNy4xNS0uNzguMjMtMS4yMi4yM3MtLjg2LS4wOC0xLjIzLS4yM2MtLjM3LS4xNS0uNjgtLjM2LS45NS0uNjItLjI2LS4yNy0uNDctLjU4LS42MS0uOTQtLjE0LS4zNi0uMjItLjc1LS4yMi0xLjE2cy4wNy0uOC4yMi0xLjE2Yy4xNC0uMzYuMzUtLjY3LjYxLS45My4yNi0uMjYuNTgtLjQ3Ljk1LS42Mi4zNy0uMTUuNzgtLjIzLDEuMjMtLjIzcy44Ni4wOCwxLjIyLjIzYy4zNy4xNS42OC4zNi45NC42Mi4yNi4yNi40Ni41Ny42MS45M1pNODUuMzIsODcuNjJjMC0uMjgtLjA0LS41NC0uMTEtLjc3LS4wNy0uMjMtLjE4LS40Mi0uMzItLjU4LS4xNC0uMTYtLjMxLS4yOC0uNTEtLjM2cy0uNDMtLjEzLS42OC0uMTMtLjQ5LjA0LS42OS4xMy0uMzcuMjEtLjUxLjM2Yy0uMTQuMTYtLjI0LjM1LS4zMi41OC0uMDcuMjMtLjExLjQ4LS4xMS43N3MuMDQuNTUuMTEuNzdjLjA3LjIzLjE4LjQyLjMyLjU4LjE0LjE2LjMxLjI4LjUxLjM2LjIuMDguNDMuMTIuNjkuMTJzLjQ4LS4wNC42OC0uMTJjLjItLjA4LjM3LS4yLjUxLS4zNi4xNC0uMTYuMjQtLjM1LjMyLS41OC4wNy0uMjMuMTEtLjQ5LjExLS43N1pNNzkuMjUsODQuODJjLS4wOC4wNi0uMTMuMTMtLjE1LjJsLS43OSwzLjAxYy0uMDIuMDktLjA1LjE5LS4wNy4zLS4wMi4xMS0uMDQuMjItLjA3LjMzLS4wMi0uMTItLjA1LS4yMy0uMDgtLjMzLS4wMy0uMS0uMDYtLjItLjA5LS4yOWwtLjkzLTMuMDFjLS4wMy0uMDktLjA4LS4xNi0uMTYtLjIxLS4wNy0uMDUtLjE3LS4wOC0uMjktLjA4aC0uNGMtLjExLDAtLjIuMDMtLjI4LjA5LS4wOC4wNi0uMTMuMTMtLjE1LjJsLS45MywzLjAxYy0uMDMuMS0uMDYuMi0uMDkuMzEtLjAzLjExLS4wNi4yMy0uMDkuMzUtLjAxLS4xMi0uMDMtLjI0LS4wNi0uMzUtLjAzLS4xMS0uMDUtLjIxLS4wOC0uMzFsLS43OS0zLjAxYy0uMDItLjA5LS4wNy0uMTYtLjE1LS4yMS0uMDgtLjA1LS4xNy0uMDgtLjI5LS4wOGgtMS4xMmwxLjc4LDUuNzZoMS4yMWwxLjEtMy41N2MuMDItLjA2LjA0LS4xMi4wNi0uMTguMDItLjA3LjA0LS4xNC4wNi0uMjEuMDIuMDcuMDQuMTQuMDYuMjEuMDIuMDcuMDQuMTMuMDYuMThsMS4wOCwzLjU3aDEuMjFsMS43OC01Ljc2aC0xLjA1Yy0uMTEsMC0uMjEuMDMtLjI4LjA5Wk02My44NSw4Ny4xNWgtMi4zNHYtMi40MWgtMS4zNHY1Ljc2aDEuMzR2LTIuNDRoMi4zNHYyLjQ0aDEuMzR2LTUuNzZoLTEuMzR2Mi40MVpNNTQuOTksODUuOGgxLjYydjQuN2gxLjM0di00LjdoMS42MnYtMS4wNmgtNC41OHYxLjA2Wk0xNjQuOTcsOTAuNWgxLjM1di01Ljc2aC0xLjM1djUuNzZaTTI2OS4zMSw4Ny43OWMwLC4wOSwwLC4xOSwwLC4yOSwwLC4xLjAxLjIxLjAyLjMybC0yLjc0LTMuNDZzLS4wNy0uMDgtLjEtLjExYy0uMDMtLjAzLS4wNi0uMDUtLjA5LS4wNi0uMDMtLjAxLS4wNy0uMDItLjExLS4wMy0uMDQsMC0uMDksMC0uMTUsMGgtLjd2NS43NmgxLjE4di0zLjA5YzAtLjA4LDAtLjE3LDAtLjI3LDAtLjEtLjAxLS4xOS0uMDItLjI5bDIuNzIsMy40M2MuMDcuMDguMTMuMTQuMjEuMTcuMDcuMDMuMTYuMDUuMjYuMDVoLjd2LTUuNzZoLTEuMTh2My4wNVpNMjIwLjgyLDg4LjQ5bDEuMjMsMi4wMWgtMS4yMWMtLjIyLDAtLjM5LS4wOC0uNDgtLjI1bC0uOTYtMS42N2MtLjA0LS4wNy0uMDktLjEzLS4xNS0uMTYtLjA2LS4wMy0uMTQtLjA1LS4yNC0uMDVoLS4zNHYyLjEzaC0xLjM0di01Ljc2aDEuODhjLjQyLDAsLjc3LjA0LDEuMDcuMTMuMjkuMDkuNTMuMjEuNzIuMzYuMTkuMTUuMzIuMzMuNDEuNTQuMDguMjEuMTMuNDQuMTMuNjgsMCwuMTktLjAzLjM2LS4wOC41My0uMDUuMTctLjEyLjMyLS4yMi40Ni0uMS4xNC0uMjIuMjctLjM2LjM4LS4xNC4xMS0uMzEuMi0uNS4yNy4wOS4wNC4xNy4xLjI1LjE3LjA4LjA3LjE1LjE1LjIuMjRaTTIyMC4yMiw4Ni41NGMwLS4yNS0uMDgtLjQ1LS4yNS0uNTktLjE3LS4xNC0uNDItLjIxLS43Ny0uMjFoLS41NHYxLjcxaC41NGMuMTgsMCwuMzQtLjAyLjQ2LS4wNy4xMy0uMDUuMjMtLjExLjMxLS4xOS4wOC0uMDguMTQtLjE4LjE4LS4yOS4wNC0uMTEuMDYtLjIzLjA2LS4zNVpNMjI0LjQ0LDkwLjVoMy43MXYtMS4wM2gtMi4zN3YtMS4zN2gxLjgxdi0uOTloLTEuODF2LTEuMzRoMi4zN3YtMS4wM2gtMy43MXY1Ljc2Wk0yMDAuMDIsODQuNzRsMi4yMyw1Ljc2aC0xLjA0Yy0uMTIsMC0uMjEtLjAzLS4yOS0uMDgtLjA4LS4wNS0uMTMtLjEyLS4xNi0uMjFsLS4zNC0xaC0yLjE5bC0uMzQsMWMtLjAzLjA3LS4wOC4xNC0uMTUuMi0uMDguMDYtLjE3LjA5LS4yOC4wOWgtMS4wNGwyLjIzLTUuNzZoMS4zN1pNMjAwLjEyLDg4LjNsLS41My0xLjU4Yy0uMDMtLjEtLjA3LS4yMi0uMTItLjM1LS4wNS0uMTQtLjA5LS4yOC0uMTQtLjQ0LS4wNC4xNi0uMDkuMzEtLjEzLjQ1LS4wNC4xNC0uMDkuMjYtLjEzLjM2bC0uNTMsMS41N2gxLjU3Wk0yMDYuMjksODguNDlsMS4yMywyLjAxaC0xLjIxYy0uMjIsMC0uMzktLjA4LS40OC0uMjVsLS45Ni0xLjY3Yy0uMDQtLjA3LS4wOS0uMTMtLjE1LS4xNi0uMDYtLjAzLS4xNC0uMDUtLjI0LS4wNWgtLjM0djIuMTNoLTEuMzR2LTUuNzZoMS44N2MuNDIsMCwuNzcuMDQsMS4wNy4xMy4yOS4wOS41My4yMS43Mi4zNi4xOS4xNS4zMi4zMy40MS41NC4wOC4yMS4xMy40NC4xMy42OCwwLC4xOS0uMDMuMzYtLjA4LjUzLS4wNS4xNy0uMTIuMzItLjIyLjQ2LS4xLjE0LS4yMi4yNy0uMzYuMzgtLjE0LjExLS4zMS4yLS41LjI3LjA5LjA0LjE3LjEuMjUuMTcuMDguMDcuMTUuMTUuMi4yNFpNMjA1LjY4LDg2LjU0YzAtLjI1LS4wOC0uNDUtLjI1LS41OS0uMTctLjE0LS40Mi0uMjEtLjc3LS4yMWgtLjU0djEuNzFoLjU0Yy4xOCwwLC4zNC0uMDIuNDYtLjA3LjEzLS4wNS4yMy0uMTEuMzEtLjE5LjA4LS4wOC4xNC0uMTguMTgtLjI5LjA0LS4xMS4wNi0uMjMuMDYtLjM1Wk0yMDguMDksOTAuNWgzLjcxdi0xLjAzaC0yLjM3di0xLjM3aDEuODF2LS45OWgtMS44MXYtMS4zNGgyLjM3di0xLjAzaC0zLjcxdjUuNzZaTTIxMi43MSw5MC41aDMuNzF2LTEuMDNoLTIuMzd2LTEuMzdoMS44MXYtLjk5aC0xLjgxdi0xLjM0aDIuMzd2LTEuMDNoLTMuNzF2NS43NlpNMjM0LjA4LDg2LjQ3Yy4xNC4zNS4yMi43My4yMiwxLjE1cy0uMDcuOC0uMjIsMS4xNWMtLjE0LjM1LS4zNS42Ni0uNjEuOTEtLjI2LjI2LS41OC40Ni0uOTQuNi0uMzcuMTQtLjc4LjIyLTEuMjIuMjJoLTIuMjR2LTUuNzZoMi4yNGMuNDUsMCwuODYuMDcsMS4yMi4yMi4zNy4xNC42OC4zNS45NC42LjI2LjI2LjQ2LjU2LjYxLjkxWk0yMzIuOTIsODcuNjJjMC0uMjgtLjA0LS41NC0uMTEtLjc3LS4wNy0uMjMtLjE4LS40Mi0uMzItLjU4LS4xNC0uMTYtLjMxLS4yOC0uNTEtLjM3LS4yLS4wOS0uNDMtLjEzLS42OC0uMTNoLS44OXYzLjcxaC44OWMuMjYsMCwuNDgtLjA0LjY4LS4xMy4yLS4wOS4zNy0uMjEuNTEtLjM3LjE0LS4xNi4yNC0uMzUuMzItLjU4LjA3LS4yMy4xMS0uNDkuMTEtLjc4Wk0yMzguNjIsODguMTVjMCwuMi0uMDMuMzgtLjA4LjU0LS4wNS4xNi0uMTMuMjktLjIyLjQxLS4xLjExLS4yMi4yLS4zNi4yNS0uMTQuMDYtLjMuMDktLjQ4LjA5cy0uMzQtLjAzLS40OC0uMDljLS4xNC0uMDYtLjI2LS4xNC0uMzYtLjI2LS4xLS4xMS0uMTctLjI1LS4yMi0uNDEtLjA1LS4xNi0uMDgtLjM0LS4wOC0uNTR2LTMuNDFoLTEuMzR2My40MWMwLC4zNS4wNi42OC4xNy45Ny4xMS4zLjI4LjU1LjQ5Ljc2LjIxLjIxLjQ3LjM4Ljc4LjUuMzEuMTIuNjUuMTgsMS4wNC4xOHMuNzMtLjA2LDEuMDMtLjE4Yy4zMS0uMTIuNTctLjI4Ljc4LS41LjIxLS4yMS4zOC0uNDcuNDktLjc2LjExLS4zLjE3LS42Mi4xNy0uOTd2LTMuNDFoLTEuMzR2My40MVpNMTM2LjA5LDg0Ljc0bDIuMjMsNS43NmgtMS4wNGMtLjEyLDAtLjIxLS4wMy0uMjktLjA4LS4wOC0uMDUtLjEzLS4xMi0uMTYtLjIxbC0uMzQtMWgtMi4xOWwtLjM0LDFjLS4wMy4wNy0uMDguMTQtLjE1LjItLjA4LjA2LS4xNy4wOS0uMjguMDloLTEuMDRsMi4yMy01Ljc2aDEuMzdaTTEzNi4xOSw4OC4zbC0uNTMtMS41OGMtLjAzLS4xLS4wNy0uMjItLjEyLS4zNS0uMDUtLjE0LS4wOS0uMjgtLjE0LS40NC0uMDQuMTYtLjA5LjMxLS4xMy40NS0uMDQuMTQtLjA5LjI2LS4xMy4zNmwtLjUzLDEuNTdoMS41N1pNMjU2LjQ0LDkwLjVoMS4zNXYtNS43NmgtMS4zNXY1Ljc2Wk0yNjQuNDQsODYuNDZjLjE0LjM2LjIyLjc0LjIyLDEuMTZzLS4wNy44LS4yMiwxLjE2Yy0uMTQuMzYtLjM1LjY3LS42MS45NC0uMjYuMjctLjU4LjQ3LS45NC42Mi0uMzcuMTUtLjc4LjIzLTEuMjIuMjNzLS44Ni0uMDgtMS4yMy0uMjNjLS4zNy0uMTUtLjY4LS4zNi0uOTUtLjYyLS4yNi0uMjctLjQ3LS41OC0uNjEtLjk0LS4xNC0uMzYtLjIyLS43NS0uMjItMS4xNnMuMDctLjguMjItMS4xNmMuMTQtLjM2LjM1LS42Ny42MS0uOTMuMjYtLjI2LjU4LS40Ny45NS0uNjIuMzctLjE1Ljc4LS4yMywxLjIzLS4yM3MuODYuMDgsMS4yMi4yM2MuMzcuMTUuNjguMzYuOTQuNjIuMjYuMjYuNDYuNTcuNjEuOTNaTTI2My4yOCw4Ny42MmMwLS4yOC0uMDQtLjU0LS4xMS0uNzctLjA3LS4yMy0uMTgtLjQyLS4zMi0uNTgtLjE0LS4xNi0uMzEtLjI4LS41MS0uMzYtLjItLjA4LS40My0uMTMtLjY4LS4xM3MtLjQ5LjA0LS42OS4xMy0uMzcuMjEtLjUxLjM2Yy0uMTQuMTYtLjI0LjM1LS4zMi41OC0uMDcuMjMtLjExLjQ4LS4xMS43N3MuMDQuNTUuMTEuNzdjLjA3LjIzLjE4LjQyLjMyLjU4LjE0LjE2LjMxLjI4LjUxLjM2LjIuMDguNDMuMTIuNjkuMTJzLjQ4LS4wNC42OC0uMTJjLjItLjA4LjM3LS4yLjUxLS4zNi4xNC0uMTYuMjQtLjM1LjMyLS41OC4wNy0uMjMuMTEtLjQ5LjExLS43N1pNMjQyLjUxLDg2LjI3Yy4xNC0uMTYuMzItLjI4LjUyLS4zNy4yLS4wOS40Mi0uMTMuNjYtLjEzLjE0LDAsLjI2LjAxLjM3LjAzLjEuMDIuMi4wNS4yNy4wOC4wOC4wMy4xNC4wNi4yLjEuMDYuMDQuMTEuMDcuMTYuMS4wNS4wMy4wOS4wNi4xMy4wOC4wNC4wMi4wOS4wMy4xMy4wMy4wNywwLC4xMy0uMDIuMTctLjA1LjA0LS4wMy4wNy0uMDYuMS0uMWwuNDUtLjYxYy0uMTEtLjExLS4yMy0uMjItLjM3LS4zMS0uMTQtLjA5LS4yOS0uMTctLjQ2LS4yNC0uMTctLjA3LS4zNC0uMTItLjU0LS4xNi0uMTktLjA0LS4zOS0uMDYtLjYxLS4wNi0uNDUsMC0uODUuMDctMS4yMi4yMi0uMzcuMTUtLjY5LjM1LS45NS42MS0uMjYuMjYtLjQ3LjU3LS42Mi45My0uMTUuMzYtLjIyLjc1LS4yMiwxLjE4cy4wNi44MS4xOSwxLjE3Yy4xMy4zNi4zMS42Ny41Ni45My4yNC4yNi41NC40Ny44OC42Mi4zNS4xNS43NC4yMiwxLjE4LjIyLjQ4LDAsLjg5LS4wOCwxLjI0LS4yMy4zNS0uMTUuNjQtLjM4Ljg3LS42OWwtLjUzLS41NnMtLjA2LS4wNS0uMDktLjA2Yy0uMDMtLjAxLS4wNi0uMDItLjEtLjAyLS4wNCwwLS4wOCwwLS4xMS4wMy0uMDQuMDItLjA3LjA0LS4xLjA3LS4wOC4wNy0uMTYuMTMtLjI0LjE3LS4wOC4wNS0uMTYuMDgtLjI1LjExLS4wOS4wMy0uMTguMDUtLjI4LjA2LS4xLjAxLS4yMS4wMi0uMzMuMDItLjIxLDAtLjQxLS4wNC0uNTktLjEyLS4xOC0uMDgtLjM1LS4yLS40OC0uMzYtLjE0LS4xNi0uMjUtLjM1LS4zMy0uNTgtLjA4LS4yMy0uMTItLjQ5LS4xMi0uNzlzLjA0LS41NC4xMi0uNzZjLjA4LS4yMy4xOS0uNDIuMzQtLjU4Wk0yNTEuMjEsODUuOGgxLjYydjQuN2gxLjM0di00LjdoMS42MnYtMS4wNmgtNC41OHYxLjA2Wk0yNDkuNDUsODQuNzRsMi4yMyw1Ljc2aC0xLjA0Yy0uMTIsMC0uMjEtLjAzLS4yOS0uMDgtLjA4LS4wNS0uMTMtLjEyLS4xNi0uMjFsLS4zNC0xaC0yLjE5bC0uMzQsMWMtLjAzLjA3LS4wOC4xNC0uMTUuMi0uMDguMDYtLjE3LjA5LS4yOC4wOWgtMS4wNGwyLjIzLTUuNzZoMS4zN1pNMjQ5LjU1LDg4LjNsLS41My0xLjU4Yy0uMDMtLjEtLjA3LS4yMi0uMTItLjM1LS4wNS0uMTQtLjA5LS4yOC0uMTQtLjQ0LS4wNC4xNi0uMDkuMzEtLjEzLjQ1LS4wNC4xNC0uMDkuMjYtLjEzLjM2bC0uNTMsMS41N2gxLjU3Wk0xNzUuMTIsODYuMjhjLjE0LS4xNi4zMS0uMjkuNTEtLjM3LjItLjA5LjQzLS4xMy42OC0uMTMuMTMsMCwuMjYsMCwuMzYuMDIuMTEuMDEuMjEuMDMuMzEuMDYuMS4wMy4xOS4wNy4yOS4xMXMuMTkuMS4zLjE2Yy4wOC4wNS4xNy4wOC4yNS4wOC4wNiwwLC4xMi0uMDIuMTctLjA1LjA1LS4wMy4xLS4wOC4xMy0uMTNsLjM5LS41OWMtLjEyLS4xMS0uMjUtLjIxLS40LS4zMS0uMTUtLjA5LS4zMS0uMTgtLjQ5LS4yNS0uMTgtLjA3LS4zNy0uMTItLjU4LS4xNi0uMjEtLjA0LS40NC0uMDYtLjY4LS4wNi0uNDYsMC0uODguMDctMS4yNi4yMi0uMzguMTUtLjcuMzUtLjk2LjYxLS4yNi4yNi0uNDcuNTctLjYxLjkzLS4xNC4zNi0uMjEuNzUtLjIxLDEuMThzLjA3LjgxLjIyLDEuMTdjLjE1LjM2LjM1LjY3LjYyLjkzLjI2LjI2LjU3LjQ3LjkzLjYyLjM2LjE1Ljc1LjIyLDEuMTcuMjIuMjMsMCwuNDUtLjAxLjY2LS4wNC4yLS4wMi40LS4wNi41OC0uMTEuMTgtLjA1LjM1LS4xMS41MS0uMTkuMTYtLjA4LjMxLS4xNy40Ni0uMjh2LTIuNDNoLTIuMDV2Ljc0YzAsLjA3LjAyLjEzLjA3LjE3LjA1LjA0LjExLjA3LjIuMDdoLjU3di44N2MtLjEzLjA1LS4yNi4wOS0uNC4xMy0uMTQuMDMtLjMxLjA1LS40OS4wNS0uMjQsMC0uNDctLjA0LS42Ny0uMTMtLjItLjA5LS4zOC0uMjEtLjUzLS4zNy0uMTUtLjE2LS4yNy0uMzYtLjM1LS42LS4wOC0uMjQtLjEzLS41MS0uMTMtLjgxLDAtLjI4LjA0LS41My4xMS0uNzVzLjE5LS40Mi4zMy0uNThaTTE3MS4zNCw4Ny43OWMwLC4wOSwwLC4xOSwwLC4yOSwwLC4xLjAxLjIxLjAyLjMybC0yLjc0LTMuNDZzLS4wNy0uMDgtLjEtLjExYy0uMDMtLjAzLS4wNi0uMDUtLjA5LS4wNi0uMDMtLjAxLS4wNy0uMDItLjExLS4wMy0uMDQsMC0uMDksMC0uMTUsMGgtLjd2NS43NmgxLjE4di0zLjA5YzAtLjA4LDAtLjE3LDAtLjI3LDAtLjEtLjAxLS4xOS0uMDItLjI5bDIuNzIsMy40M2MuMDcuMDguMTMuMTQuMjEuMTcuMDcuMDMuMTYuMDUuMjYuMDVoLjd2LTUuNzZoLTEuMTh2My4wNVpNMTQzLjY3LDg1LjhoMS42MnY0LjdoMS4zNHYtNC43aDEuNjJ2LTEuMDZoLTQuNTh2MS4wNlpNMTYzLjEsODguNDlsMS4yMywyLjAxaC0xLjIxYy0uMjIsMC0uMzktLjA4LS40OC0uMjVsLS45Ni0xLjY3Yy0uMDQtLjA3LS4wOS0uMTMtLjE1LS4xNi0uMDYtLjAzLS4xNC0uMDUtLjI0LS4wNWgtLjM0djIuMTNoLTEuMzR2LTUuNzZoMS44N2MuNDIsMCwuNzcuMDQsMS4wNy4xMy4yOS4wOS41My4yMS43Mi4zNi4xOS4xNS4zMi4zMy40MS41NC4wOC4yMS4xMy40NC4xMy42OCwwLC4xOS0uMDMuMzYtLjA4LjUzLS4wNS4xNy0uMTIuMzItLjIyLjQ2LS4xLjE0LS4yMi4yNy0uMzYuMzgtLjE0LjExLS4zMS4yLS41LjI3LjA5LjA0LjE3LjEuMjUuMTcuMDguMDcuMTUuMTUuMi4yNFpNMTYyLjUsODYuNTRjMC0uMjUtLjA4LS40NS0uMjUtLjU5LS4xNy0uMTQtLjQyLS4yMS0uNzctLjIxaC0uNTR2MS43MWguNTRjLjE4LDAsLjM0LS4wMi40Ni0uMDcuMTMtLjA1LjIzLS4xMS4zMS0uMTkuMDgtLjA4LjE0LS4xOC4xOC0uMjkuMDQtLjExLjA2LS4yMy4wNi0uMzVaTTE1Mi42OSw4Ny43OWMwLC4wOSwwLC4xOSwwLC4yOSwwLC4xLjAxLjIxLjAyLjMybC0yLjc0LTMuNDZzLS4wNy0uMDgtLjEtLjExYy0uMDMtLjAzLS4wNi0uMDUtLjA5LS4wNi0uMDMtLjAxLS4wNy0uMDItLjExLS4wMy0uMDQsMC0uMDksMC0uMTUsMGgtLjd2NS43NmgxLjE4di0zLjA5YzAtLjA4LDAtLjE3LDAtLjI3LDAtLjEtLjAxLS4xOS0uMDItLjI5bDIuNzIsMy40M2MuMDcuMDguMTMuMTQuMjEuMTcuMDcuMDMuMTYuMDUuMjYuMDVoLjd2LTUuNzZoLTEuMTh2My4wNVpNMTQyLjM2LDg4LjQ5bDEuMjMsMi4wMWgtMS4yMWMtLjIyLDAtLjM5LS4wOC0uNDgtLjI1bC0uOTYtMS42N2MtLjA0LS4wNy0uMDktLjEzLS4xNS0uMTYtLjA2LS4wMy0uMTQtLjA1LS4yNC0uMDVoLS4zNHYyLjEzaC0xLjM0di01Ljc2aDEuODhjLjQyLDAsLjc3LjA0LDEuMDcuMTMuMjkuMDkuNTMuMjEuNzIuMzYuMTkuMTUuMzIuMzMuNDEuNTQuMDguMjEuMTMuNDQuMTMuNjgsMCwuMTktLjAzLjM2LS4wOC41My0uMDUuMTctLjEyLjMyLS4yMi40Ni0uMS4xNC0uMjIuMjctLjM2LjM4LS4xNC4xMS0uMzEuMi0uNS4yNy4wOS4wNC4xNy4xLjI1LjE3LjA4LjA3LjE1LjE1LjIuMjRaTTE0MS43Niw4Ni41NGMwLS4yNS0uMDgtLjQ1LS4yNS0uNTktLjE3LS4xNC0uNDItLjIxLS43Ny0uMjFoLS41NHYxLjcxaC41NGMuMTgsMCwuMzQtLjAyLjQ2LS4wNy4xMy0uMDUuMjMtLjExLjMxLS4xOS4wOC0uMDguMTQtLjE4LjE4LS4yOS4wNC0uMTEuMDYtLjIzLjA2LS4zNVpNMTU0Ljk5LDkwLjVoMy43MXYtMS4wM2gtMi4zN3YtMS4zN2gxLjgxdi0uOTloLTEuODF2LTEuMzRoMi4zN3YtMS4wM2gtMy43MXY1Ljc2Wk0xODcuNjEsODcuNzljMCwuMDksMCwuMTksMCwuMjksMCwuMS4wMS4yMS4wMi4zMmwtMi43NC0zLjQ2cy0uMDctLjA4LS4xLS4xMWMtLjAzLS4wMy0uMDYtLjA1LS4wOS0uMDYtLjAzLS4wMS0uMDctLjAyLS4xMS0uMDMtLjA0LDAtLjA5LDAtLjE1LDBoLS43djUuNzZoMS4xOHYtMy4wOWMwLS4wOCwwLS4xNywwLS4yNywwLS4xLS4wMS0uMTktLjAyLS4yOWwyLjcyLDMuNDNjLjA3LjA4LjEzLjE0LjIxLjE3LjA3LjAzLjE2LjA1LjI2LjA1aC43di01Ljc2aC0xLjE4djMuMDVaTTE5My4wOCw4Ni4yN2MuMTQtLjE2LjMyLS4yOC41Mi0uMzcuMi0uMDkuNDItLjEzLjY2LS4xMy4xNCwwLC4yNi4wMS4zNy4wMy4xLjAyLjIuMDUuMjcuMDguMDguMDMuMTQuMDYuMi4xLjA2LjA0LjExLjA3LjE2LjEuMDUuMDMuMDkuMDYuMTMuMDguMDQuMDIuMDkuMDMuMTMuMDMuMDcsMCwuMTMtLjAyLjE3LS4wNS4wNC0uMDMuMDctLjA2LjEtLjFsLjQ1LS42MWMtLjExLS4xMS0uMjMtLjIyLS4zNy0uMzEtLjE0LS4wOS0uMjktLjE3LS40Ni0uMjQtLjE3LS4wNy0uMzQtLjEyLS41NC0uMTYtLjE5LS4wNC0uMzktLjA2LS42MS0uMDYtLjQ1LDAtLjg1LjA3LTEuMjIuMjItLjM3LjE1LS42OS4zNS0uOTUuNjEtLjI2LjI2LS40Ny41Ny0uNjIuOTMtLjE1LjM2LS4yMi43NS0uMjIsMS4xOHMuMDYuODEuMTksMS4xN2MuMTMuMzYuMzEuNjcuNTYuOTMuMjQuMjYuNTQuNDcuODguNjIuMzUuMTUuNzQuMjIsMS4xOC4yMi40OCwwLC44OS0uMDgsMS4yNC0uMjMuMzUtLjE1LjY0LS4zOC44Ny0uNjlsLS41My0uNTZzLS4wNi0uMDUtLjA5LS4wNmMtLjAzLS4wMS0uMDYtLjAyLS4xLS4wMi0uMDQsMC0uMDgsMC0uMTEuMDMtLjA0LjAyLS4wNy4wNC0uMS4wNy0uMDguMDctLjE2LjEzLS4yNC4xN3MtLjE2LjA4LS4yNS4xMWMtLjA5LjAzLS4xOC4wNS0uMjguMDYtLjEuMDEtLjIxLjAyLS4zMy4wMi0uMjEsMC0uNDEtLjA0LS41OS0uMTItLjE4LS4wOC0uMzUtLjItLjQ4LS4zNi0uMTQtLjE2LS4yNS0uMzUtLjMzLS41OC0uMDgtLjIzLS4xMi0uNDktLjEyLS43OXMuMDQtLjU0LjEyLS43NmMuMDgtLjIzLjE5LS40Mi4zNC0uNThaTTE4MS4yNCw5MC41aDEuMzR2LTUuNzZoLTEuMzR2NS43NlpNMTk4LjU0LDIzLjY1TDIwMy4yNy4zN2gtNS44NWwtMi40NiwxNi4xOHMtLjA5LjA1LS4wOSwwbC0yLjY5LTE2LjE4aC01LjQxbDQuNjQsMjMuMjhoNy4xNVpNMTIzLjQzLDIzLjY1aDYuMjFWNC4zNGgzLjg4Vi4zN2gtMTMuOTh2My45N2gzLjg5djE5LjMxWk0xNDAuOTEsMjMuNjZoLTYuMTRWLjM1aDcuMjhjMS4xMSwwLDIuMTEuMDYsMi45Ni4xNy44NS4xMSwxLjY3LjMzLDIuNDUuNjMuNzcuMywxLjQuNywxLjg4LDEuMi40OC41Ljg4LDEuMTUsMS4xNiwxLjk1LjI5LjguNDQsMS43Ni40NCwyLjg1LDAsMS43NS0uMjIsMy4xNS0uNjUsNC4xOC0uNDMsMS4wMS0xLjIyLDEuODYtMi44OCwyLjYxbC0uMTIuMDcsMy45OSw5LjY0aC02LjIxbC0yLjkzLTguNzQtLjA0LS4xM2gtMS4xOHY4Ljg3Wk0xNDAuOTEsMTEuNTZoMS40MWMxLjExLDAsMS45LS4zMywyLjM0LS45OS40My0uNjQuNjQtMS41NS42NC0yLjcxcy0uMi0xLjk5LS42MS0yLjYxYy0uNDItLjY0LTEuMTEtLjk2LTIuMDUtLjk2aC0xLjczdjcuMjdaTTI2My44OSwyMy42NWg1Ljk0di05LjkyczUuMTctMTMuMzYsNS4xNy0xMy4zNmgtNmwtMS44Miw3LjM4cy0uMDguMDQtLjA5LDBsLTIuMTktNy4zOGgtNS44Mmw0LjgxLDEzLjR2OS44OFpNMTQ5Ljk3LDUzLjM5di0xOC43aDMuODF2LTMuODNoLTEzLjczdjMuODNoMy44MnYxOC43aDYuMDlaTTExNi43MywzMC44NmgtMi4yNmwtMi4zOCwxMS43NHMtLjA4LjA1LS4wOSwwbC0yLjM5LTExLjc0aC03LjI5bC0uMzgsMjAuMzksMi44MiwyLjE0aDIuNDlsLjAzLTE1LjI0YzAtLjA1LjA4LS4wNi4wOSwwbDIuOTUsMTUuMjRoMy40NGwyLjk1LTE1LjIyYzAtLjA1LjA5LS4wNC4wOSwwbC4wMywxNS4yMmg1LjE5bC0uNDItMjIuNTNoLTQuODdaTTE4My40NCwyMC4xaC03LjI1Vi4zN2gtNi4yMXYyMy4yOGgxMy40NnYtMy41NVpNMjMxLjczLDIwLjFoLTUuOTRWLjM3aC02LjIxdjIzLjI4aDEyLjE1di0zLjU1Wk0xNTcuNTMsMjMuNjVoLTUuODNMMTU2LjQ4LjM3aDcuMzNsNC44NSwyMy4yOGgtNS43NWwtLjgzLTQuNjd2LS4wM2gtMy43NGwtLjgxLDQuNzFaTTE1OC44LDE1LjkxaDIuNzZsLTEuMzQtOS44YzAtLjA1LS4wOS0uMDUtLjA5LDBsLTEuMzIsOS43NnYuMDRaTTI1OC44LDIwLjA5aC02LjAydi02Ljg4aDQuNDR2LTMuNzFoLTQuNDRWMy45NGg1Ljk1Vi4zN2gtMTIuMTZ2MjMuMjhoMTIuMjN2LTMuNTVaTTI0NS4yMywyMC4xaC01Ljk0Vi4zN2gtNi4yMXYyMy4yOGgxMi4xNXYtMy41NVpNNzQuNCwyMS45NWMuNjEuNjgsMS40NCwxLjIsMi40OSwxLjU0LDEuMDYuMzUsMi4zNS41MiwzLjg1LjUyLDEuMTksMCwyLjI1LS4xMiwzLjE2LS4zNS45LS4yMywxLjY1LS41NSwyLjIyLS45NC41Ny0uMzksMS4wNS0uODgsMS40MS0xLjQ1LjM3LS41OC42My0xLjIxLjc4LTEuODYuMTUtLjY2LjIzLTEuNC4yMy0yLjIxdi0xLjk2aC02LjF2Mi41NWMwLC4zNS0uMDEuNjMtLjAzLjgzLS4wMi4yMS0uMDguNDYtLjE4Ljc1LS4xLjMxLS4yOC41NC0uNTQuNy0uMjUuMTUtLjU3LjIzLS45Ni4yMy0uMywwLS41OC0uMDYtLjgxLS4xNy0uMjMtLjExLS40MS0uMjUtLjU0LS40Mi0uMTItLjE2LS4yMS0uMzctLjI4LS42MS0uMDctLjI0LS4xMS0uNDYtLjEyLS42NS0uMDItLjE5LS4wMy0uNDEtLjAzLS42NlY2LjIxYzAtLjI1LDAtLjQ2LjAzLS42NS4wMi0uMTkuMDYtLjQxLjEyLS42NS4wNi0uMjUuMTYtLjQ2LjI3LS42Mi4xMi0uMTYuMy0uMy41My0uNDIuMjMtLjExLjUxLS4xNy44Mi0uMTcuMzgsMCwuNzEuMDguOTYuMjMuMjYuMTYuNDQuMzkuNTQuNjkuMDkuMjguMTUuNTMuMTguNzQuMDIuMjEuMDMuNDkuMDMuODN2Mi40NGg2LjF2LTEuOTdjMC0uOC0uMDgtMS41My0uMjMtMi4xOS0uMTUtLjY0LS40MS0xLjI2LS43OC0xLjgzLS4zNi0uNTYtLjg0LTEuMDQtMS40MS0xLjQyLS41OC0uMzgtMS4zMy0uNjgtMi4yMi0uOS0uOS0uMjItMS45Ny0uMzMtMy4xNi0uMzMtMS41LDAtMi43OS4xOC0zLjg1LjUyLTEuMDUuMzQtMS44OC44Ni0yLjQ5LDEuNTQtLjYxLjY4LTEuMDYsMS40OS0xLjM0LDIuNC0uMjguOTItLjQyLDIuMDMtLjQyLDMuMjl2OC41MmMwLDEuMjUuMTQsMi4zNS40MiwzLjI3LjI4LjkxLjczLDEuNzIsMS4zNCwyLjRaTTE4NC45Nyw0OS45NmgtNS45MXYtNi42N2g0LjM2di0zLjU4aC00LjM2di01LjRoNS44NXYtMy40NWgtMTEuOTR2MjIuNTNoMTJ2LTMuNDNaTTE3MC44NSw1My4zOXYtMjIuNTNoLTYuMDl2OS4wM2gtMy41OXYtOS4wM2gtNi4wOHYyMi41M2g2LjA4di05Ljc5aDMuNTl2OS43OWg2LjA5Wk0xOTguNzYsNDQuMWwzLjk2LDkuMjloLTYuMTdsLTIuOTEtOC40My0uMDQtLjEyaC0xLjE3djguNTVoLTYuMDl2LTIyLjQ4aDcuMjJjMS4xLDAsMi4wOS4wNiwyLjk0LjE3Ljg0LjExLDEuNjYuMzIsMi40My42MS43Ni4yOSwxLjM5LjY4LDEuODcsMS4xNi40OC40OC44NywxLjExLDEuMTUsMS44OC4yOS43OC40MywxLjcuNDMsMi43NSwwLDEuNjgtLjIyLDMuMDQtLjY1LDQuMDMtLjQyLjk4LTEuMjEsMS44LTIuODYsMi41MmwtLjEyLjA2Wk0xOTYuNzksMzguMTdjMC0xLjA4LS4yLTEuOTItLjYtMi41Mi0uNDItLjYxLTEuMS0uOTItMi4wNC0uOTJoLTEuNzF2Ny4wMWgxLjRjMS4xLDAsMS44OC0uMzIsMi4zMi0uOTYuNDItLjYxLjY0LTEuNDkuNjQtMi42MVpNMTE5LjIyLDY5LjA1Yy0uNzQtLjQ3LS41Mi0uMzQtLjUyLS4zNCwwLDAtLjIyLS4xOC0uMjMtLjM2LS4wMi0uMTgtLjA1LS4yOS0uMjItLjQ1LS4xNi0uMTYtLjA0LS4xOC0uMTQtLjM2LS4xMS0uMTgtLjExLS4yNy0uMzYtLjQ1LS4yNS0uMTgtLjQtLjQ3LS40LS40NywwLDAsLjA1LS4wNS0uMTMtLjE2LS4xOC0uMTEtLjE2LS4yOS0uMTgtLjQzLS4wMi0uMTUtLjA2LS4yNy0uMjQtLjQzLS4xOC0uMTYtMS4wMy0xLjA1LTEuNzctMS41OWwtMy4yMi0yLjU1LS40My4yNy0uNTQuMTQtNy4wNS40Mi4xMSw0LjA4cy4wNy45NC0uNCwxLjEyYzAsMC0uMzQuMTUtLjYuMThsLTcuMzcuNDVzLS44My0uMDUtMS4wOC0uNGMwLDAtLjU0LS4xMS0uNjktLjIzLS4xNC0uMTMtLjE2LS4xOC0uNDUtLjY5LDAsMC0uMTgtLjQzLS4zOC0uNjItLjItLjE4LS4zOC0uMzItLjU0LS40Ny0uMTYtLjE0LS41Ni0uMzEtLjctLjU4LS4xNS0uMjctLjM4LS4zOC0uMzgtLjM4bC0xLjEtMS4wOHMtLjQ1LS4zOC0uNTEtLjYxYy0uMDUtLjIzLS4yNS0uOTktLjI1LS45OSwwLDAsMC0uMjItLjM4LS40NS0uMzgtLjIzLTEuMTYtLjc5LTEuMTYtLjc5LDAsMC0uNDctLjIyLS41Mi0uOWwtLjA3LS42N3MtLjE0LS4zNC4wOS0uOTJjMCwwLC4wMi0uMTEtLjA3LS4xOC0uMDktLjA3LTEuNDQtMS4yOC0xLjQ0LTEuMjgsMCwwLS42MS0uMzItLjcyLS40LS4xMS0uMDctLjUxLS4zNi0uNjUtLjg1bC0uMTMtLjUycy0uMDktLjI3LS4yMi0uNDJjMCwwLS4yMi4wMi0uMzgtLjM2LDAsMC0uMDktLjItLjA0LS41MSwwLDAsLjA0LS4xNi0uMDUtLjQzLDAsMC0uMjctLjU2LS40NS0uODEsMCwwLS4zMS0uNDMtLjM2LS45MmwtLjE1LTEuNjgtLjA5LS41OHMtLjA1LS40My4wNy0uODFsLjEzLS4yNS4xMy0uMzFzLjA1LS4zMy4xMS0uNTJjLjA1LS4yLjExLS4zOC4xOC0uNTEuMDctLjEzLjI0LS4zNi4yNC0uMzYsMCwwLC4xMS0uMTYuMzItLjE1LDAsMCwuMjIuMDcuMzguMTYsMCwwLC4yOS4yLjQ1LjE4bC4yMy0uMDdzLjA5LS4wNS4xMy0uMzFjLjA0LS4yNS0uMDItLjg3LDAtLjk3LjAyLS4xMS4wNy0uMjUuMjItLjM2LjE1LS4xMS4zMy0uMjUuNDktLjI3LjE2LS4wMi4zMS0uMDIuNDcsMCwuMTYuMDIuNDkuMDcuNDkuMDdsLjM2LjE0cy4wNC4wNS4yOS4wN2MuMjUuMDIuNjMsMCwuOS0uMTYsMCwwLC4zMS0uMDkuNDMtLjQzLDAsMCwuMjItLjk0LjQ5LTEuMzcsMCwwLC4zNi0uNTQuODMtLjc0bC0uMjUtMTUuMzQtMTguNzkuMDRzLjA3LjI5LDAsLjYxYy0uMDcuMzMtLjI5LjUxLjA0LjgzLDAsMCwuNjUuNTQuNDMsMi4xN2wtLjI1LDEuMDVzLS4xNC4yMiwwLDEuMDVjMCwwLC4wMi4yOS0uMTEuNjcsMCwwLS42MywxLjE5LS44LDEuNTcsMCwwLS42MSwxLjEyLS4xOCwxLjkzLDAsMCwuMjUuNDMuNzIuNzQsMCwwLDEuNTIsMS4yOCwxLjc1LDIuNjcsMCwwLC4wNy4zMS4xMS41NCwwLDAsMC0uMDItLjA3LjM4LDAsMC0uMzQuNzIuMDIsMS41bC4yOS45cy4wOS4wNy4wNC40MmMwLDAtLjAyLjEzLS4wNy4zMywwLDAtLjE2LjE4LjIuNDlsLjM0LjM2cy4yNS4yOS42LjYxYzAsMCwxLjAzLjg3LDEuMzcsMS4zNywwLDAsLjM0LjQ1LjQ3LjgsMCwwLDAsLjEzLjIuMDksMCwwLC4yNC4xNi4yNC4zMywwLDAtLjE1LjA0LjAyLjIzLDAsMCwuMjMuMjcuMDUuNjEsMCwwLS4zOC4zMy4wNy42MywwLDAsLjMyLjE0LjU4LjIzLDAsMCwuMTguMDQuMzQuMTYsMCwwLC4xMS4xNi4yOS4xNCwwLDAsLjE4LS4wNy40LjEzLDAsMCwuMTEuMTQuMjcuMjUsMCwwLC4zMi4yMy4yOS0uMTEsMCwwLC4xNS0uMDkuMTYtLjE4LjAyLS4wOS0uMDUtLjExLS4yMy0uMjUtLjE4LS4xNC4xMy0uMi4xNS0uMzEuMDItLjExLS4wNi0uMTYtLjExLS4zMS0uMDUtLjE1LS4wNC0uMzguMTYtLjQ5LDAsMCwuMzEtLjIyLjUyLS4wNCwwLDAsLjQ5LjMxLjIuNjMsMCwwLS4yNS4xNS0uMzQuMjksMCwwLS4xNi4xMS0uMDcuMjIuMDkuMTEuMTguMDcuMjkuMTQuMTEuMDcuMTguMDcuMDkuMzgtLjA5LjMxLS4wNS4yNy4xMy4zNi4xOC4wOS4xNi4yLjI1LjMzLjA5LjEzLjI5LjI1LjM2LjQxLjA3LjE2LjA3LjQyLjEzLjUyLjA1LjExLjE2LjUyLS4zNC4xNS0uNTEtLjM4LS40Mi0uMjUtLjYxLS4zMS0uMi0uMDUtLjI1LS4yLS4yNy0uMzMtLjAyLS4xMy0uMDQtLjMxLDAtLjM4LjA0LS4wNy4xMS0uMTMuMDUtLjIzLS4wNS0uMTEsMC0uMzgtLjM0LS4zMS0uMzQuMDctLjMxLjMxLS4yNy41Mi4wNC4yMi4wNy40OSwwLC43Mi0uMDcuMjMtLjExLjQzLjE4LjU2LDAsMCwuMTYuMjcuMjcuNjMsMCwwLC4wNC4yNywwLC41NCwwLDAsLjAyLjcyLjY1LDEuMjUsMCwwLC42NS41NiwxLjA1LjYsMCwwLC4yNy4wNC4zMiwwcy4xMy0uMjIuMzEtLjEzYy4xOC4wOS41Mi41OC41OC44OS4wNS4zMS4wOS42LS4wNy45NC0uMTYuMzQtLjMyLjI3LS41NC4yNXMtLjE0LjItLjA5LjI3Yy4wNS4wNy4wNy4xOC4wNy40MnMuMDUuMzYuMTYuNThjLjExLjIyLjAyLjQ3LjIzLjY5LjIyLjIyLjY3LjUxLjgzLjYxLjE2LjExLjM4LjQzLjQ1LjU2LjA3LjEzLjIyLjI3LjM0LjQuMTMuMTMuNDcuNjMuNjMuODkuMTYuMjUuMjUuMzQuNDIuNjEuMTYuMjcuMzEuNDMuNi41Mi4yOS4wOS40MS40NS41NC42MS4xMy4xNi4zNi40NS43Ni40Ny40LjAyLjI0LjM4LjI0LjU4cy0uMTUuNzYuMjkuODVjLjQzLjA5LjU2LjE0LjU2LjE0LDAsMCwuNDUsMCwuNTQuNjksMCwwLC4yMi44Ni4wMiwxLjk1LDAsMC0uMDcuMjctLjEzLjQ5LS4wNS4yMi4xNC4zOC40Ny40OSwwLDAsLjMzLjIuNDkuNCwwLDAsMCwuMDUuMjMuMDQsMCwwLDEuNDYtLjI1LDIuMzUuMDUsMCwwLC4zNi4wMi41Mi4wNy4xNi4wNS4zOC4wNS42MS0uMDIuMjQtLjA3LjQ3LS4xNS44My4wNy4zNi4yMi45OC41MiwxLjA1LjYuMDcuMDcuMjUuMzEuMzguNTEuMTMuMi43Mi40NywxLjE0LjY3LjQyLjIuNzguMjMuNzguMjMsMCwwLC4yOS4xOC40Ny0uMDUuMTgtLjI0LDEuMTItLjA0LDEuNDUuMjIuMzIuMjUuNDcuNzQuNCwxLjAzLS4wNy4yOS4wMi4yNy4yMi4zNC4yLjA3LjYuMTYuNi4xNiwwLDAsLjIzLS4wNC4yNy0uMjUsMCwwLC4zNi4wNC42NS4yMy4yOS4yLDEuNDEuOTIsMS42NiwxLjE3LDAsMCwuMTYuMjMuNjEuNC40NS4xNiwxLjc3LDEuNDYsMS45NSwyLjcxLDAsMC0uMDUuMTYuMDIuNTEuMDcuMzQuMDkuNjEuMDkuNjEsMCwwLC4wNS4xOC4yMy4xNS4xOC0uMDQuMzguNDEuNDMuNjMsMCwwLC4yMy4yLjQuMTYuMTYtLjA0LDEuMy0uMjcsMS42MS0uMzEuMzEtLjA0LjY3LS4wNS44OS0uMTQuMjItLjA5LDUuMzMtLjY5LDUuODktLjc4LjU2LS4wOSwzLjExLS41MSwzLjc4LS44OS42Ny0uMzguNi0uNDkuNjMtLjY1LjA0LS4xNi0uMDUtLjI5LS42NS0uNzItLjYtLjQzLS42LS4zNC0uNTYtLjY1cy4wMi0uNTgtLjExLS44NWMtLjEzLS4yNy0uMTEtLjUxLjA1LS43Ni4xNi0uMjUuNzktLjY1LjY3LTEuMywwLDAsMC0uMjMuMDQtLjQuMDQtLjE2LjA0LS4yNy0uMTgtLjY5LDAsMCwuMDQtLjA3LjA5LS4xNi4wNS0uMDkuMDctLjExLS4wNC0uMjctLjExLS4xNi0uMDUtLjIzLjA3LS4zOC4xMy0uMTUuMi0uMTguMjUtLjQ5LjA1LS4zMS0uMDQtLjMxLjE4LS40My4yMi0uMTMuOTctLjcxLjk3LS43MSwwLDAsLjM4LS4yNS0uMzYtLjcyWk0xMzEuNTgsNTMuNzVjLTEuNDcsMC0yLjc0LS4xNy0zLjc3LS40OS0xLjAyLS4zMy0xLjg0LS44Mi0yLjQ0LTEuNDYtLjYtLjY0LTEuMDQtMS40Mi0xLjMxLTIuMy0uMjctLjg5LS40LTEuOTUtLjQtMy4xNnYtOC40M2MwLTEuMjEuMTQtMi4yNy40LTMuMTYuMjctLjg4LjcxLTEuNjUsMS4zMS0yLjMuNi0uNjQsMS40Mi0xLjEzLDIuNDQtMS40NiwxLjAzLS4zMywyLjMtLjQ5LDMuNzctLjQ5czIuNzQuMTcsMy43OC40OWMxLjAzLjMzLDEuODUuODIsMi40NiwxLjQ2LjYxLjY1LDEuMDUsMS40MiwxLjMyLDIuMy4yNy44OS40MSwxLjk1LjQxLDMuMTZ2OC40M2MwLDEuMjEtLjE0LDIuMjctLjQxLDMuMTYtLjI3Ljg4LS43MiwxLjY1LTEuMzIsMi4zLS42LjY0LTEuNDMsMS4xMy0yLjQ2LDEuNDYtMS4wNC4zMy0yLjMxLjQ5LTMuNzguNDlaTTEzMC43Nyw1MGMuMjIuMTIuNDkuMTguODEuMTguMzgsMCwuNjktLjA4Ljk0LS4yMi4yNS0uMTUuNDMtLjM3LjU0LS42Ni4xLS4yNi4xNi0uNTEuMTktLjczLjAzLS4yMi4wNC0uNDkuMDQtLjh2LTExLjI4YzAtLjMyLS4wMS0uNTgtLjA0LS44LS4wMy0uMjItLjA5LS40Ny0uMTktLjczLS4xMS0uMjgtLjI5LS41MS0uNTQtLjY1LS4yNS0uMTUtLjU2LS4yMi0uOTQtLjIyLS4zMSwwLS41OC4wNi0uOC4xNy0uMjIuMTEtLjM5LjI0LS41MS40LS4xMS4xNS0uMi4zNS0uMjUuNjEtLjA1LjI0LS4wOC40NC0uMDkuNiwwLC4xNiwwLC4zNywwLC42M3YxMS4yOGMwLC4yNSwwLC40NiwwLC42MiwwLC4xNy4wNC4zNy4wOS42MS4wNi4yNS4xNC40Ni4yNS42MS4xMS4xNS4yOC4yOS41LjRaTTIxMS42NywxOC45NGgtMy43M2wtLjgxLDQuNzFoLTUuODNMMjA2LjA4LjM3aDcuMzNsNC44NSwyMy4yOGgtNS43NWwtLjgzLTQuNjd2LS4wM1pNMjExLjE2LDE1LjkxbC0xLjM0LTkuOGMwLS4wNS0uMDktLjA1LS4wOSwwbC0xLjMyLDkuNzZ2LjA0czIuNzYsMCwyLjc2LDBaTTI3MC4zNyw0OS45NmgtNS45MXYtNi42N2g0LjM2di0zLjU4aC00LjM2di01LjRoNS44NXYtMy40NWgtMTEuOTR2MjIuNTNoMTJ2LTMuNDNaTTIxNi4yNSwzMC44NmgtNi4wOXYyMi41M2gxMi44di0zLjQzaC02Ljd2LTE5LjFaTTEwMi4zNiwyMC4wOWgtNi4wMnYtNi44OGg0LjQ0di0zLjcxaC00LjQ0VjMuOTRoNS45NVYuMzdoLTEyLjE2djIzLjI4aDEyLjIzdi0zLjU1Wk0xMDguOTksMTIuMTZzLjA3LS4wNi4wOS0uMDJsNS4wMiwxMS41aDQuMTlWLjM3aC01LjA3djEwLjQ0cy0uMDcuMDYtLjA5LjAyTDEwOC4wOC4zN2gtNC4zN3YyMy4yOGg1LjI4di0xMS40OVpNMjM3LjI1LDUxLjc5Yy0uNi42NC0xLjQzLDEuMTMtMi40NiwxLjQ2LTEuMDQuMzMtMi4zMS40OS0zLjc4LjQ5cy0yLjc0LS4xNy0zLjc3LS40OWMtMS4wMi0uMzMtMS44NC0uODItMi40NC0xLjQ2LS42LS42NC0xLjA0LTEuNDItMS4zMS0yLjMtLjI3LS44OS0uNDEtMS45NS0uNDEtMy4xNnYtOC40M2MwLTEuMjEuMTQtMi4yNy40MS0zLjE2LjI3LS44OC43MS0xLjY1LDEuMzEtMi4zLjYtLjY0LDEuNDItMS4xMywyLjQ0LTEuNDYsMS4wMy0uMzMsMi4zLS40OSwzLjc3LS40OXMyLjc0LjE3LDMuNzguNDljMS4wMy4zMywxLjg1LjgyLDIuNDYsMS40Ni42MS42NSwxLjA1LDEuNDIsMS4zMiwyLjMuMjcuODkuNDEsMS45NS40MSwzLjE2djguNDNjMCwxLjIxLS4xNCwyLjI3LS40MSwzLjE2LS4yNy44OC0uNzIsMS42NS0xLjMyLDIuM1pNMjMyLjcyLDM2LjQ4YzAtLjMyLS4wMS0uNTgtLjA0LS44LS4wMy0uMjItLjA5LS40Ny0uMTktLjczLS4xMS0uMjgtLjI5LS41MS0uNTQtLjY1LS4yNS0uMTUtLjU2LS4yMi0uOTQtLjIyLS4zMSwwLS41OC4wNi0uOC4xNy0uMjIuMTEtLjM5LjI0LS41MS40LS4xMS4xNS0uMi4zNS0uMjUuNjEtLjA1LjI0LS4wOC40NC0uMDkuNiwwLC4xNiwwLC4zNywwLC42M3YxMS4yOGMwLC4yNSwwLC40NiwwLC42MiwwLC4xNi4wNC4zNy4wOS42MS4wNi4yNS4xNC40Ni4yNS42MS4xMS4xNS4yOC4yOS41LjQuMjIuMTIuNDkuMTguODEuMTguMzgsMCwuNjktLjA4Ljk0LS4yMi4yNS0uMTUuNDMtLjM3LjU0LS42Ni4xLS4yNy4xNi0uNTEuMTktLjczLjAzLS4yMi4wNC0uNDkuMDQtLjh2LTExLjI4Wk0yNTYuNTMsNDYuMjNjMCwxLjM0LS4xNCwyLjQ2LS40MSwzLjMzLS4yNy44Ni0uNzUsMS41OS0xLjQyLDIuMTgtLjY3LjU5LTEuNTksMS4wMi0yLjcyLDEuMjctMS4xNS4yNi0yLjYzLjM5LTQuNC4zOWgtNi43NnYtMjIuNTNoNi43NGMxLjc4LDAsMy4yNi4xMyw0LjQxLjM5LDEuMTMuMjUsMi4wNS42OCwyLjcyLDEuMjcuNjcuNTgsMS4xNSwxLjMyLDEuNDIsMi4xNy4yNy44Ny40MSwxLjk4LjQxLDMuMzF2OC4yM1pNMjUwLjI3LDM2Ljc0YzAtLjQ1LS4wMi0uOC0uMDctMS4wNS0uMDUtLjI2LS4xNy0uNS0uMzUtLjcxLS4xOC0uMjItLjQ2LS4zNy0uODItLjQ1LS4zMy0uMDctLjc4LS4xMS0xLjM0LS4xMWgtLjc2djE1LjQyaC43NmMuNTYsMCwxLjAxLS4wNCwxLjM0LS4xMi4zNi0uMDkuNjMtLjI1LjgyLS40Ny4xOC0uMjIuMjktLjQ3LjM1LS43My4wNS0uMjUuMDctLjYuMDctMS4wNXYtMTAuNzFaIi8+PC9zdmc+" alt="CVML Logo" class="hdr-logo" onerror="this.style.display='none'">
+      K12 SWP Grant Dashboard
+    </div>
+    <div class="hdr-meta">Generated: <span id="gen-ts"></span></div>
+  </div>
+  <nav class="tabs">
+    <button class="tab on" data-v="1">⚡ Command Center</button>
+    <button class="tab" data-v="2">📊 Portfolio Overview</button>
+    <button class="tab" data-v="3">🗓 Status Matrix</button>
+    <button class="tab" data-v="4">⚠️ Alert Dashboard</button>
+    <button class="tab" data-v="5">🃏 Grant Cards</button>
+    <button class="tab" data-v="6">📋 Deadlines</button>
+    <button class="tab" data-v="7">📈 Lifecycle</button>
+  </nav>
+  <div class="fbar">
+    <div class="pills">
+      <button class="pill on" data-r="all">All Rounds</button>
+      <button class="pill" data-r="R6">R6</button>
+      <button class="pill" data-r="R7">R7</button>
+      <button class="pill" data-r="R8">R8</button>
+    </div>
+    <input type="search" class="srch" id="srch" placeholder="🔍  Search institution…">
+    <button onclick="exportCSV()" class="tool-btn" title="Export current view to CSV">⬇ Export CSV</button>
+    <button onclick="printDashboard()" class="tool-btn" title="Print or save as PDF">🖨 Print</button>
+    <span class="rcount" id="rcount"></span>
+  </div>
+</header>
+
+<!-- DEADLINE BAR -->
+<div id="dbar" class="dbar"></div>
+
+<!-- VIEWS -->
+<main class="main">
+  <div id="v1" class="view on"></div>
+  <div id="v2" class="view"></div>
+  <div id="v3" class="view"></div>
+  <div id="v4" class="view"></div>
+  <div id="v5" class="view"></div>
+  <div id="v6" class="view"></div>
+  <div id="v7" class="view"></div>
+</main>
+
+</div><!-- #app -->
+
+<script>
+// ─── DATA (injected by Python) ────────────────────────────────────────────
+const DATA = {"generated":"2026-04-30T14:12:08","rounds":{"R6":{"label":"Round 6","grantFY":"2023-24","yearCode":"2024004","finalReportDue":"2026-09-30","grantFYStart":"2023-07-01","quarterlyLabels":["FY23-24 Q4 (08/31/24)","FY24-25 Q2 (02/28/25)","FY24-25 Q4 (08/31/25)","FY25-26 Q2 (02/28/26)","FY25-26 Q4 (08/31/26)"],"quarterlyDueDates":["2024-08-31","2025-02-28","2025-08-31","2026-02-28","2026-08-31"],"grants":[{"planId":"25883","institution":"Amador County ROP","grantName":"Amador ROP Blueprint For Tomorrow Classroom to Career Connection","instCount":2,"budget":795000.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Amador County ROP","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,false,false,false,false],"finalReport":false,"atRisk":true},{"planId":"25896","institution":"Amador County ROP","grantName":"Amador ROP Blueprint For Tomorrow College and Career Readiness Continuum","instCount":2,"budget":795000.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Amador County ROP","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,false,false,false],"finalReport":false,"atRisk":true},{"planId":"25679","institution":"Calaveras Unified","grantName":"Strengthening & Aligning CTE Pathways for College & Career Readiness - Middle/High School Expansion","instCount":1,"budget":677603.0,"spent":15810.0,"pctSpent":0.0233,"planStatus":"Certified","leadLEA":"Calaveras Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,true,true,false],"finalReport":false,"atRisk":false},{"planId":"25856","institution":"Career Technical Education Charter","grantName":"Connecting students to the Workforce","instCount":1,"budget":440000.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Draft","leadLEA":"Career Technical Education Charter","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":true},{"planId":"25636","institution":"Firebaugh-Las Deltas Unified","grantName":"Advancing Drone Education in Pathway Training (ADEPT) Project","instCount":1,"budget":279057.0,"spent":3468.0,"pctSpent":0.0124,"planStatus":"Certified","leadLEA":"Firebaugh-Las Deltas Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,true,true,false],"finalReport":false,"atRisk":false},{"planId":"25760","institution":"Fresno Unified","grantName":"Manufacturing a Stronger Workforce","instCount":1,"budget":1480000.0,"spent":452301.0,"pctSpent":0.3056,"planStatus":"Certified","leadLEA":"Fresno Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,true,true,false],"finalReport":false,"atRisk":false},{"planId":"25743","institution":"Kern Co. Office of Education","grantName":"Bridging Alt Ed Students to Employment Through Entrepreneurship, Data, and Community Collaborations","instCount":1,"budget":484704.0,"spent":6622.0,"pctSpent":0.0137,"planStatus":"Certified","leadLEA":"Kern Co. Office of Education","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,true,true,false],"finalReport":false,"atRisk":false},{"planId":"25669","institution":"Kern Co. Office of Education","grantName":"Camp College and Career - Expanding Educational Horizons Across Diverse Industries","instCount":3,"budget":1480007.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Kern Co. Office of Education","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,true,true,false],"finalReport":false,"atRisk":false},{"planId":"25858","institution":"Kern Co. Office of Education","grantName":"Fostering a Strong Workforce in Rural Kern County Through Supportive Systems for Educators","instCount":3,"budget":889964.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Kern Co. Office of Education","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,true,false,false],"finalReport":false,"atRisk":true},{"planId":"25686","institution":"Kern High ROC","grantName":"Aviation Program Expansion","instCount":2,"budget":921223.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Kern High ROC","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,true,false,false],"finalReport":false,"atRisk":true},{"planId":"25751","institution":"Lincoln Unified","grantName":"Expanding CTE Opportunities and Pathways Through Equity and Access","instCount":1,"budget":286505.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Lincoln Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,true,true,false],"finalReport":false,"atRisk":false},{"planId":"25637","institution":"Lodi Unified","grantName":"Lodi High School Ag Expansion","instCount":1,"budget":227303.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Lodi Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,true,false,false],"finalReport":false,"atRisk":true},{"planId":"25638","institution":"Lodi Unified","grantName":"Tokay High School Ag Expansion","instCount":1,"budget":232039.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Lodi Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,false,false,false],"finalReport":false,"atRisk":true},{"planId":"25843","institution":"Mariposa County Unified","grantName":"Growing in Agriculture Mechanics","instCount":1,"budget":317526.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Mariposa County Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,true,false,false],"finalReport":false,"atRisk":true},{"planId":"25903","institution":"Merced County ROP","grantName":"CAD in Constrction","instCount":4,"budget":542160.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Merced County ROP","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,true,true,false],"finalReport":false,"atRisk":false},{"planId":"25685","institution":"Merced Union High","grantName":"MUHSD Food Service, Hospitality, and Food Science Pathways Alignment, Development, and Expansion","instCount":1,"budget":795000.0,"spent":116734.0,"pctSpent":0.1468,"planStatus":"Certified","leadLEA":"Merced Union High","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,true,true,false],"finalReport":false,"atRisk":false},{"planId":"25643","institution":"Patterson Joint Unified","grantName":"Patterson Cosmetology/Barbering Pathway","instCount":1,"budget":281711.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Patterson Joint Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,true,true,false],"finalReport":false,"atRisk":false},{"planId":"25641","institution":"Porterville Unified","grantName":"Using Work Based Learning Strategies to Increase Equity and Access for All Students","instCount":1,"budget":795000.0,"spent":663606.0,"pctSpent":0.8347,"planStatus":"Certified","leadLEA":"Porterville Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,true,true,false],"finalReport":false,"atRisk":false},{"planId":"25651","institution":"Reef-Sunset Unified","grantName":"Avenal CTE Expansion (ACE) Project","instCount":1,"budget":795000.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Reef-Sunset Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,false,false,false,false],"finalReport":false,"atRisk":true},{"planId":"25668","institution":"Riverdale Joint Unified","grantName":"Securing Technology to Advance RJUSD Training of Underrepresented Populations (START-UP) Project","instCount":1,"budget":795000.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Riverdale Joint Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,true,true,false],"finalReport":false,"atRisk":false},{"planId":"25854","institution":"Sanger Unified","grantName":"Sanger CTE Advances Learning on Equipment Used by Professionals (SCALE UP) Project","instCount":1,"budget":795000.0,"spent":20362.0,"pctSpent":0.0256,"planStatus":"Certified","leadLEA":"Sanger Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,true,false,false],"finalReport":false,"atRisk":true},{"planId":"25646","institution":"Taft Union High","grantName":"Wildcat Productions","instCount":1,"budget":440000.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Taft Union High","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,true,true,false],"finalReport":false,"atRisk":false},{"planId":"25882","institution":"Tulare Co. Office of Education","grantName":"Advancing Tomorrow's Workforce: Bridging the Skills Gap through Enhanced Secondary Education","instCount":11,"budget":1480000.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Tulare Co. Office of Education","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,true,false,false],"finalReport":false,"atRisk":true},{"planId":"25678","institution":"Tuolumne County Superintendent of Schools","grantName":"Tuolumne CTE CARES","instCount":4,"budget":821025.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Tuolumne County Superintendent of Schools","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,true,true,false],"finalReport":false,"atRisk":false},{"planId":"25658","institution":"Valley ROP","grantName":"BuildUP: Skills Development in the Construction Trades","instCount":8,"budget":906999.0,"spent":2500.0,"pctSpent":0.0028,"planStatus":"Certified","leadLEA":"Valley ROP","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,true,true,false],"finalReport":false,"atRisk":false},{"planId":"25656","institution":"Valley ROP","grantName":"StepUP: Bridging from CNA to LVN","instCount":8,"budget":896664.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Valley ROP","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,true,true,false],"finalReport":false,"atRisk":false},{"planId":"25649","institution":"Visalia Technical Early College","grantName":"Visalia Technical Early College Advanced Manufacturing Pathway","instCount":1,"budget":440000.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Visalia Technical Early College","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,true,false,false],"finalReport":false,"atRisk":true},{"planId":"25632","institution":"Visalia Unified","grantName":"Closing the Gap between Middle School and High School CTE Pathways","instCount":1,"budget":795000.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Visalia Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,true,false,false],"finalReport":false,"atRisk":true},{"planId":"25633","institution":"Wonderful College Prep Academy","grantName":"Wonderful Culinary Arts Pathway","instCount":2,"budget":626200.0,"spent":121071.0,"pctSpent":0.1933,"planStatus":"Certified","leadLEA":"Wonderful College Prep Academy","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,false,false,false,false],"finalReport":false,"atRisk":true},{"planId":"25757","institution":"Yosemite Unified","grantName":"YUSD Food Service and Hospitality","instCount":1,"budget":121918.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Yosemite Unified","dashboardApproval":"","approvalStatus":"Submitted","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":true}],"totals":{"budget":20632608.0,"spent":1402474.0,"pctSpent":0.068,"grantCount":30,"atRiskCount":15,"quarterlyCounts":[28,25,23,15,0],"finalCount":0}},"R7":{"label":"Round 7","grantFY":"2024-25","yearCode":"2025004","finalReportDue":"2027-09-30","grantFYStart":"2024-07-01","quarterlyLabels":["FY24-25 Q4 (08/31/25)","FY25-26 Q2 (02/28/26)","FY25-26 Q4 (08/31/26)","FY26-27 Q2 (02/28/27)","FY26-27 Q4 (08/31/27)"],"quarterlyDueDates":["2025-08-31","2026-02-28","2026-08-31","2027-02-28","2027-08-31"],"grants":[{"planId":"29787","institution":"Aspire Vanguard College Preparatory Academy","grantName":"Cultivating Careers in Sustainable Agriculture at Aspire Vanguard","instCount":1,"budget":127770.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Aspire Vanguard College Preparatory Academy","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,false,false,false],"finalReport":false,"atRisk":false},{"planId":"29752","institution":"Burton Elementary","grantName":"CTE Wheel 7-12 Alignment","instCount":1,"budget":299807.0,"spent":22067.0,"pctSpent":0.0736,"planStatus":"Certified","leadLEA":"Burton Elementary","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,false,false,false],"finalReport":false,"atRisk":false},{"planId":"29789","institution":"Career Technical Education Charter","grantName":"CTE: The Pathway to College and Career Readiness","instCount":2,"budget":569998.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Career Technical Education Charter","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,false,false,false,false],"finalReport":false,"atRisk":true},{"planId":"29754","institution":"Ceres Unified","grantName":"Ceres CTE Collaboration and Health Pathway","instCount":1,"budget":129000.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Ceres Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,false,false,false],"finalReport":false,"atRisk":false},{"planId":"29803","institution":"Chawanakee Unified","grantName":"Building CTE Onramps for Middle School Students","instCount":1,"budget":609627.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Chawanakee Unified","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":true},{"planId":"29788","institution":"Delhi Unified","grantName":"Advancing Equity & Strengthening Regional Workforces Through CTE","instCount":1,"budget":569998.0,"spent":34543.0,"pctSpent":0.0606,"planStatus":"Certified","leadLEA":"Delhi Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,false,false,false,false],"finalReport":false,"atRisk":true},{"planId":"29760","institution":"Escalon Unified","grantName":"Expanding Equity, Articulation, and Equal Access - Agriculture and Natural Resources","instCount":1,"budget":475800.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Escalon Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,false,false,false,false],"finalReport":false,"atRisk":true},{"planId":"29799","institution":"Exeter Unified","grantName":"Patient Care","instCount":1,"budget":559173.0,"spent":101613.0,"pctSpent":0.1817,"planStatus":"Certified","leadLEA":"Exeter Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,false,false,false,false],"finalReport":false,"atRisk":true},{"planId":"29800","institution":"Exeter Unified","grantName":"Family and Consumer Science- Education","instCount":1,"budget":453195.0,"spent":1664.0,"pctSpent":0.0037,"planStatus":"Certified","leadLEA":"Exeter Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,false,false,false,false],"finalReport":false,"atRisk":true},{"planId":"29796","institution":"Firebaugh-Las Deltas Unified","grantName":"Completing College Credits and Certifications Connected to Central California Careers (C8) Project","instCount":1,"budget":569998.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Firebaugh-Las Deltas Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,false,false,false,false],"finalReport":false,"atRisk":true},{"planId":"29765","institution":"Fowler Unified","grantName":"Capacity, Inclusion, and Equity in Ag/Welding","instCount":1,"budget":569998.0,"spent":3194.0,"pctSpent":0.0056,"planStatus":"Certified","leadLEA":"Fowler Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,false,false,false,false],"finalReport":false,"atRisk":true},{"planId":"29755","institution":"Fresno Unified","grantName":"Dual Enrollment Pathways to Combat California's Teacher Shortage","instCount":1,"budget":563112.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Fresno Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,false,false,false,false],"finalReport":false,"atRisk":true},{"planId":"29757","institution":"Fresno Unified","grantName":"Overcoming Barriers to Internships and Early College Credit","instCount":1,"budget":1093274.0,"spent":105326.0,"pctSpent":0.0963,"planStatus":"Certified","leadLEA":"Fresno Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,false,false,false],"finalReport":false,"atRisk":false},{"planId":"29802","institution":"Fruitvale Elementary","grantName":"K12S SWP Round 7 (FJH CTE pathways)","instCount":1,"budget":149930.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Fruitvale Elementary","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,false,false,false],"finalReport":false,"atRisk":false},{"planId":"29816","institution":"Golden Plains Unified","grantName":"Getting Ready for Opportunities in the Workforce At Tranquility High (GROWTH) Project","instCount":1,"budget":322500.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Golden Plains Unified","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":true},{"planId":"29756","institution":"Hanford Joint Union High","grantName":"Pre-Apprenticeship Training for High School Students (PATHSS)","instCount":1,"budget":427000.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Hanford Joint Union High","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,false,false,false],"finalReport":false,"atRisk":false},{"planId":"29769","institution":"Kern Co. Office of Education","grantName":"Expanding Future Readiness: Building Bridges to 21st Century Careers for Kern's Middle Schoolers","instCount":1,"budget":1093274.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Kern Co. Office of Education","dashboardApproval":"","approvalStatus":"Submitted","quarterly":[true,false,false,false,false],"finalReport":false,"atRisk":true},{"planId":"29770","institution":"Kern Co. Office of Education","grantName":"Kern Innovation Center for Future Readiness and Student Success in College and Career","instCount":1,"budget":1093274.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Kern Co. Office of Education","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,false,false,false,false],"finalReport":false,"atRisk":true},{"planId":"29790","institution":"Kern Co. Office of Education","grantName":"Enhancing AgriScience & Forestry Education Through Work-Based Learning & Industry Exploration","instCount":1,"budget":301834.0,"spent":11203.0,"pctSpent":0.0371,"planStatus":"Certified","leadLEA":"Kern Co. Office of Education","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,false,false,false],"finalReport":false,"atRisk":false},{"planId":"29767","institution":"Kern High","grantName":"Simulation Training for Welding and Diesel Mechanics","instCount":1,"budget":1064060.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Kern High","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":true},{"planId":"29764","institution":"Lincoln Unified","grantName":"LUSD: Cultivating Graduates for a Competitive World","instCount":1,"budget":208605.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Lincoln Unified","dashboardApproval":"","approvalStatus":"Submitted","quarterly":[true,false,false,false,false],"finalReport":false,"atRisk":true},{"planId":"29753","institution":"Lodi Unified","grantName":"LodiHS Agriculture Complex Expansion and Modernization","instCount":1,"budget":280897.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Lodi Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,false,false,false,false],"finalReport":false,"atRisk":true},{"planId":"29810","institution":"Merced County ROP","grantName":"Preparing for Careers in Welding","instCount":2,"budget":569998.0,"spent":31475.0,"pctSpent":0.0552,"planStatus":"Certified","leadLEA":"Merced County ROP","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,false,false,false],"finalReport":false,"atRisk":false},{"planId":"29878","institution":"Merced Union High","grantName":"MUHSD Arts, Media, & Entertainment K14 Pathway - Leading with Equity and Preparing for 2030","instCount":1,"budget":603485.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Merced Union High","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,false,false,false],"finalReport":false,"atRisk":false},{"planId":"29751","institution":"Newman-Crows Landing Unified","grantName":"Agriculture Pathway Expansion","instCount":1,"budget":418567.0,"spent":79554.0,"pctSpent":0.1901,"planStatus":"Certified","leadLEA":"Newman-Crows Landing Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,false,false,false,false],"finalReport":false,"atRisk":true},{"planId":"29842","institution":"Patterson Joint Unified","grantName":"Patterson High School Forklift Safety and Maintenance","instCount":1,"budget":96750.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Patterson Joint Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,false,false,false],"finalReport":false,"atRisk":false},{"planId":"29841","institution":"Ripon Unified","grantName":"Agriculture Work Base Learning & College Readiness","instCount":1,"budget":145125.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Ripon Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,false,false,false,false],"finalReport":false,"atRisk":true},{"planId":"29773","institution":"Sanger Unified","grantName":"Supporting Career Connections with Equity in Sanger Schools (SUCCESS) Project","instCount":1,"budget":569998.0,"spent":1030.0,"pctSpent":0.0018,"planStatus":"Certified","leadLEA":"Sanger Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,false,false,false],"finalReport":false,"atRisk":false},{"planId":"29794","institution":"Sonora Union High","grantName":"Strong Workforce Sonora","instCount":1,"budget":609532.0,"spent":1225.0,"pctSpent":0.002,"planStatus":"Certified","leadLEA":"Sonora Union High","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,false,false,false,false],"finalReport":false,"atRisk":true},{"planId":"29780","institution":"Stockton Unified","grantName":"Edison High School Construction Pathway","instCount":1,"budget":500007.0,"spent":20402.0,"pctSpent":0.0408,"planStatus":"Certified","leadLEA":"Stockton Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,false,false,false],"finalReport":false,"atRisk":false},{"planId":"29781","institution":"Stockton Unified","grantName":"Expanding CTE Exploration Opportunities for Middle School","instCount":1,"budget":593839.0,"spent":43234.0,"pctSpent":0.0728,"planStatus":"Certified","leadLEA":"Stockton Unified","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,false,false,false],"finalReport":false,"atRisk":false},{"planId":"29763","institution":"Tulare Co. Office of Education","grantName":"Equity Diversity and Inclusion in CTE Across the Region","instCount":11,"budget":1093272.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Tulare Co. Office of Education","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,false,false,false],"finalReport":false,"atRisk":false},{"planId":"29775","institution":"Valley ROP","grantName":"Harnessing AI in Student-Led Enterprises","instCount":8,"budget":963297.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Valley ROP","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,false,false,false],"finalReport":false,"atRisk":false},{"planId":"29776","institution":"Valley ROP","grantName":"Advancing Agricultural Sustainability and Environmental Quality in the Central Valley","instCount":8,"budget":882232.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Valley ROP","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,false,false,false],"finalReport":false,"atRisk":false},{"planId":"29761","institution":"Visalia Unified","grantName":"Refining Systems of Alignment & Access to CTE Pathways for All Students","instCount":1,"budget":1093274.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Visalia Unified","dashboardApproval":"","approvalStatus":"Submitted","quarterly":[true,false,false,false,false],"finalReport":false,"atRisk":true},{"planId":"29762","institution":"Yosemite ROP","grantName":"Stanislaus County Career Inspiration Center Partnership Program","instCount":7,"budget":570297.0,"spent":4348.0,"pctSpent":0.0076,"planStatus":"Certified","leadLEA":"Yosemite ROP","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,false,false,false],"finalReport":false,"atRisk":false},{"planId":"29843","institution":"Yosemite ROP","grantName":"Stanislaus County Career Navigation and Exploration","instCount":6,"budget":1093274.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Yosemite ROP","dashboardApproval":"","approvalStatus":"Certified","quarterly":[true,true,false,false,false],"finalReport":false,"atRisk":false},{"planId":"29792","institution":"Yosemite Unified","grantName":"Modernizing Yosemite Unified's Agriculture Pathways","instCount":1,"budget":214350.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Yosemite Unified","dashboardApproval":"","approvalStatus":"Submitted","quarterly":[true,false,false,false,false],"finalReport":false,"atRisk":true}],"totals":{"budget":21549421.0,"spent":460878.0,"pctSpent":0.0214,"grantCount":38,"atRiskCount":20,"quarterlyCounts":[35,18,0,0,0],"finalCount":0}},"R8":{"label":"Round 8","grantFY":"2025-26","yearCode":"2026004","finalReportDue":"2028-09-30","grantFYStart":"2025-07-01","quarterlyLabels":["FY25-26 Q4 (08/31/26)","FY26-27 Q2 (02/28/27)","FY26-27 Q4 (08/31/27)","FY27-28 Q2 (02/28/28)","FY27-28 Q4 (08/31/28)"],"quarterlyDueDates":["2026-08-31","2027-02-28","2027-08-31","2028-02-28","2028-08-31"],"grants":[{"planId":"32685","institution":"Burton Elementary","grantName":"From Exploration to Enrollment: Strengthening the CTE Pipeline","instCount":1,"budget":475398.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Burton Elementary","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":false},{"planId":"32749","institution":"Delhi Unified","grantName":"Business/Financial","instCount":1,"budget":0.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Draft","leadLEA":"Delhi Unified","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":false},{"planId":"32876","institution":"El Tejon Unified","grantName":"FMHS Ceramics: Industry-Standard Kiln Project","instCount":1,"budget":14040.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"El Tejon Unified","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":false},{"planId":"32686","institution":"Firebaugh-Las Deltas Unified","grantName":"Firebaugh Opportunities Connecting Underserved Students to Careers (FOCUS-2-Careers)","instCount":1,"budget":0.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Submitted","leadLEA":"Firebaugh-Las Deltas Unified","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":false},{"planId":"33143","institution":"Fresno ROP","grantName":"CTE Early Exposure & Exploration Empowered by Engaging Educational Experiences (CTE-8) Project","instCount":1,"budget":0.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Submitted","leadLEA":"Fresno ROP","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":false},{"planId":"32648","institution":"Fresno Unified","grantName":"Pre-Apprenticeship Development, Alignment and Training","instCount":1,"budget":0.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Submitted","leadLEA":"Fresno Unified","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":false},{"planId":"32805","institution":"Grow Public Schools","grantName":"GPS Middle School Career Exploration","instCount":1,"budget":248090.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Grow Public Schools","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":false},{"planId":"32643","institution":"Kern Co. Office of Education","grantName":"The Future Readiness Initiative- R8","instCount":1,"budget":0.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Draft","leadLEA":"Kern Co. Office of Education","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":false},{"planId":"32644","institution":"Kern Co. Office of Education","grantName":"Career and Technical Education Mobile Lab- R8","instCount":1,"budget":0.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Draft","leadLEA":"Kern Co. Office of Education","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":false},{"planId":"32659","institution":"Kern High ROC","grantName":"Development and Implementation of an Introduction to Skilled Trades Program and HVAC Program","instCount":2,"budget":1436173.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Kern High ROC","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":false},{"planId":"33053","institution":"Lincoln Unified","grantName":"Align, Refine, Design","instCount":1,"budget":0.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Draft","leadLEA":"Lincoln Unified","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":false},{"planId":"32639","institution":"Lodi Unified","grantName":"Bear Creek HS Medical Assistant Program","instCount":1,"budget":569176.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Lodi Unified","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":false},{"planId":"32649","institution":"Merced County ROP","grantName":"EMPACT \u2013 Emergency Medical Preparedness and Career Training","instCount":1,"budget":0.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Submitted","leadLEA":"Merced County ROP","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":false},{"planId":"32690","institution":"Merced Union High","grantName":"MUHSD Animal Science K14 Pathway - Building Bridges from High School to High-Wage Careers","instCount":1,"budget":0.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Submitted","leadLEA":"Merced Union High","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":false},{"planId":"32640","institution":"Patterson Joint Unified","grantName":"Expanding Agriculture Pathways: Middle School to Postsecondary","instCount":1,"budget":0.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Draft","leadLEA":"Patterson Joint Unified","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":false},{"planId":"32730","institution":"Richland Union Elementary","grantName":"Creative Minds and Leaders of Tomorrow","instCount":1,"budget":0.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Submitted","leadLEA":"Richland Union Elementary","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":false},{"planId":"32692","institution":"Sanger Unified","grantName":"Advancing Students to Careers of Employer Need and Demand at Sanger (ASCEND@Sanger) Project","instCount":1,"budget":900000.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Sanger Unified","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":false},{"planId":"32638","institution":"Tehachapi Unified","grantName":"Innovative Pathways: Cultivating Skills for Tomorrow's Careers","instCount":1,"budget":0.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Submitted","leadLEA":"Tehachapi Unified","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":false},{"planId":"32769","institution":"Tuolumne County Superintendent of Schools","grantName":"Pathway to Prosperity","instCount":1,"budget":0.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Submitted","leadLEA":"Tuolumne County Superintendent of Schools","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":false},{"planId":"32740","institution":"Valley ROP","grantName":"Build and Beyond: Welding & Manufacturing Pathways","instCount":8,"budget":1432864.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Valley ROP","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":false},{"planId":"32741","institution":"Valley ROP","grantName":"Protect & Serve Pathways: Preparing Central Valley Students for Service and Safety Careers","instCount":8,"budget":1416119.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Valley ROP","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":false},{"planId":"32642","institution":"Visalia Technical Early College","grantName":"A Model for Advancing Mastery in Ag Mechanics and Advanced Manufacturing (AM4) Project","instCount":1,"budget":402737.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Certified","leadLEA":"Visalia Technical Early College","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":false},{"planId":"32677","institution":"Visalia Unified","grantName":"Leading efforts to Address Underrepresentation in Careers in Health (LAUNCH) Project","instCount":1,"budget":0.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Submitted","leadLEA":"Visalia Unified","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":false},{"planId":"32678","institution":"Visalia Unified","grantName":"ADVANCE@Visalia Project","instCount":1,"budget":0.0,"spent":0.0,"pctSpent":0.0,"planStatus":"Submitted","leadLEA":"Visalia Unified","dashboardApproval":"","approvalStatus":"","quarterly":[false,false,false,false,false],"finalReport":false,"atRisk":false}],"totals":{"budget":6894597.0,"spent":0.0,"pctSpent":0.0,"grantCount":24,"atRiskCount":0,"quarterlyCounts":[0,0,0,0,0],"finalCount":0}}}};
+const TODAY = new Date('2026-04-30T00:00:00');
+
+// ─── STATE ────────────────────────────────────────────────────────────────
+const S = {
+  view: 1,
+  round: 'all',
+  search: '',
+  sortCol: 'institution',
+  sortDir: 1,
+  alertOpen: true,
+  unspentOpen: true,
+  odOpen: true,
+  statusFilter: 'all',
+  expandedCard: null,
+  expandedRound: null,
+};
+
+// ─── HELPERS ──────────────────────────────────────────────────────────────
+const $c = (v, dec=0) => v == null ? '—' :
+  '$' + Math.round(v).toLocaleString('en-US');
+
+const $p = n => Math.round(n * 100) + '%';
+const $pf = n => (n * 100).toFixed(1) + '%';
+
+function pastDue(ds) {
+  return new Date(ds + 'T00:00:00') <= TODAY;
+}
+
+function pbHtml(pct, risk) {
+  const w = Math.min(100, Math.round(pct * 100));
+  const cls = risk ? 'red' : pct >= 0.75 ? 'grn' : '';
+  return `<div class="pb-wrap"><div class="pb ${cls}" style="width:${w}%"></div></div>
+          <div class="pct-lbl">${$p(pct)}</div>`;
+}
+
+function qiHtml(quarterly, dueDates) {
+  return '<div class="qi">' + quarterly.map((v, i) => {
+    const pd = pastDue(dueDates[i]);
+    const [cls, sym] = v ? ['ok','✓'] : pd ? ['bad','✗'] : ['fut','·'];
+    return `<span class="q ${cls}" title="${dueDates[i]}">${sym}</span>`;
+  }).join('') + '</div>';
+}
+
+function finalIcon(done, dueDate, size='') {
+  const st = size ? `style="width:${size};height:${size}"` : '';
+  if (done) return `<span class="q ok" ${st}>✓</span>`;
+  return pastDue(dueDate)
+    ? `<span class="q bad" ${st}>✗</span>`
+    : `<span class="q fut" ${st}>·</span>`;
+}
+
+function sbadge(status) {
+  if (!status) return '';
+  const s = status.toLowerCase();
+  const cls = s.includes('certif') ? 'cert' : s.includes('submit') ? 'subm' : 'none';
+  return `<span class="sbdg ${cls}">${status}</span>`;
+}
+
+function rbadge(rk) { return `<span class="rbdg">${rk}</span>`; }
+function arIcon() { return `<span class="arf" title="At risk — past-due report missing">⚠</span>`; }
+
+function daysFrom(ds) {
+  return Math.round((new Date(ds + 'T00:00:00') - TODAY) / 86400000);
+}
+
+function fmtDate(ds) {
+  return new Date(ds + 'T00:00:00').toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+}
+
+function novaUrl(g) {
+  return `https://nova.cccco.edu/swpk/fiscal-reports/plans/${g.planId}?duration=${g.yearCode}`;
+}
+
+function instLink(g) {
+  return `<a class="inst-link" href="${novaUrl(g)}" target="_blank" rel="noopener"
+    title="View ${g.institution} grant on NOVA">${g.institution}</a>`;
+}
+
+// ─── BURN RATE HELPERS ────────────────────────────────────────────────────
+// Compares actual spend % vs expected spend % based on lifecycle position
+function burnRate(g, rd) {
+  const start = new Date(rd.grantFYStart + 'T00:00:00');
+  const end   = new Date(rd.finalReportDue + 'T00:00:00');
+  const total = end - start;
+  const elapsed = Math.max(0, Math.min(total, TODAY - start));
+  const expectedPct = elapsed / total;
+  const actualPct   = g.pctSpent;
+  const delta       = actualPct - expectedPct;
+  return { expectedPct, actualPct, delta };
+}
+
+function burnBadge(g, rd) {
+  const { expectedPct, delta } = burnRate(g, rd);
+  let cls, label, title;
+  if (delta >= -0.05)       { cls = 'br-ok';   label = '▲ On Pace'; }
+  else if (delta >= -0.15)  { cls = 'br-warn';  label = '▼ Slightly Behind'; }
+  else                       { cls = 'br-risk';  label = '▼ Under-Spending'; }
+  title = `Expected ${Math.round(expectedPct*100)}% spent by now`;
+  return `<span class="br-badge ${cls}" title="${title}">${label}</span>`;
+}
+
+// ─── UNSPENT FUNDS AT RISK HELPER ─────────────────────────────────────────
+function unspentRiskGrants() {
+  // Grants in final year (≤365 days to final report) with >20% budget unspent and final report not done
+  return allGrants().filter(g => {
+    const daysLeft = daysFrom(g.finalReportDue);
+    return daysLeft >= 0 && daysLeft <= 365 && !g.finalReport && g.pctSpent < 0.80;
+  }).sort((a, b) => (a.budget - a.spent) < (b.budget - b.spent) ? 1 : -1);
+}
+
+function renderOverduePanel() {
+  const grants = allGrants();
+
+  // --- Group 1: Missed quarterly reports (one row per missed quarter per grant) ---
+  const missedReports = [];
+  for (const g of grants) {
+    for (let i = 0; i < g.quarterlyDueDates.length; i++) {
+      if (pastDue(g.quarterlyDueDates[i]) && !g.quarterly[i]) {
+        missedReports.push({
+          g,
+          label: g.quarterlyLabels[i].split(' (')[0],
+          date:  g.quarterlyDueDates[i],
+          days:  Math.abs(daysFrom(g.quarterlyDueDates[i]))
+        });
+      }
+    }
+  }
+  missedReports.sort((a, b) => daysFrom(a.date) - daysFrom(b.date));
+
+  // --- Group 2: Missed final reports ---
+  const missedFinal = grants
+    .filter(g => pastDue(g.finalReportDue) && !g.finalReport)
+    .map(g => ({ g, days: Math.abs(daysFrom(g.finalReportDue)) }))
+    .sort((a, b) => daysFrom(a.g.finalReportDue) - daysFrom(b.g.finalReportDue));
+
+  // --- Group 3: Behind on spending ---
+  const behindSpend = [];
+  for (const g of grants) {
+    if (g.budget <= 0) continue;
+    const rd = DATA.rounds[g.roundKey];
+    if (!rd) continue;
+    const { delta } = burnRate(g, rd);
+    if (delta < -0.05) {
+      behindSpend.push({ g, delta });
+    }
+  }
+  behindSpend.sort((a, b) => a.delta - b.delta);
+
+  const total = missedReports.length + missedFinal.length + behindSpend.length;
+  if (total === 0) return '';  // Panel hidden when nothing is overdue
+
+  function groupHtml(title, rowsHtml, isAmber) {
+    if (!rowsHtml) return '';
+    const cls = isAmber ? 'amber' : '';
+    const cnt = isAmber ? behindSpend.length : (title.includes('Final') ? missedFinal.length : missedReports.length);
+    return `<div class="od-group">
+      <div class="od-group-hdr ${cls}">${title}<span class="od-cnt ${cls}">${cnt}</span></div>
+      ${rowsHtml}
+    </div>`;
+  }
+
+  const mrRows = missedReports.map(r =>
+    `<div class="od-row">
+      ${rbadge(r.g.roundKey)}
+      <div class="od-gname" title="${r.g.grantName}">${r.g.grantName}</div>
+      <div class="od-detail">${r.label} · ${r.days}d overdue</div>
+    </div>`
+  ).join('');
+
+  const mfRows = missedFinal.map(r =>
+    `<div class="od-row">
+      ${rbadge(r.g.roundKey)}
+      <div class="od-gname" title="${r.g.grantName}">${r.g.grantName}</div>
+      <div class="od-detail">Final Report · ${r.days}d overdue</div>
+    </div>`
+  ).join('');
+
+  const bsRows = behindSpend.map(r =>
+    `<div class="od-row amber">
+      ${rbadge(r.g.roundKey)}
+      <div class="od-gname" title="${r.g.grantName}">${r.g.grantName}</div>
+      <div class="od-detail amber">${Math.round(Math.abs(r.delta) * 100)}% behind pace</div>
+    </div>`
+  ).join('');
+
+  const body = S.odOpen ? `<div class="od-body">
+      ${groupHtml('Missed Reports (Q2/Q4)', mrRows, false)}
+      ${groupHtml('Missed Final Reports', mfRows, false)}
+      ${groupHtml('Behind on Spending', bsRows, true)}
+    </div>` : '';
+
+  return `<div class="od-panel">
+    <div class="od-hdr" onclick="togOD()">
+      <div class="od-hdr-ttl">⚠ Overdue &amp; At-Risk<span class="od-total">${total}</span></div>
+      <span class="alrt-tog">${S.odOpen ? 'Collapse ▲' : 'Expand ▼'}</span>
+    </div>
+    ${body}
+  </div>`;
+}
+
+// ─── EXPORT / PRINT HELPERS ───────────────────────────────────────────────
+function exportCSV() {
+  const gs = filterG(allGrants());
+  const headers = ['Round','Institution','Plan ID','Grant Name','Budget','Spent','% Spent','At Risk','Plan Status'];
+  const rows = gs.map(g => [
+    g.roundKey, `"${g.institution}"`, g.planId, `"${g.grantName}"`,
+    g.budget, g.spent, Math.round(g.pctSpent*100)+'%',
+    g.atRisk ? 'Yes' : 'No', `"${g.planStatus||g.approvalStatus||''}"`
+  ]);
+  const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = 'k12-swp-grants.csv'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function printDashboard() {
+  render();
+  requestAnimationFrame(() => requestAnimationFrame(() => window.print()));
+}
+
+// ─── DEADLINE HELPERS ─────────────────────────────────────────────────────
+// Returns a small chip showing the grant's most urgent deadline situation.
+function grantDeadlineChip(g) {
+  // 1. First overdue incomplete quarter
+  for (let i = 0; i < g.quarterly.length; i++) {
+    if (!g.quarterly[i] && pastDue(g.quarterlyDueDates[i])) {
+      const d = Math.abs(daysFrom(g.quarterlyDueDates[i]));
+      const lbl = g.quarterlyLabels[i].split(' (')[0];
+      return `<span class="gdl-chip overdue">⚠ ${lbl}<br>${d}d overdue</span>`;
+    }
+  }
+  // 2. Final report overdue
+  if (!g.finalReport && pastDue(g.finalReportDue)) {
+    const d = Math.abs(daysFrom(g.finalReportDue));
+    return `<span class="gdl-chip overdue">⚠ Final Report<br>${d}d overdue</span>`;
+  }
+  // 3. Next upcoming quarter not yet submitted
+  for (let i = 0; i < g.quarterly.length; i++) {
+    if (!g.quarterly[i]) {
+      const d = daysFrom(g.quarterlyDueDates[i]);
+      const lbl = g.quarterlyLabels[i].split(' (')[0];
+      const cls = d <= 45 ? 'soon' : 'future';
+      return `<span class="gdl-chip ${cls}">${lbl}<br>due in ${d}d</span>`;
+    }
+  }
+  // 4. Final report upcoming
+  if (!g.finalReport) {
+    const d = daysFrom(g.finalReportDue);
+    return `<span class="gdl-chip ${d <= 60 ? 'soon' : 'future'}">Final Report<br>due in ${d}d</span>`;
+  }
+  return `<span class="gdl-chip ok">✓ All done</span>`;
+}
+
+// Collects all round-level deadlines, deduped by date+label, sorted by date.
+function allDeadlines() {
+  const map = {};  // key = dateStr → [{rk, label}]
+  Object.entries(DATA.rounds).forEach(([rk, rd]) => {
+    rd.quarterlyLabels.forEach((lbl, i) => {
+      const ds = rd.quarterlyDueDates[i];
+      const short = lbl.split(' (')[0];
+      const key = ds + '|' + short;
+      if (!map[key]) map[key] = {ds, label: short, rounds: [], isFinal: false};
+      map[key].rounds.push(rk);
+    });
+    const key = rd.finalReportDue + '|Final Report';
+    if (!map[key]) map[key] = {ds: rd.finalReportDue, label: 'Final Report', rounds: [], isFinal: true};
+    map[key].rounds.push(rk);
+  });
+  return Object.values(map).sort((a, b) => a.ds.localeCompare(b.ds));
+}
+
+function renderDeadlineBar() {
+  const dl = allDeadlines();
+  const past   = dl.filter(d => daysFrom(d.ds) < 0 && daysFrom(d.ds) >= -75).reverse(); // last 75 days
+  const coming = dl.filter(d => daysFrom(d.ds) >= 0).slice(0, 5);  // next 5
+
+  function chip(d) {
+    const days   = daysFrom(d.ds);
+    const rks    = [...new Set(d.rounds)].join('/');
+    const name   = `${rks} ${d.label}`;
+    const dateShort = new Date(d.ds + 'T00:00:00')
+      .toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+    if (days < 0) {
+      const cls = days >= -14 ? 'recent' : 'overdue';
+      return `<span class="dchip ${cls}">${name} · ${dateShort} · ${Math.abs(days)}d ago</span>`;
+    }
+    const cls = days === 0 ? 'recent' : days <= 30 ? 'soon' : 'future';
+    return `<span class="dchip ${cls}">${name} · ${dateShort} · ${days === 0 ? 'TODAY' : 'in ' + days + 'd'}</span>`;
+  }
+
+  let html = '';
+  if (past.length) {
+    html += `<div class="dbar-sec"><span class="dbar-lbl past-lbl">⚠ Recently passed</span>
+      ${past.map(chip).join('')}</div>`;
+  }
+  if (past.length && coming.length) {
+    html += '<div class="dbar-div"></div>';
+  }
+  if (coming.length) {
+    html += `<div class="dbar-sec"><span class="dbar-lbl up-lbl">📅 Upcoming</span>
+      ${coming.map(chip).join('')}</div>`;
+  }
+  if (!past.length && !coming.length) {
+    html = '<span style="font-size:12px;color:#475569">No deadlines in the next 6 months.</span>';
+  }
+  document.getElementById('dbar').innerHTML = html;
+}
+
+// ─── DATA ACCESS ──────────────────────────────────────────────────────────
+function rounds() {
+  const rk = S.round;
+  const entries = Object.entries(DATA.rounds);
+  return rk === 'all' ? entries : entries.filter(([k]) => k === rk);
+}
+
+function allGrants() {
+  return rounds().flatMap(([rk, rd]) =>
+    rd.grants.map(g => ({
+      ...g, roundKey: rk, roundLabel: rd.label,
+      yearCode: rd.yearCode,
+      quarterlyDueDates: rd.quarterlyDueDates,
+      quarterlyLabels: rd.quarterlyLabels,
+      finalReportDue: rd.finalReportDue,
+    }))
+  );
+}
+
+function filterG(gs) {
+  const q = S.search.toLowerCase().trim();
+  if (!q) return gs;
+  return gs.filter(g =>
+    g.institution.toLowerCase().includes(q) ||
+    g.grantName.toLowerCase().includes(q) ||
+    g.planId.includes(q)
+  );
+}
+
+function sortG(gs) {
+  const { sortCol: col, sortDir: dir } = S;
+  return [...gs].sort((a, b) => {
+    let av = a[col], bv = b[col];
+    if (typeof av === 'string') av = av.toLowerCase();
+    if (typeof bv === 'string') bv = bv.toLowerCase();
+    if (av < bv) return -dir;
+    if (av > bv) return dir;
+    return 0;
+  });
+}
+
+function kpiStats(gs) {
+  return {
+    count: gs.length,
+    budget: gs.reduce((s, g) => s + g.budget, 0),
+    spent:  gs.reduce((s, g) => s + g.spent, 0),
+    atRisk: gs.filter(g => g.atRisk).length,
+  };
+}
+
+function setCount(n) {
+  const el = document.getElementById('rcount');
+  if (el) el.textContent = n === 1 ? '1 grant' : `${n} grants`;
+}
+
+function sa(col) {
+  if (S.sortCol !== col) return `<span class="si">⇅</span>`;
+  return `<span class="si">${S.sortDir === 1 ? '↑' : '↓'}</span>`;
+}
+
+// ─── VIEW 1: COMMAND CENTER ───────────────────────────────────────────────
+function togUnspent() { S.unspentOpen = !S.unspentOpen; rv1(); }
+function togOD()      { S.odOpen = !S.odOpen; rv1(); rv2(); }
+
+function rv1() {
+  const gs = filterG(allGrants());
+  const sorted = sortG(gs);
+  const st = kpiStats(gs);
+  setCount(sorted.length);
+
+  // Unspent Funds at Risk panel
+  const riskGrants = unspentRiskGrants();
+  let unspentPanel = '';
+  if (riskGrants.length > 0) {
+    let unspentBody = '';
+    if (S.unspentOpen) {
+      const unspentRows = riskGrants.map(g => {
+        const unspent = g.budget - g.spent;
+        const pctRemaining = g.budget > 0 ? Math.round((1 - g.pctSpent) * 100) : 0;
+        const dl = daysFrom(g.finalReportDue);
+        return `<div class="alrt-item">
+          ${rbadge(g.roundKey)}
+          <div class="alrt-inst">${instLink(g)}</div>
+          <div class="alrt-det">${$c(unspent)} unspent (${pctRemaining}% remaining) · ${dl}d until final report</div>
+        </div>`;
+      }).join('');
+      unspentBody = `<div class="alrt-body">${unspentRows}</div>`;
+    }
+    unspentPanel = `<div class="unspent-panel">
+      <div class="unspent-hdr" onclick="togUnspent()">
+        <div class="unspent-ttl">
+          <span>💰</span><span>Unspent Funds at Risk of Lapsing</span>
+          <span class="unspent-n">${riskGrants.length}</span>
+        </div>
+        <span class="alrt-tog">${S.unspentOpen ? 'Collapse ▲' : 'Expand ▼'}</span>
+      </div>
+      ${unspentBody}
+    </div>`;
+  }
+
+  const kpi = `<div class="kpi-row">
+    <div class="kpi nvy">
+      <div class="kpi-lbl">Total Budget</div>
+      <div class="kpi-val num">${$c(st.budget)}</div>
+      <div class="kpi-sub">${st.count} grants · Rounds 6 – 8</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">Total Spent</div>
+      <div class="kpi-val num">${$c(st.spent)}</div>
+      <div class="kpi-sub">${st.budget > 0 ? $pf(st.spent/st.budget) : '0%'} of budget used</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">Active Grants</div>
+      <div class="kpi-val">${st.count}</div>
+      <div class="kpi-sub">Rounds 5 – 8</div>
+    </div>
+    <div class="kpi ${st.atRisk > 0 ? 'red' : 'grn'}">
+      <div class="kpi-lbl">At-Risk Grants</div>
+      <div class="kpi-val">${st.atRisk}</div>
+      <div class="kpi-sub">${st.atRisk > 0 ? 'Missing past-due reports' : 'All reports on track'}</div>
+    </div>
+  </div>`;
+
+  let rows = sorted.length ? sorted.map(g =>
+    `<tr>
+      <td><div class="inst">${instLink(g)}</div><div class="gname" title="${g.grantName}">${g.grantName}</div></td>
+      <td>${rbadge(g.roundKey)}</td>
+      <td class="num">${$c(g.budget)}</td>
+      <td class="num">${$c(g.spent)}</td>
+      <td>${pbHtml(g.pctSpent, g.atRisk)}</td>
+      <td>${burnBadge(g, DATA.rounds[g.roundKey])}</td>
+      <td>${qiHtml(g.quarterly, g.quarterlyDueDates)}</td>
+      <td style="text-align:center">${finalIcon(g.finalReport, g.finalReportDue)}</td>
+      <td>${grantDeadlineChip(g)}</td>
+      <td>${sbadge(g.planStatus || g.approvalStatus)}</td>
+      <td>${g.atRisk ? arIcon() : ''}</td>
+    </tr>`
+  ).join('') : `<tr><td colspan="11"><div class="empty"><div class="ico">🔍</div>No grants match your search.</div></td></tr>`;
+
+  const tbl = `<div class="tbl-wrap"><table>
+    <thead><tr>
+      <th onclick="ds('institution')" class="${S.sortCol==='institution'?'srt':''}">Institution ${sa('institution')}</th>
+      <th>Round</th>
+      <th onclick="ds('budget')" class="${S.sortCol==='budget'?'srt':''}">Budget ${sa('budget')}</th>
+      <th onclick="ds('spent')" class="${S.sortCol==='spent'?'srt':''}">Spent ${sa('spent')}</th>
+      <th onclick="ds('pctSpent')" class="${S.sortCol==='pctSpent'?'srt':''}">% Spent ${sa('pctSpent')}</th>
+      <th>Burn Rate</th>
+      <th>Quarterly Status</th>
+      <th>Final</th>
+      <th>Next Deadline</th>
+      <th>Plan Status</th>
+      <th></th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
+
+  document.getElementById('v1').innerHTML = renderOverduePanel() + unspentPanel + kpi + tbl;
+  animateBars('#v1');
+}
+
+// ─── VIEW 2: PORTFOLIO OVERVIEW ───────────────────────────────────────────
+function rv2() {
+  const q = S.search.toLowerCase().trim();
+  const rds = rounds();
+
+  const cards = rds.map(([rk, rd]) => {
+    const t = rd.totals;
+    const qSummary = t.quarterlyCounts.map((c, i) => {
+      const lbl = rd.quarterlyLabels[i] ? rd.quarterlyLabels[i].split(' (')[0] : `Q${i+1}`;
+      return `${c}/${t.grantCount}`;
+    }).join(' · ');
+    return `<div class="rc ${S.expandedRound===rk?'on':''}" onclick="togRound('${rk}')">
+      <div class="rc-lbl">${rd.label} · FY ${rd.grantFY}</div>
+      <div class="rc-budget num">${$c(t.budget)}</div>
+      <div class="rc-sub">${t.grantCount} grants</div>
+      <div class="pb-wrap" style="width:100%;height:8px;margin-bottom:4px">
+        <div class="pb ${t.pctSpent>=.75?'grn':''}" style="width:${Math.min(100,Math.round(t.pctSpent*100))}%"></div>
+      </div>
+      <div class="rc-pct">${$pf(t.pctSpent)} spent · ${$c(t.spent)}</div>
+      <div style="margin-top:7px;font-size:11px;color:var(--muted)">Quarterly: ${qSummary}</div>
+      ${t.atRiskCount > 0 ? `<div style="margin-top:6px;font-size:11px;color:var(--red);font-weight:700">⚠ ${t.atRiskCount} at risk</div>` : `<div style="margin-top:6px;font-size:11px;color:var(--green);font-weight:600">✓ All on track</div>`}
+    </div>`;
+  }).join('');
+
+  let listHtml = '';
+  if (S.expandedRound) {
+    const found = rds.find(([k]) => k === S.expandedRound);
+    if (found) {
+      const [rk, rd] = found;
+      let gs = rd.grants.map(g => ({...g, yearCode: rd.yearCode}));
+      if (q) gs = gs.filter(g =>
+        g.institution.toLowerCase().includes(q) || g.grantName.toLowerCase().includes(q)
+      );
+      setCount(gs.length);
+      const rows = gs.length ? gs.map(g =>
+        `<tr>
+          <td><div class="inst">${instLink(g)}</div><div class="gname" title="${g.grantName}">${g.grantName}</div></td>
+          <td class="num">${$c(g.budget)}</td>
+          <td class="num">${$c(g.spent)}</td>
+          <td>${pbHtml(g.pctSpent, g.atRisk)}</td>
+          <td>${qiHtml(g.quarterly, rd.quarterlyDueDates)}</td>
+          <td style="text-align:center">${finalIcon(g.finalReport, rd.finalReportDue)}</td>
+          <td>${sbadge(g.planStatus || g.approvalStatus)}</td>
+          <td>${g.atRisk ? arIcon() : ''}</td>
+        </tr>`
+      ).join('') : `<tr><td colspan="8"><div class="empty"><div class="ico">🔍</div>No grants match.</div></td></tr>`;
+
+      listHtml = `<div class="rgl">
+        <div class="rgl-hdr">${rd.label} — ${gs.length} grant${gs.length!==1?'s':''} shown</div>
+        <div class="tbl-wrap" style="border:none;border-radius:0;box-shadow:none"><table>
+          <thead><tr>
+            <th>Institution</th><th>Budget</th><th>Spent</th>
+            <th>% Spent</th><th>Quarterly</th><th>Final</th><th>Status</th><th></th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table></div>
+      </div>`;
+    }
+  } else {
+    setCount(rds.reduce((s,[,rd])=>s+rd.totals.grantCount,0));
+  }
+
+  document.getElementById('v2').innerHTML =
+    renderOverduePanel() + `<div class="rc-grid">${cards}</div>${listHtml}`;
+  animateBars('#v2');
+}
+
+// ─── VIEW 3: STATUS MATRIX ────────────────────────────────────────────────
+function rv3() {
+  const q = S.search.toLowerCase().trim();
+  const rds = rounds();
+  let html = '';
+  let total = 0;
+
+  rds.forEach(([rk, rd]) => {
+    let gs = rd.grants.map(g => ({...g, yearCode: rd.yearCode}));
+    if (q) gs = gs.filter(g => g.institution.toLowerCase().includes(q) || g.grantName.toLowerCase().includes(q));
+    total += gs.length;
+
+    const allLabels = [...rd.quarterlyLabels, 'Final Report'];
+    const allDates  = [...rd.quarterlyDueDates, rd.finalReportDue];
+    const counts    = new Array(allLabels.length).fill(0);
+
+    const hdrCols = allLabels.map((lbl, i) => {
+      const pd = pastDue(allDates[i]);
+      const short = lbl.split(' (')[0];
+      const dateStr = allDates[i].slice(5).replace('-','/');
+      return `<th class="${pd?'pd':''}">${short}<br><small style="font-weight:400;opacity:.7">${dateStr}</small></th>`;
+    }).join('');
+
+    const bodyRows = gs.map(g => {
+      const qCols = g.quarterly.map((v, i) => {
+        const pd = pastDue(allDates[i]);
+        const [cls, sym] = v ? ['ok','✓'] : pd ? ['bad','✗'] : ['fut','—'];
+        if (v) counts[i]++;
+        return `<td><div class="mc ${cls}">${sym}</div></td>`;
+      });
+      // Final report
+      const fi = allLabels.length - 1;
+      const pd = pastDue(rd.finalReportDue);
+      const [fcls, fsym] = g.finalReport ? ['ok','✓'] : pd ? ['bad','✗'] : ['fut','—'];
+      if (g.finalReport) counts[fi]++;
+      return `<tr><td><strong style="font-size:13px">${instLink(g)}</strong>${g.atRisk?` <span class="arf" style="width:16px;height:16px;font-size:9px">⚠</span>`:''}</td>${qCols.join('')}<td><div class="mc ${fcls}">${fsym}</div></td></tr>`;
+    }).join('');
+
+    const footCols = counts.map((c, i) =>
+      `<td><strong>${c}/${gs.length}</strong></td>`
+    ).join('');
+
+    html += `<div class="sec-ttl">${rd.label} — Submission Matrix</div>
+    <div class="mtx-wrap">
+      <table class="mtx">
+        <thead><tr><th>Institution</th>${hdrCols}</tr></thead>
+        <tbody>${bodyRows}</tbody>
+        <tfoot><tr class="mtx-foot"><td><strong>Submitted</strong></td>${footCols}</tr></tfoot>
+      </table>
+    </div>`;
+  });
+
+  setCount(total);
+  document.getElementById('v3').innerHTML = html ||
+    '<div class="empty"><div class="ico">📋</div>No data for selected round.</div>';
+}
+
+// ─── VIEW 4: ALERT DASHBOARD ──────────────────────────────────────────────
+function rv4() {
+  const gs = filterG(allGrants());
+  const atRisk = gs.filter(g => g.atRisk);
+  const sorted = sortG(S.statusFilter === 'risk' ? atRisk :
+    S.statusFilter === 'ok' ? gs.filter(g => !g.atRisk) : gs);
+  setCount(sorted.length);
+
+  // Alert panel
+  let alertItems = '';
+  if (S.alertOpen) {
+    if (atRisk.length) {
+      alertItems = '<div class="alrt-body">' + atRisk.map(g => {
+        const missing = [
+          ...g.quarterly.map((v, i) =>
+            !v && pastDue(g.quarterlyDueDates[i])
+              ? `${g.quarterlyLabels[i].split(' (')[0]} (${Math.abs(daysFrom(g.quarterlyDueDates[i]))}d overdue)`
+              : null
+          ).filter(Boolean),
+          !g.finalReport && pastDue(g.finalReportDue)
+            ? `Final Report (${Math.abs(daysFrom(g.finalReportDue))}d overdue)`
+            : null,
+        ].filter(Boolean);
+        return `<div class="alrt-item">
+          ${rbadge(g.roundKey)}
+          <div class="alrt-inst">${instLink(g)}</div>
+          <div class="alrt-det">Missing: ${missing.join(' · ')}</div>
+        </div>`;
+      }).join('') + '</div>';
+    } else {
+      alertItems = '<div style="padding:14px 18px;color:#065F46;font-weight:600;font-size:13px">✅ All grants are on track — no missing past-due reports.</div>';
+    }
+  }
+
+  const alertPanel = `<div class="alrt-panel">
+    <div class="alrt-hdr" onclick="togAlert()">
+      <div class="alrt-ttl">
+        <span>⚠</span><span>Grants Needing Attention</span>
+        <span class="alrt-n">${atRisk.length}</span>
+      </div>
+      <span class="alrt-tog">${S.alertOpen ? 'Collapse ▲' : 'Expand ▼'}</span>
+    </div>
+    ${alertItems}
+  </div>`;
+
+  const sfRow = `<div class="sf-row">
+    <button class="sf-btn ${S.statusFilter==='all'?'on':''}" onclick="setSF('all')">All (${gs.length})</button>
+    <button class="sf-btn ${S.statusFilter==='risk'?'on':''}" onclick="setSF('risk')">At-Risk (${atRisk.length})</button>
+    <button class="sf-btn ${S.statusFilter==='ok'?'on':''}" onclick="setSF('ok')">On Track (${gs.length-atRisk.length})</button>
+  </div>`;
+
+  const rows = sorted.length ? sorted.map(g =>
+    `<tr style="${g.atRisk?'background:#FFFAFA':''}">
+      <td>
+        <div class="inst">${instLink(g)}</div>
+        ${g.atRisk ? `<div style="font-size:11px;color:var(--red);font-weight:600;margin-top:2px">⚠ Past-due report missing</div>` : ''}
+      </td>
+      <td>${rbadge(g.roundKey)}</td>
+      <td class="num">${$c(g.budget)}</td>
+      <td>${pbHtml(g.pctSpent, g.atRisk)}</td>
+      <td>${qiHtml(g.quarterly, g.quarterlyDueDates)}</td>
+      <td style="text-align:center">${finalIcon(g.finalReport, g.finalReportDue)}</td>
+      <td>${grantDeadlineChip(g)}</td>
+      <td>${sbadge(g.planStatus || g.approvalStatus)}</td>
+    </tr>`
+  ).join('') : `<tr><td colspan="8"><div class="empty"><div class="ico">✅</div>No grants in this category.</div></td></tr>`;
+
+  const tbl = `<div class="tbl-wrap"><table>
+    <thead><tr>
+      <th onclick="ds('institution')" class="${S.sortCol==='institution'?'srt':''}">Institution ${sa('institution')}</th>
+      <th>Round</th>
+      <th onclick="ds('budget')" class="${S.sortCol==='budget'?'srt':''}">Budget ${sa('budget')}</th>
+      <th onclick="ds('pctSpent')" class="${S.sortCol==='pctSpent'?'srt':''}">% Spent ${sa('pctSpent')}</th>
+      <th>Quarterly Status</th>
+      <th>Final Report</th>
+      <th>Next Deadline</th>
+      <th>Plan Status</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
+
+  document.getElementById('v4').innerHTML = alertPanel + sfRow + tbl;
+  animateBars('#v4');
+}
+
+// ─── VIEW 5: GRANT CARDS ──────────────────────────────────────────────────
+function rv5() {
+  const gs = [...filterG(allGrants())].sort((a,b) =>
+    a.institution.localeCompare(b.institution)
+  );
+  setCount(gs.length);
+
+  if (!gs.length) {
+    document.getElementById('v5').innerHTML =
+      '<div class="empty"><div class="ico">🔍</div>No grants match your search.</div>';
+    return;
+  }
+
+  const html = '<div class="cards">' + gs.map(g => {
+    const exp = S.expandedCard === g.planId;
+    const pctColor = g.atRisk ? 'var(--red)' : g.pctSpent >= 0.75 ? 'var(--green)' : 'var(--navy)';
+    return `<div class="gc ${g.atRisk?'risk':''} ${exp?'exp':''}" onclick="togCard('${g.planId}')">
+      <div class="gc-hdr">
+        <div class="gc-bdgs">
+          ${rbadge(g.roundKey)}
+          ${sbadge(g.planStatus || g.approvalStatus)}
+          ${g.atRisk ? arIcon() : ''}
+        </div>
+        <div class="gc-inst">${instLink(g)}</div>
+        <div class="gc-gname" title="${g.grantName}">${g.grantName || '—'}</div>
+      </div>
+      <div class="gc-metrics">
+        <div class="gc-m">
+          <div class="gc-ml">Budget</div>
+          <div class="gc-mv num">${$c(g.budget)}</div>
+        </div>
+        <div class="gc-m">
+          <div class="gc-ml">Spent</div>
+          <div class="gc-mv num">${$c(g.spent)}</div>
+        </div>
+        <div class="gc-m">
+          <div class="gc-ml">% Spent</div>
+          <div class="gc-mv" style="color:${pctColor}">${$p(g.pctSpent)}</div>
+        </div>
+      </div>
+      <div style="padding:6px 17px 2px">
+        <div class="pb-wrap" style="width:100%;height:5px">
+          <div class="pb ${g.atRisk?'red':g.pctSpent>=.75?'grn':''}" style="width:${Math.min(100,Math.round(g.pctSpent*100))}%"></div>
+        </div>
+      </div>
+      <div class="gc-qi">
+        <span class="gc-ql">Quarterly</span>
+        ${qiHtml(g.quarterly, g.quarterlyDueDates)}
+        <span class="gc-ql" style="margin-left:6px">Final</span>
+        ${finalIcon(g.finalReport, g.finalReportDue, '18px')}
+      </div>
+      <div style="padding:4px 17px 10px;display:flex;align-items:center;gap:6px">
+        <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)">Pace</span>
+        ${burnBadge(g, DATA.rounds[g.roundKey])}
+      </div>
+      <div class="gc-det ${exp?'open':''}">
+        <div class="gc-det-inner">
+          <div class="dr"><span class="dl">Proposal ID</span><span class="dv">${g.planId}</span></div>
+          <div class="dr"><span class="dl">Grant Name</span><span class="dv" title="${g.grantName}" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${g.grantName||'—'}</span></div>
+          <div class="dr"><span class="dl">Lead LEA</span><span class="dv">${g.leadLEA||'—'}</span></div>
+          <div class="dr"><span class="dl">Reporting Institutions</span><span class="dv">${g.instCount}</span></div>
+          <div class="dr"><span class="dl">Approval Status</span><span class="dv">${g.dashboardApproval||g.approvalStatus||'—'}</span></div>
+          <div class="dr"><span class="dl">Budget Remaining</span><span class="dv num">${$c(g.budget - g.spent)}</span></div>
+          <div class="dr"><span class="dl">Final Report Due</span><span class="dv">${g.finalReportDue}</span></div>
+        </div>
+      </div>
+    </div>`;
+  }).join('') + '</div>';
+
+  document.getElementById('v5').innerHTML = html;
+  animateBars('#v5');
+}
+
+// ─── VIEW 6: DEADLINES ────────────────────────────────────────────────────
+const ROUND_ACCENT = {R5:'#6D28D9', R6:'#0369A1', R7:'#047857', R8:'#B45309'};
+
+function rv6() {
+  const rds = rounds();
+  if (!rds.length) {
+    document.getElementById('v6').innerHTML =
+      '<div class="empty"><div class="ico">📋</div>No rounds selected.</div>';
+    return;
+  }
+
+  function periodRow(label, ds, submitted, total, isFinal) {
+    const days    = daysFrom(ds);
+    const pd      = pastDue(ds);
+    const pct     = total > 0 ? submitted / total : 0;
+    const allDone = submitted === total;
+    const noneDone= submitted === 0;
+
+    // days label
+    let daysHtml, daysCls;
+    if (!pd) {
+      daysCls = days <= 45 ? 'soon' : 'future';
+      daysHtml = `in ${days} day${days!==1?'s':''}`;
+    } else {
+      daysCls = allDone ? 'past' : 'overdue';
+      daysHtml = `${Math.abs(days)} day${Math.abs(days)!==1?'s':''} ago`;
+    }
+
+    // status chip
+    let statusHtml;
+    if (!pd) {
+      statusHtml = days <= 45
+        ? `<span class="dl-status upcoming">🔔 Due in ${days}d</span>`
+        : `<span class="dl-status future">Upcoming</span>`;
+    } else if (allDone) {
+      statusHtml = `<span class="dl-status done">✓ All ${total} submitted</span>`;
+    } else if (noneDone) {
+      statusHtml = `<span class="dl-status missing">✗ None submitted</span>`;
+    } else {
+      statusHtml = `<span class="dl-status ${submitted/total>=.75?'partial':'missing'}">⚠ ${submitted}/${total} submitted</span>`;
+    }
+
+    // progress bar colour
+    const barColor = !pd ? '#3B82F6' : allDone ? '#059669' : submitted/total >= .5 ? '#D97706' : '#DC2626';
+
+    const rowCls = isFinal
+      ? (pd && !allDone ? 'dl-row-final-warn' : 'dl-row-final')
+      : (pd && !allDone ? 'dl-row-warn' : '');
+
+    return `<tr class="${rowCls}">
+      <td class="dl-period">${isFinal ? '🏁 ' : ''}${label}</td>
+      <td class="dl-date">
+        <span class="dl-date-full">${fmtDate(ds)}</span>
+      </td>
+      <td class="dl-days ${daysCls}">${daysHtml}</td>
+      <td class="dl-count">
+        <span class="dl-count-num">${submitted}</span><span class="dl-count-den"> / ${total}</span>
+        <div class="dl-bar-wrap">
+          <div class="dl-bar" style="width:${Math.round(pct*100)}%;background:${barColor}"></div>
+        </div>
+      </td>
+      <td>${statusHtml}</td>
+    </tr>`;
+  }
+
+  const cards = rds.map(([rk, rd]) => {
+    const t      = rd.totals;
+    const accent = ROUND_ACCENT[rk] || 'var(--navy)';
+    const rows   = rd.quarterlyLabels.map((lbl, i) =>
+      periodRow(lbl.split(' (')[0], rd.quarterlyDueDates[i], t.quarterlyCounts[i], t.grantCount, false)
+    );
+    rows.push(periodRow('Final Report', rd.finalReportDue, t.finalCount, t.grantCount, true));
+
+    return `<div class="dl-card">
+      <div class="dl-card-top" style="background:${accent}"></div>
+      <div class="dl-hdr">
+        <div>
+          <div class="dl-round-name" style="color:${accent}">${rd.label}</div>
+          <div class="dl-round-fy">Grant Award FY ${rd.grantFY} &nbsp;·&nbsp; Final Report Due ${fmtDate(rd.finalReportDue)}</div>
+        </div>
+        <div class="dl-hdr-meta">
+          <div class="dl-hdr-stat">
+            <span class="dl-hdr-stat-val">${t.grantCount}</span>
+            <span class="dl-hdr-stat-lbl">Grants</span>
+          </div>
+          <div class="dl-hdr-stat">
+            <span class="dl-hdr-stat-val num">${$c(t.budget)}</span>
+            <span class="dl-hdr-stat-lbl">Total Budget</span>
+          </div>
+          <div class="dl-hdr-stat">
+            <span class="dl-hdr-stat-val num">${$p(t.pctSpent)}</span>
+            <span class="dl-hdr-stat-lbl">% Spent</span>
+          </div>
+          <div class="dl-hdr-stat">
+            <span class="dl-hdr-stat-val ${t.atRiskCount > 0 ? 'red' : ''}" style="${t.atRiskCount > 0 ? 'color:var(--red)' : 'color:var(--green)'}">${t.atRiskCount > 0 ? '⚠ '+t.atRiskCount : '✓ 0'}</span>
+            <span class="dl-hdr-stat-lbl">At-Risk</span>
+          </div>
+        </div>
+      </div>
+      <table class="dl-table">
+        <thead><tr>
+          <th>Reporting Period</th>
+          <th>Due Date</th>
+          <th>Days from Today</th>
+          <th>Grants Submitted</th>
+          <th>Status</th>
+        </tr></thead>
+        <tbody>${rows.join('')}</tbody>
+      </table>
+      <div class="dl-legend">
+        <div class="dl-legend-item"><div class="dl-legend-dot" style="background:var(--green)"></div> All submitted</div>
+        <div class="dl-legend-item"><div class="dl-legend-dot" style="background:var(--amber)"></div> Partially submitted</div>
+        <div class="dl-legend-item"><div class="dl-legend-dot" style="background:var(--red)"></div> Overdue / missing</div>
+        <div class="dl-legend-item"><div class="dl-legend-dot" style="background:var(--blue)"></div> Upcoming</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('v6').innerHTML = `<div class="dl-grid">${cards}</div>`;
+
+  // Animate deadline bars
+  setTimeout(() => {
+    document.querySelectorAll('#v6 .dl-bar').forEach(el => {
+      const w = el.style.width; el.style.width = '0';
+      requestAnimationFrame(() => requestAnimationFrame(() => { el.style.width = w; }));
+    });
+  }, 30);
+}
+
+// ─── VIEW 7: LIFECYCLE COMPARISON ─────────────────────────────────────────
+function rv7() {
+  const rds = Object.entries(DATA.rounds);
+  if (!rds.length) {
+    document.getElementById('v7').innerHTML = '<div class="empty"><div class="ico">📈</div>No round data.</div>';
+    return;
+  }
+
+  // Build comparison table rows
+  const metrics = [
+    { key: 'lifecycle',  label: 'Lifecycle Elapsed',     fmt: v => Math.round(v*100)+'%' },
+    { key: 'expected',   label: 'Expected Spend by Now', fmt: v => Math.round(v*100)+'%' },
+    { key: 'actual',     label: 'Actual Spend',          fmt: v => Math.round(v*100)+'%' },
+    { key: 'pace',       label: 'Pace vs Expected',      fmt: (v,rk,rd) => {
+        const delta = v;
+        const cls = delta >= -0.05 ? 'br-ok' : delta >= -0.15 ? 'br-warn' : 'br-risk';
+        const sign = delta >= 0 ? '+' : '';
+        return `<span class="br-badge ${cls}">${sign}${Math.round(delta*100)}pp</span>`;
+    }},
+    { key: 'budget',     label: 'Total Budget',          fmt: v => '$'+Math.round(v).toLocaleString('en-US') },
+    { key: 'spent',      label: 'Total Spent',           fmt: v => '$'+Math.round(v).toLocaleString('en-US') },
+    { key: 'unspent',    label: 'Unspent Budget',        fmt: v => '$'+Math.round(v).toLocaleString('en-US') },
+    { key: 'grants',     label: 'Total Grants',          fmt: v => v },
+    { key: 'atRisk',     label: 'At-Risk Grants',        fmt: (v,rk,rd) => {
+        const pct = rd.totals.grantCount > 0 ? Math.round(v/rd.totals.grantCount*100) : 0;
+        return v > 0 ? `<span style="color:var(--red);font-weight:700">⚠ ${v} (${pct}%)</span>` : `<span style="color:var(--green);font-weight:700">✓ 0</span>`;
+    }},
+    { key: 'q1sub',      label: 'Q1 Submitted',          fmt: (v,rk,rd) => `${v}/${rd.totals.grantCount}` },
+    { key: 'q2sub',      label: 'Q2 Submitted',          fmt: (v,rk,rd) => `${v}/${rd.totals.grantCount}` },
+    { key: 'q3sub',      label: 'Q3 Submitted',          fmt: (v,rk,rd) => `${v}/${rd.totals.grantCount}` },
+    { key: 'q4sub',      label: 'Q4 Submitted',          fmt: (v,rk,rd) => `${v}/${rd.totals.grantCount}` },
+    { key: 'q5sub',      label: 'Q5 Submitted',          fmt: (v,rk,rd) => `${v}/${rd.totals.grantCount}` },
+    { key: 'finalSub',   label: 'Final Report Submitted',fmt: (v,rk,rd) => `${v}/${rd.totals.grantCount}` },
+  ];
+
+  // Compute per-round values
+  const rdData = rds.map(([rk, rd]) => {
+    const start   = new Date(rd.grantFYStart + 'T00:00:00');
+    const end     = new Date(rd.finalReportDue + 'T00:00:00');
+    const total   = end - start;
+    const elapsed = Math.max(0, Math.min(total, TODAY - start));
+    const lifecycle = elapsed / total;
+    const expected  = lifecycle;
+    const actual    = rd.totals.pctSpent;
+    const delta     = actual - expected;
+    const qc        = rd.totals.quarterlyCounts;
+    return { rk, rd,
+      lifecycle, expected, actual, pace: delta,
+      budget: rd.totals.budget, spent: rd.totals.spent,
+      unspent: rd.totals.budget - rd.totals.spent,
+      grants: rd.totals.grantCount, atRisk: rd.totals.atRiskCount,
+      q1sub: qc[0]||0, q2sub: qc[1]||0, q3sub: qc[2]||0, q4sub: qc[3]||0, q5sub: qc[4]||0,
+      finalSub: rd.totals.finalCount,
+    };
+  });
+
+  const accent = { R6:'#0369A1', R7:'#047857', R8:'#B45309' };
+
+  const hdrCols = rdData.map(({rk, rd}) =>
+    `<th style="text-align:center;border-bottom:3px solid ${accent[rk]||'var(--navy)'}">
+      <span style="color:${accent[rk]||'var(--navy)'};">${rd.label}</span><br>
+      <small style="font-weight:400;color:var(--muted)">Grant FY ${rd.grantFY}</small>
+    </th>`
+  ).join('');
+
+  const bodyRows = metrics.map(m => {
+    const cells = rdData.map(({rk, rd, ...vals}) => {
+      const v = vals[m.key];
+      const fmt = typeof m.fmt === 'function' ? m.fmt(v, rk, rd) : v;
+      return `<td style="text-align:center">${fmt}</td>`;
+    }).join('');
+    return `<tr><td style="font-weight:600;white-space:nowrap;padding-left:16px">${m.label}</td>${cells}</tr>`;
+  }).join('');
+
+  // Lifecycle progress bars per round
+  const progressCards = rdData.map(({rk, rd, lifecycle, expected, actual, pace}) => {
+    const ac = accent[rk] || 'var(--navy)';
+    const paceCls = pace >= -0.05 ? 'br-ok' : pace >= -0.15 ? 'br-warn' : 'br-risk';
+    const paceLabel = pace >= -0.05 ? 'On Pace' : pace >= -0.15 ? 'Slightly Behind' : 'Under-Spending';
+    const sign = pace >= 0 ? '+' : '';
+    return `<div style="background:var(--card);border:2px solid ${ac};border-radius:var(--r);padding:20px;min-width:220px;flex:1">
+      <div style="font-size:18px;font-weight:800;color:${ac};margin-bottom:4px">${rd.label}</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:14px">FY ${rd.grantFY} · ${rd.totals.grantCount} grants</div>
+      <div style="margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:3px">
+          <span>Lifecycle Progress</span><span>${Math.round(lifecycle*100)}%</span>
+        </div>
+        <div style="background:var(--bg);border-radius:100px;height:8px;overflow:hidden">
+          <div style="width:${Math.round(lifecycle*100)}%;height:100%;background:${ac};border-radius:100px"></div>
+        </div>
+      </div>
+      <div style="margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:3px">
+          <span>Expected Spend</span><span>${Math.round(expected*100)}%</span>
+        </div>
+        <div style="background:var(--bg);border-radius:100px;height:8px;overflow:hidden">
+          <div style="width:${Math.round(expected*100)}%;height:100%;background:#94A3B8;border-radius:100px"></div>
+        </div>
+      </div>
+      <div style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:3px">
+          <span>Actual Spend</span><span>${Math.round(actual*100)}%</span>
+        </div>
+        <div style="background:var(--bg);border-radius:100px;height:8px;overflow:hidden">
+          <div style="width:${Math.min(100,Math.round(actual*100))}%;height:100%;background:${actual < expected - 0.15 ? 'var(--red)' : actual < expected - 0.05 ? 'var(--amber)' : 'var(--green)'};border-radius:100px"></div>
+        </div>
+      </div>
+      <span class="br-badge ${paceCls}">${paceLabel} (${sign}${Math.round(pace*100)}pp)</span>
+    </div>`;
+  }).join('');
+
+  const html = `
+    <div style="margin-bottom:20px">
+      <div class="sec-ttl">Round-by-Round Lifecycle Comparison</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:16px">
+        Compares each round's actual spending against where it <em>should</em> be based on time elapsed since the grant award year started.
+      </div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:24px">${progressCards}</div>
+    </div>
+    <div class="sec-ttl" style="margin-bottom:12px">Detailed Metrics</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th style="min-width:200px">Metric</th>${hdrCols}</tr></thead>
+        <tbody>${bodyRows}</tbody>
+      </table>
+    </div>`;
+
+  document.getElementById('v7').innerHTML = html;
+}
+
+// ─── RENDER DISPATCHER ────────────────────────────────────────────────────
+function render() {
+  switch (S.view) {
+    case 1: rv1(); break;
+    case 2: rv2(); break;
+    case 3: rv3(); break;
+    case 4: rv4(); break;
+    case 5: rv5(); break;
+    case 6: rv6(); break;
+    case 7: rv7(); break;
+  }
+}
+
+function animateBars(sel) {
+  setTimeout(() => {
+    document.querySelectorAll(sel + ' .pb').forEach(el => {
+      const w = el.style.width;
+      el.style.width = '0';
+      requestAnimationFrame(() => requestAnimationFrame(() => { el.style.width = w; }));
+    });
+  }, 30);
+}
+
+// ─── INTERACTION HANDLERS ─────────────────────────────────────────────────
+function ds(col) {
+  S.sortCol === col ? (S.sortDir *= -1) : (S.sortCol = col, S.sortDir = 1);
+  render();
+}
+function togAlert()      { S.alertOpen = !S.alertOpen; rv4(); }
+function setSF(f)        { S.statusFilter = f; rv4(); }
+function togCard(pid)    { S.expandedCard = S.expandedCard === pid ? null : pid; rv5(); }
+function togRound(rk)    { S.expandedRound = S.expandedRound === rk ? null : rk; rv2(); }
+
+// ─── EVENT LISTENERS ──────────────────────────────────────────────────────
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
+    S.view = +btn.dataset.v;
+    document.getElementById('v' + S.view).classList.add('on');
+    render();
+  });
+});
+
+document.querySelectorAll('.pill').forEach(p => {
+  p.addEventListener('click', () => {
+    document.querySelectorAll('.pill').forEach(x => x.classList.remove('on'));
+    p.classList.add('on');
+    S.round = p.dataset.r;
+    S.expandedRound = null;
+    render();
+  });
+});
+
+document.getElementById('srch').addEventListener('input', e => {
+  S.search = e.target.value;
+  render();
+});
+
+// ─── INIT ─────────────────────────────────────────────────────────────────
+document.getElementById('gen-ts').textContent = DATA.generated.replace('T', ' ');
+renderDeadlineBar();
+render();
+</script>
+</body>
+</html>

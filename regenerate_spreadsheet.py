@@ -160,7 +160,7 @@ def regenerate():
         config = ROUND_CONFIGS[round_key]
         sheet_name = config['sheet_name']
         round_data = data[round_key]
-        grants = round_data['grants']
+        grants = round_data if isinstance(round_data, list) else round_data['grants']
 
         L = config['layout']
 
