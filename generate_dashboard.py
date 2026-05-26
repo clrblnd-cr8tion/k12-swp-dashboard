@@ -661,6 +661,18 @@ function sbadge(status) {
 function rbadge(rk) { return `<span class="rbdg">${rk}</span>`; }
 function arIcon() { return `<span class="arf" title="At risk — past-due report missing">⚠</span>`; }
 
+function reportStatusBadge(g) {
+  const s = (g.dashboardApproval || g.approvalStatus || '').toLowerCase();
+  if (!s || s.includes('certif')) return '';
+  if (s.includes('pending')) return `<span class="sbdg" style="background:#FEF3C7;color:#92400E">⏳ Pending Approval</span>`;
+  if (s.includes('submit')) return `<span class="sbdg subm">Submitted</span>`;
+  return `<span class="sbdg none">${g.dashboardApproval || g.approvalStatus}</span>`;
+}
+
+function planIdTag(g) {
+  return `<span style="font-size:11px;color:var(--muted);font-weight:400">Plan #${g.planId}</span>`;
+}
+
 function daysFrom(ds) {
   return Math.round((new Date(ds + 'T00:00:00') - TODAY) / 86400000);
 }
@@ -1219,7 +1231,7 @@ function rv4() {
         ].filter(Boolean);
         return `<div class="alrt-item">
           ${rbadge(g.roundKey)}
-          <div class="alrt-inst">${instLink(g)}</div>
+          <div class="alrt-inst">${instLink(g)} ${planIdTag(g)}</div>
           <div class="alrt-det">Missing: ${missing.join(' · ')}</div>
         </div>`;
       }).join('') + '</div>';
@@ -1249,17 +1261,19 @@ function rv4() {
     `<tr style="${g.atRisk?'background:#FFFAFA':''}">
       <td>
         <div class="inst">${instLink(g)}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">${planIdTag(g)}</div>
         ${g.atRisk ? `<div style="font-size:11px;color:var(--red);font-weight:600;margin-top:2px">⚠ Past-due report missing</div>` : ''}
       </td>
       <td>${rbadge(g.roundKey)}</td>
       <td class="num">${$c(g.budget)}</td>
       <td>${pbHtml(g.pctSpent, g.atRisk)}</td>
       <td>${qiHtml(g.quarterly, g.quarterlyDueDates)}</td>
+      <td>${reportStatusBadge(g)}</td>
       <td style="text-align:center">${finalIcon(g.finalReport, g.finalReportDue)}</td>
       <td>${grantDeadlineChip(g)}</td>
       <td>${sbadge(g.planStatus || g.approvalStatus)}</td>
     </tr>`
-  ).join('') : `<tr><td colspan="8"><div class="empty"><div class="ico">✅</div>No grants in this category.</div></td></tr>`;
+  ).join('') : `<tr><td colspan="9"><div class="empty"><div class="ico">✅</div>No grants in this category.</div></td></tr>`;
 
   const tbl = `<div class="tbl-wrap"><table>
     <thead><tr>
@@ -1268,6 +1282,7 @@ function rv4() {
       <th onclick="ds('budget')" class="${S.sortCol==='budget'?'srt':''}">Budget ${sa('budget')}</th>
       <th onclick="ds('pctSpent')" class="${S.sortCol==='pctSpent'?'srt':''}">% Spent ${sa('pctSpent')}</th>
       <th>Quarterly Status</th>
+      <th>Report Status</th>
       <th>Final Report</th>
       <th>Next Deadline</th>
       <th>Plan Status</th>
@@ -1302,7 +1317,7 @@ function rv5() {
           ${sbadge(g.planStatus || g.approvalStatus)}
           ${g.atRisk ? arIcon() : ''}
         </div>
-        <div class="gc-inst">${instLink(g)}</div>
+        <div class="gc-inst">${instLink(g)} ${planIdTag(g)}</div>
         <div class="gc-gname" title="${g.grantName}">${g.grantName || '—'}</div>
       </div>
       <div class="gc-metrics">
