@@ -673,8 +673,8 @@ function reportStatusBadge(g) {
   const s = (g.dashboardApproval || g.approvalStatus || '').toLowerCase();
   if (!s || s.includes('certif')) return '';
   const dateSuffix = g.submittedDate ? ` — ${g.submittedDate}` : '';
-  if (s.includes('pending'))
-    return `<span class="sbdg rs-pending">⏳ Pending Approval${dateSuffix}</span>`;
+  if (s.includes('pending') || s === 'awaiting approval')
+    return `<span class="sbdg rs-pending">⏳ Awaiting Approval${dateSuffix}</span>`;
   if (s.includes('submit'))
     return `<span class="sbdg rs-submitted">📋 Submitted${dateSuffix}</span>`;
   if (s.includes('awaiting'))
