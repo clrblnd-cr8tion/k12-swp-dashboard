@@ -612,7 +612,7 @@ const S = {
   search: '',
   sortCol: 'institution',
   sortDir: 1,
-  alertOpen: true,
+  alertOpen: false,
   unspentOpen: false,
   odOpen: false,
   statusFilter: 'all',
@@ -1125,7 +1125,7 @@ function rv2() {
       setCount(gs.length);
       const rows = gs.length ? gs.map(g =>
         `<tr>
-          <td><div class="inst">${instLink(g)}</div><div class="gname" title="${g.grantName}">${g.grantName}</div></td>
+          <td><div class="inst">${instLink(g)} ${planIdTag(g)}</div><div class="gname" title="${g.grantName}">${g.grantName}</div></td>
           <td class="num">${$c(g.budget)}</td>
           <td class="num">${$c(g.spent)}</td>
           <td>${pbHtml(g.pctSpent, g.atRisk)}</td>
@@ -1191,7 +1191,7 @@ function rv3() {
       const pd = pastDue(rd.finalReportDue);
       const [fcls, fsym] = g.finalReport ? ['ok','✓'] : pd ? ['bad','✗'] : ['fut','—'];
       if (g.finalReport) counts[fi]++;
-      return `<tr><td><strong style="font-size:13px">${instLink(g)}</strong>${g.atRisk?` <span class="arf" style="width:16px;height:16px;font-size:9px">⚠</span>`:''}</td>${qCols.join('')}<td><div class="mc ${fcls}">${fsym}</div></td></tr>`;
+      return `<tr><td><strong style="font-size:13px">${instLink(g)}</strong> ${planIdTag(g)}${g.atRisk?` <span class="arf" style="width:16px;height:16px;font-size:9px">⚠</span>`:''}</td>${qCols.join('')}<td><div class="mc ${fcls}">${fsym}</div></td></tr>`;
     }).join('');
 
     const footCols = counts.map((c, i) =>
