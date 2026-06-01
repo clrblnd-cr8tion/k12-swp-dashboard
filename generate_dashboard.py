@@ -656,12 +656,13 @@ function finalIcon(done, dueDate, size='') {
     : `<span class="q fut" ${st}>·</span>`;
 }
 
-function sbadge(status, certDate) {
+function sbadge(status, certDate, submittedDate) {
   if (!status) return '';
   const s = status.toLowerCase();
   const cls = s.includes('certif') ? 'cert' : s.includes('submit') ? 'subm' : 'none';
-  const dateTag = (s.includes('certif') && certDate)
-    ? `<span style="font-size:10px;font-weight:400;opacity:0.85;margin-left:3px">${certDate}</span>`
+  const date = s.includes('certif') ? certDate : s.includes('submit') ? submittedDate : '';
+  const dateTag = date
+    ? `<span style="font-size:10px;font-weight:400;opacity:0.85;margin-left:3px">${date}</span>`
     : '';
   return `<span class="sbdg ${cls}">${status}${dateTag}</span>`;
 }
@@ -1069,7 +1070,7 @@ function rv1() {
       <td>${qiHtml(g.quarterly, g.quarterlyDueDates)}</td>
       <td style="text-align:center">${finalIcon(g.finalReport, g.finalReportDue)}</td>
       <td>${grantDeadlineChip(g)}</td>
-      <td>${sbadge(g.planStatus || g.approvalStatus, g.certifiedDate)}</td>
+      <td>${sbadge(g.planStatus || g.approvalStatus, g.certifiedDate, g.submittedDate)}</td>
       <td>${g.atRisk ? arIcon() : ''}</td>
     </tr>`
   ).join('') : `<tr><td colspan="11"><div class="empty"><div class="ico">🔍</div>No grants match your search.</div></td></tr>`;
@@ -1137,7 +1138,7 @@ function rv2() {
           <td>${pbHtml(g.pctSpent, g.atRisk)}</td>
           <td>${qiHtml(g.quarterly, rd.quarterlyDueDates)}</td>
           <td style="text-align:center">${finalIcon(g.finalReport, rd.finalReportDue)}</td>
-          <td>${sbadge(g.planStatus || g.approvalStatus, g.certifiedDate)}</td>
+          <td>${sbadge(g.planStatus || g.approvalStatus, g.certifiedDate, g.submittedDate)}</td>
           <td>${g.atRisk ? arIcon() : ''}</td>
         </tr>`
       ).join('') : `<tr><td colspan="8"><div class="empty"><div class="ico">🔍</div>No grants match.</div></td></tr>`;
@@ -1284,7 +1285,7 @@ function rv4() {
       <td>${reportStatusBadge(g)}</td>
       <td style="text-align:center">${finalIcon(g.finalReport, g.finalReportDue)}</td>
       <td>${grantDeadlineChip(g)}</td>
-      <td>${sbadge(g.planStatus || g.approvalStatus, g.certifiedDate)}</td>
+      <td>${sbadge(g.planStatus || g.approvalStatus, g.certifiedDate, g.submittedDate)}</td>
     </tr>`
   ).join('') : `<tr><td colspan="9"><div class="empty"><div class="ico">✅</div>No grants in this category.</div></td></tr>`;
 
@@ -1327,7 +1328,7 @@ function rv5() {
       <div class="gc-hdr">
         <div class="gc-bdgs">
           ${rbadge(g.roundKey)}
-          ${sbadge(g.planStatus || g.approvalStatus, g.certifiedDate)}
+          ${sbadge(g.planStatus || g.approvalStatus, g.certifiedDate, g.submittedDate)}
           ${reportStatusBadge(g)}
           ${g.atRisk ? arIcon() : ''}
         </div>
