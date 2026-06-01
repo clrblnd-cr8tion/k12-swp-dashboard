@@ -1011,7 +1011,7 @@ function rv1() {
         const dl = daysFrom(g.finalReportDue);
         return `<div class="alrt-item">
           ${rbadge(g.roundKey)}
-          <div class="alrt-inst">${instLink(g)}</div>
+          <div class="alrt-inst">${instLink(g)} ${planIdTag(g)}</div>
           <div class="alrt-det">${$c(unspent)} unspent (${pctRemaining}% remaining) · ${dl}d until final report</div>
         </div>`;
       }).join('');
@@ -1054,7 +1054,7 @@ function rv1() {
 
   let rows = sorted.length ? sorted.map(g =>
     `<tr>
-      <td><div class="inst">${instLink(g)}</div><div class="gname" title="${g.grantName}">${g.grantName}</div></td>
+      <td><div class="inst">${instLink(g)} ${planIdTag(g)}</div><div class="gname" title="${g.grantName}">${g.grantName}</div></td>
       <td>${rbadge(g.roundKey)}</td>
       <td class="num">${$c(g.budget)}</td>
       <td class="num">${$c(g.spent)}</td>
