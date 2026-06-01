@@ -339,6 +339,9 @@ td{padding:9px 13px;vertical-align:middle}
 .sbdg.cert{background:var(--green-bg);color:#065F46}
 .sbdg.subm{background:var(--amber-bg);color:#92400E}
 .sbdg.none{background:var(--bg);color:var(--muted)}
+.sbdg.rs-submitted{background:#DBEAFE;color:#1E40AF;font-weight:700}
+.sbdg.rs-pending{background:#FEF3C7;color:#92400E;font-weight:700}
+.sbdg.rs-awaiting{background:#F3F4F6;color:#6B7280;font-weight:600}
 .arf{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:var(--red-bg);color:var(--red);border-radius:50%;font-size:11px}
 
 /* ─── VIEW 2: PORTFOLIO ──────────────────────────────────── */
@@ -664,8 +667,12 @@ function arIcon() { return `<span class="arf" title="At risk — past-due report
 function reportStatusBadge(g) {
   const s = (g.dashboardApproval || g.approvalStatus || '').toLowerCase();
   if (!s || s.includes('certif')) return '';
-  if (s.includes('pending')) return `<span class="sbdg" style="background:#FEF3C7;color:#92400E">⏳ Pending Approval</span>`;
-  if (s.includes('submit')) return `<span class="sbdg subm">Submitted</span>`;
+  if (s.includes('pending'))
+    return `<span class="sbdg rs-pending">⏳ Pending Approval</span>`;
+  if (s.includes('submit'))
+    return `<span class="sbdg rs-submitted">📋 Submitted</span>`;
+  if (s.includes('awaiting'))
+    return `<span class="sbdg rs-awaiting">⌛ Awaiting Submittal</span>`;
   return `<span class="sbdg none">${g.dashboardApproval || g.approvalStatus}</span>`;
 }
 
@@ -1315,6 +1322,7 @@ function rv5() {
         <div class="gc-bdgs">
           ${rbadge(g.roundKey)}
           ${sbadge(g.planStatus || g.approvalStatus)}
+          ${reportStatusBadge(g)}
           ${g.atRisk ? arIcon() : ''}
         </div>
         <div class="gc-inst">${instLink(g)} ${planIdTag(g)}</div>
