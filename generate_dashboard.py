@@ -1067,7 +1067,7 @@ function rv1() {
 
   let rows = sorted.length ? sorted.map(g =>
     `<tr>
-      <td><div class="inst">${instLink(g)} ${planIdTag(g)}</div><div class="gname" title="${g.grantName}">${g.grantName}</div>${viewerTag(g)}</td>
+      <td><div class="inst">${instLink(g)} ${planIdTag(g)}</div><div class="gname" title="${g.grantName}">${g.grantName}</div></td>
       <td>${rbadge(g.roundKey)}</td>
       <td class="num">${$c(g.budget)}</td>
       <td class="num">${$c(g.spent)}</td>
@@ -1138,7 +1138,7 @@ function rv2() {
       setCount(gs.length);
       const rows = gs.length ? gs.map(g =>
         `<tr>
-          <td><div class="inst">${instLink(g)} ${planIdTag(g)}</div><div class="gname" title="${g.grantName}">${g.grantName}</div>${viewerTag(g)}</td>
+          <td><div class="inst">${instLink(g)} ${planIdTag(g)}</div><div class="gname" title="${g.grantName}">${g.grantName}</div></td>
           <td class="num">${$c(g.budget)}</td>
           <td class="num">${$c(g.spent)}</td>
           <td>${pbHtml(g.pctSpent, g.atRisk)}</td>
@@ -1282,7 +1282,6 @@ function rv4() {
       <td>
         <div class="inst">${instLink(g)}</div>
         <div style="font-size:11px;color:var(--muted);margin-top:1px">${planIdTag(g)}</div>
-        ${viewerTag(g)}
         ${g.atRisk ? `<div style="font-size:11px;color:var(--red);font-weight:600;margin-top:2px">⚠ Past-due report missing</div>` : ''}
       </td>
       <td>${rbadge(g.roundKey)}</td>
@@ -1341,7 +1340,6 @@ function rv5() {
         </div>
         <div class="gc-inst">${instLink(g)} ${planIdTag(g)}</div>
         <div class="gc-gname" title="${g.grantName}">${g.grantName || '—'}</div>
-        ${viewerTag(g)}
       </div>
       <div class="gc-metrics">
         <div class="gc-m">
